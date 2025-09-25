@@ -20,17 +20,39 @@ export default function App(){
   const fmt = (c) => `$${(c/100).toFixed(2)}`
   const subtotal = useMemo(() => cart.reduce((s,c)=> s + c.item.price_cents*c.qty, 0), [cart])
 
-  useEffect(()=>{(async()=>{
-    const { data, error } = await supabase
-      .from('menu_items')
-      .select('id,name,category,price_cents,image_url')
-      .eq('is_active', true)
-      .order('category', { ascending: true })
-      .order('name', { ascending: true })
-    if(error){ console.error(error); alert('Failed to load menu') }
-    setMenu(data || [])
-    setLoading(false)
-  })(); return ()=>{ if(orderSubRef.current){ supabase.removeChannel(orderSubRef.current); orderSubRef.current=null } }},[])
+useEffect(() => {
+  (async () => {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('id,name,category,price_cents,image_url,is_active')
+        .eq('is_active', true)
+        .order('category', { ascending: true })
+        .order('name', { ascending: true })
+
+      if (error) {
+        console.error(error)
+        setLoadErr(error.message)
+        setMenu([])
+      } else {
+        setMenu(data || [])
+      }
+    } catch (e) {
+      console.error(e)
+      setLoadErr(String(e))
+      setMenu([])
+    } finally {
+      setLoading(false)
+    }
+  })()
+  return () => {
+    if (orderSubRef.current) {
+      supabase.removeChannel(orderSubRef.current)
+      orderSubRef.current = null
+    }
+  }
+}, [])
+
 
   const addToCart = (item)=> setCart(prev=>{
     const i = prev.findIndex(c=>c.item.id===item.id)
@@ -76,6 +98,14 @@ export default function App(){
     <div className="container">
       {/* HERO */}
       <header className="hero">
+        <div className="card" style={{border:'1px dashed #334155', background:'#0c1326'}}>
+  <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+    <b>DEBUG</b>
+    <span className="badge">menu rows: {menu?.length ?? 0}</span>
+  </div>
+  {loadErr ? <div style={{color:'#fca5a5'}}>Error: {loadErr}</div> : <div className="meta">Loaded OK</div>}
+</div>
+
         <div className="hero-stage">
           <div style={{position:'relative', zIndex:1}}>
             <h1>SnapBurger · Theo Kiosk</h1>
