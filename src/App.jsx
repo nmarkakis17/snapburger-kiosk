@@ -134,34 +134,29 @@ export default function App() {
   return (
     <div className="container">
       {/* HERO */}
-      <header className="hero">
-        <div className="hero-stage">
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <h1>SnapBurger · Theo Kiosk</h1>
-            <p>Order with Theo · Earn SnapCoins · Watch the SnapBoard light up</p>
-            <div style={{ marginTop: 12, display: 'flex', gap: 10 }}>
-              <span className="badge">MVP</span>
-              <span className="badge">Realtime</span>
-              <span className="badge">Supabase</span>
-            </div>
-          </div>
+<header className="hero hero--white">
+  <div className="hero-stack">
+    {/* Theo centered on top */}
+    <img src="/assets/theo.png" alt="Theo mascot" className="theo-hero" />
 
-          {/* HERO IMAGE CHIPS (logo + Theo) */}
-          <div className="brand-images" style={{ zIndex: 1 }}>
-            <span className="brand-chip small">
-              <img src="/assets/logo.png" alt="SnapBurger logo" />
-              <b>SnapBurger</b>
-            </span>
-            <span className="brand-chip">
-              <img src="/assets/theo.png" alt="Theo mascot" />
-              <div style={{ display: 'grid', lineHeight: 1.1 }}>
-                <b>Theo</b>
-                <small style={{ color: 'var(--sb-subtext)' }}>your AI host</small>
-              </div>
-            </span>
-          </div>
-        </div>
-      </header>
+    {/* Logo left + brand title in blue */}
+    <div className="brand-row">
+      <img src="/assets/logo.png" alt="SnapBurger logo" className="logo-small" />
+      <h1>SnapBurger · Theo Kiosk</h1>
+    </div>
+
+    <p style={{margin:0, color:'var(--sb-subtext)'}}>
+      Order with Theo · Earn SnapCoins · Watch the SnapBoard light up
+    </p>
+
+    <div style={{marginTop:8, display:'flex', gap:10}}>
+      <span className="badge">MVP</span>
+      <span className="badge">Realtime</span>
+      <span className="badge">Supabase</span>
+    </div>
+  </div>
+</header>
+
 
       {/* EMAIL / ID */}
       <section className="card space">
