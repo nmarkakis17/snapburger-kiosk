@@ -143,28 +143,7 @@ export default function App() {
     setPlacing(false)
   }
 
-  async function seedDemoItems() {
-    const rows = [
-      {
-        name: 'Byte Burger',
-        category: 'burger',
-        price_cents: 899,
-        is_active: true,
-        image_url: 'https://via.placeholder.com/640x480?text=Burger',
-      },
-      {
-        name: 'Fries',
-        category: 'sides',
-        price_cents: 349,
-        is_active: true,
-        image_url: 'https://via.placeholder.com/640x480?text=Fries',
-      },
-    ]
-    const { error } = await supabase.from('menu_items').insert(rows)
-    if (error) {
-      alert('Seed failed: ' + error.message)
-      return
-    }
+
     const { data } = await supabase
       .from('menu_items')
       .select('id,name,category,price_cents,image_url,is_active')
@@ -202,27 +181,6 @@ export default function App() {
           </div>
         </div>
       </header>
-
-      {/* Debug panel */}
-      <div className="card" style={{ border: '1px dashed #334155', background: '#0c1326' }}>
-        <div className="space">
-          <b>DEBUG</b>
-          <span className="badge">menu rows: {menu?.length ?? 0}</span>
-        </div>
-        {loadErr ? (
-          <div style={{ color: '#fca5a5' }}>Error: {loadErr}</div>
-        ) : (
-          <div className="meta">Loaded OK</div>
-        )}
-        {!loading && menu.length === 0 && (
-          <div className="row" style={{ marginTop: 8 }}>
-            <button className="btn btn-ghost" onClick={seedDemoItems}>
-              Seed 2 Demo Items
-            </button>
-            <span className="meta">Use this if your table is empty.</span>
-          </div>
-        )}
-      </div>
 
       <section className="grid-2">
         <div className="card">
