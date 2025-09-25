@@ -13,7 +13,6 @@ export default function App() {
   const [placing, setPlacing] = useState(false)
   const [order, setOrder] = useState(null)
   const [statusFeed, setStatusFeed] = useState([])
-  const [loadErr, setLoadErr] = useState(null)
   const orderSubRef = useRef(null)
 
   const fmt = (c) => `$${(c / 100).toFixed(2)}`
@@ -23,27 +22,16 @@ export default function App() {
   )
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const { data, error } = await supabase
-          .from('menu_items')
-          .select('id,name,category,price_cents,image_url,is_active')
-          .eq('is_active', true)
-          .order('category', { ascending: true })
-          .order('name', { ascending: true })
+    (async () => {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('id,name,category,price_cents,image_url,is_active')
+        .eq('is_active', true)
+        .order('category', { ascending: true })
+        .order('name', { ascending: true })
 
-        if (error) {
-          setLoadErr(error.message)
-          setMenu([])
-        } else {
-          setMenu(data || [])
-        }
-      } catch (e) {
-        setLoadErr(String(e))
-        setMenu([])
-      } finally {
-        setLoading(false)
-      }
+      if (!error) setMenu(data || [])
+      setLoading(false)
     })()
 
     return () => {
@@ -143,18 +131,9 @@ export default function App() {
     setPlacing(false)
   }
 
-
-    const { data } = await supabase
-      .from('menu_items')
-      .select('id,name,category,price_cents,image_url,is_active')
-      .eq('is_active', true)
-      .order('category', { ascending: true })
-      .order('name', { ascending: true })
-    setMenu(data || [])
-  }
-
   return (
     <div className="container">
+      {/* HERO */}
       <header className="hero">
         <div className="hero-stage">
           <div style={{ position: 'relative', zIndex: 1 }}>
@@ -166,13 +145,15 @@ export default function App() {
               <span className="badge">Supabase</span>
             </div>
           </div>
+
+          {/* HERO IMAGE CHIPS (logo + Theo) */}
           <div className="brand-images" style={{ zIndex: 1 }}>
             <span className="brand-chip small">
-              <img src="https://via.placeholder.com/140x90?text=Logo" alt="SnapBurger logo" />
+              <img src="/assets/logo.png" alt="SnapBurger logo" />
               <b>SnapBurger</b>
             </span>
             <span className="brand-chip">
-              <img src="https://via.placeholder.com/140x90?text=Theo" alt="Theo mascot" />
+              <img src="/assets/theo.png" alt="Theo mascot" />
               <div style={{ display: 'grid', lineHeight: 1.1 }}>
                 <b>Theo</b>
                 <small style={{ color: 'var(--sb-subtext)' }}>your AI host</small>
@@ -182,12 +163,28 @@ export default function App() {
         </div>
       </header>
 
+      {/* EMAIL / ID */}
+      <section className="card space">
+        <div className="kv" style={{ flex: 1 }}>
+          <label>Identify (email)</label>
+          <input
+            className="input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="nick@example.com"
+          />
+          <small style={{ color: 'var(--sb-subtext)' }}>
+            Optional; ties orders to a user for loyalty.
+          </small>
+        </div>
+        <button className="btn">Use demo email</button>
+      </section>
+
+      {/* MENU + CART */}
       <section className="grid-2">
         <div className="card">
           <div className="space">
-            <h2 style={{ margin: 0 }}>
-              Menu <span className="meta">({menu.length})</span>
-            </h2>
+            <h2 style={{ margin: 0 }}>Menu</h2>
           </div>
           {loading ? (
             <div>Loading menu…</div>
@@ -208,7 +205,7 @@ export default function App() {
                   </div>
                   <div className="price">{fmt(m.price_cents)}</div>
                   <button
-                    className="btn btn-primary"
+                    className="btn"
                     style={{ marginTop: 8 }}
                     onClick={() => addToCart(m)}
                   >
@@ -226,7 +223,7 @@ export default function App() {
             <span className="badge">Subtotal {fmt(subtotal)}</span>
           </div>
           {!cart.length ? (
-            <div style={{ color: 'var(--sb-subtext)' }}>No items yet.</div>
+            <div className="meta">No items yet.</div>
           ) : (
             <ul className="cart-list">
               {cart.map((c) => (
@@ -246,27 +243,22 @@ export default function App() {
             </ul>
           )}
           <div className="row" style={{ gap: 12, marginTop: 10 }}>
-            <button className="btn btn-ghost" onClick={clearCart}>
+            <button className="btn" onClick={clearCart}>
               Clear
             </button>
-            <button
-              className="btn btn-success"
-              onClick={placeOrder}
-              disabled={placing || !cart.length}
-            >
+            <button className="btn" onClick={placeOrder} disabled={placing || !cart.length}>
               {placing ? 'Placing…' : 'Place Order'}
             </button>
           </div>
         </div>
       </section>
 
+      {/* ORDER + FEED */}
       <section className="grid-2">
         <div className="card">
           <h2 style={{ marginTop: 0 }}>Order</h2>
           {!order ? (
-            <div style={{ color: 'var(--sb-subtext)' }}>
-              Place an order to see status updates.
-            </div>
+            <div className="meta">Place an order to see status updates.</div>
           ) : (
             <div className="kv">
               <div>
@@ -277,9 +269,8 @@ export default function App() {
                 <b>{String(order.status).toUpperCase()}</b>
               </div>
               <p className="meta">
-                Tip: In Supabase → <b>orders</b>, update status to{' '}
-                <code>in_kitchen</code> → <code>ready</code> →{' '}
-                <code>served</code>.
+                Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> →{' '}
+                <code>ready</code> → <code>served</code>.
               </p>
             </div>
           )}
