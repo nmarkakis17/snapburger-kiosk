@@ -185,20 +185,41 @@ export default function App() {
       </header>
 
       {/* —— Stage router —— */}
-      {stage === 'landing' && (
-        <section className="grid-2">
-          <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
-            <h2 style={{margin:0}}>First-Time Customer</h2>
-            <p className="meta">Create your account to earn SnapCoins</p>
-            <button className="btn" onClick={startNewFlow} style={{width:'100%'}}>New Customer</button>
-          </div>
-          <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
-            <h2 style={{margin:0}}>Returning Customer</h2>
-            <p className="meta">Use your loyalty to sign in</p>
-            <button className="btn" onClick={startReturningFlow} style={{width:'100%'}}>Returning Customer</button>
-          </div>
-        </section>
-      )}
+{stage === 'landing' && (
+  <section className="landing-wrap">
+    <div className="landing-col totem">
+      <div className="totem-inner">
+        {/* Crest row: logo + SNAPBURGER */}
+        <div className="crest">
+          <img src="/assets/logo.png" alt="SnapBurger logo" />
+          <div>SNAPBURGER</div>
+        </div>
+
+        {/* First-time */}
+        <div className="divider"></div>
+        <div className="title">First-Time Customer</div>
+        <button className="cta" onClick={startNewFlow}>New Customer</button>
+
+        {/* Returning */}
+        <div className="divider"></div>
+        <div className="title">Returning Customer</div>
+        <div className="sub">(Scan loyalty card below)</div>
+        <button className="cta" onClick={startReturningFlow}>Returning Customer</button>
+
+        {/* Welcome */}
+        <div className="divider"></div>
+        <div className="welcome">Welcome to<br/>SnapBurger</div>
+
+        {/* Theo */}
+        <img className="theo-big" src="/assets/theo.png" alt="Theo mascot" />
+
+        {/* Tagline */}
+        <div className="divider"></div>
+        <div className="tagline">Where dining and entertainment meets technology!</div>
+      </div>
+    </div>
+  </section>
+)}
 
       {stage === 'new' && (
         <section className="grid-2">
