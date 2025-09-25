@@ -1,4 +1,39 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+const [stage, setStage] = useState('landing') // 'landing' | 'new' | 'returning' | 'menu'
+const [phone, setPhone] = useState('')
+const [loyaltyId, setLoyaltyId] = useState('')
+
+// demo links for QR (change to your real URL if you want)
+const SIGNUP_URL = 'https://your-website.example/signup?src=kiosk'
+const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(SIGNUP_URL)}`
+
+function startNewFlow() { setStage('new') }
+function startReturningFlow() { setStage('returning') }
+
+// “Continue on kiosk” in new flow
+function confirmNewOnKiosk() {
+  // For demo: set a temp email and go to menu
+  if (!email) setEmail('guest+' + Math.floor(Math.random()*9999) + '@snapburger.demo')
+  setStage('menu')
+}
+
+// Returning options
+function confirmReturningByEmail() {
+  if (!email) return alert('Enter your email')
+  setStage('menu')
+}
+function confirmReturningByPhone() {
+  if (!phone) return alert('Enter your phone')
+  // optional: set a demo email from phone
+  setEmail(`p${phone.replace(/\D/g,'')}@snapburger.demo`)
+  setStage('menu')
+}
+function confirmReturningByCard() {
+  if (!loyaltyId) return alert('Enter your loyalty ID')
+  setEmail(`card${loyaltyId}@snapburger.demo`)
+  setStage('menu')
+}
+
 import { createClient } from '@supabase/supabase-js'
 
 const SB_URL = import.meta.env.VITE_SUPABASE_URL
@@ -134,15 +169,89 @@ export default function App() {
   return (
     <div className="page container">
       {/* HERO */}
-<header className="hero" style={{ background:'transparent', border:'1px solid var(--sb-border)', borderRadius:28, padding:'36px 24px', boxShadow:'var(--shadow)' }}>
-  <div style={{ position:'relative', zIndex:1, display:'grid', placeItems:'center', gap:10, textAlign:'center' }}>
+<header className="hero" style={{background:'transparent',border:'1px solid var(--sb-border)',borderRadius:28,padding:'36px 24px',boxShadow:'var(--shadow)'}}>
+  <div style={{position:'relative',zIndex:1,display:'grid',placeItems:'center',gap:10,textAlign:'center'}}>
     <img src="/assets/theo.png" alt="Theo mascot" style={{ height:88, width:'auto', objectFit:'contain' }} />
-<h1 className="hero-title shimmer">
-  Order with Theo + Earn SnapCoins + Light Up the SnapBoard 
-  <span className="glow"> = Theo-Kiosk</span>
-</h1>
+    <h1 className="hero-title shimmer">
+      Order with Theo + Earn SnapCoins + Light Up the SnapBoard <span className="glow"> = Theo-Kiosk</span>
+    </h1>
   </div>
 </header>
+{/* —— Stage router —— */}
+{stage === 'landing' && (
+  <section className="grid-2">
+    <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
+      <h2 style={{margin:0}}>First-Time Customer</h2>
+      <p className="meta">Create your account to earn SnapCoins</p>
+      <button className="btn" onClick={startNewFlow} style={{width:'100%'}}>New Customer</button>
+    </div>
+    <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
+      <h2 style={{margin:0}}>Returning Customer</h2>
+      <p className="meta">Use your loyalty to sign in</p>
+      <button className="btn" onClick={startReturningFlow} style={{width:'100%'}}>Returning Customer</button>
+    </div>
+  </section>
+)}
+
+{stage === 'new' && (
+  <section className="grid-2">
+    {/* Left: phone/QR */}
+    <div className="card" style={{display:'grid',gap:10,justifyItems:'center',textAlign:'center'}}>
+      <h2 style={{margin:0}}>Set up on your phone</h2>
+      <img src={QR_SRC} alt="Scan to sign up" style={{width:240,height:240, borderRadius:12, border:'1px solid var(--sb-border)'}}/>
+      <a className="btn" href={SIGNUP_URL} target="_blank" rel="noreferrer">Open Signup Link</a>
+      <span className="meta">Scan the QR or tap the link</span>
+      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+    </div>
+
+    {/* Right: on-kiosk (Netflix-style) */}
+    <div className="card" style={{display:'grid',gap:10}}>
+      <h2 style={{margin:0}}>Set up on this kiosk</h2>
+      <label className="kv">
+        <span>Email</span>
+        <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
+      </label>
+      <label className="kv">
+        <span>Phone (optional)</span>
+        <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
+      </label>
+      <button className="btn" onClick={confirmNewOnKiosk}>Create & Continue</button>
+      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+      <span className="meta">Demo only — no password needed here</span>
+    </div>
+  </section>
+)}
+
+{stage === 'returning' && (
+  <section className="grid-2">
+    <div className="card" style={{display:'grid',gap:10}}>
+      <h2 style={{margin:0}}>Scan Loyalty Card</h2>
+      <input className="input" placeholder="Enter card ID (stub)" value={loyaltyId} onChange={e=>setLoyaltyId(e.target.value)} />
+      <button className="btn" onClick={confirmReturningByCard}>Continue</button>
+      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+      <span className="meta">Scanner stub for demo</span>
+    </div>
+
+    <div className="card" style={{display:'grid',gap:10}}>
+      <h2 style={{margin:0}}>Sign in with Email or Phone</h2>
+      <label className="kv">
+        <span>Email</span>
+        <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
+      </label>
+      <button className="btn" onClick={confirmReturningByEmail}>Continue with Email</button>
+      <div style={{height:1, background:'var(--sb-border)', margin:'6px 0'}}/>
+      <label className="kv">
+        <span>Phone</span>
+        <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
+      </label>
+      <button className="btn" onClick={confirmReturningByPhone}>Continue with Phone</button>
+      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+    </div>
+  </section>
+)}
+
+      {stage === 'menu' && (
+  <>
 
       {/* MENU + CART */}
       <section className="grid-2">
@@ -256,6 +365,9 @@ export default function App() {
             {!statusFeed.length && <li className="meta">No updates yet.</li>}
           </ul>
         </div>
+
+          </>
+)}
       </section>
 
       <div className="footer">SnapBurger: Where Dining Meets Technology</div>
