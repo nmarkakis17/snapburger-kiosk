@@ -1,39 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-const [stage, setStage] = useState('landing') // 'landing' | 'new' | 'returning' | 'menu'
-const [phone, setPhone] = useState('')
-const [loyaltyId, setLoyaltyId] = useState('')
-
-// demo links for QR (change to your real URL if you want)
-const SIGNUP_URL = 'https://your-website.example/signup?src=kiosk'
-const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(SIGNUP_URL)}`
-
-function startNewFlow() { setStage('new') }
-function startReturningFlow() { setStage('returning') }
-
-// “Continue on kiosk” in new flow
-function confirmNewOnKiosk() {
-  // For demo: set a temp email and go to menu
-  if (!email) setEmail('guest+' + Math.floor(Math.random()*9999) + '@snapburger.demo')
-  setStage('menu')
-}
-
-// Returning options
-function confirmReturningByEmail() {
-  if (!email) return alert('Enter your email')
-  setStage('menu')
-}
-function confirmReturningByPhone() {
-  if (!phone) return alert('Enter your phone')
-  // optional: set a demo email from phone
-  setEmail(`p${phone.replace(/\D/g,'')}@snapburger.demo`)
-  setStage('menu')
-}
-function confirmReturningByCard() {
-  if (!loyaltyId) return alert('Enter your loyalty ID')
-  setEmail(`card${loyaltyId}@snapburger.demo`)
-  setStage('menu')
-}
-
 import { createClient } from '@supabase/supabase-js'
 
 const SB_URL = import.meta.env.VITE_SUPABASE_URL
@@ -41,6 +6,7 @@ const SB_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 const supabase = createClient(SB_URL, SB_ANON_KEY)
 
 export default function App() {
+  // ===== Global state =====
   const [loading, setLoading] = useState(true)
   const [menu, setMenu] = useState([])
   const [cart, setCart] = useState([])
@@ -50,12 +16,48 @@ export default function App() {
   const [statusFeed, setStatusFeed] = useState([])
   const orderSubRef = useRef(null)
 
+  // ===== New/Returning/Menu stage router =====
+  const [stage, setStage] = useState('landing') // 'landing' | 'new' | 'returning' | 'menu'
+  const [phone, setPhone] = useState('')
+  const [loyaltyId, setLoyaltyId] = useState('')
+
+  // demo links for QR (change to your real URL if you want)
+  const SIGNUP_URL = 'https://your-website.example/signup?src=kiosk'
+  const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(SIGNUP_URL)}`
+
+  function startNewFlow() { setStage('new') }
+  function startReturningFlow() { setStage('returning') }
+
+  // “Continue on kiosk” in new flow
+  function confirmNewOnKiosk() {
+    if (!email) setEmail('guest+' + Math.floor(Math.random() * 9999) + '@snapburger.demo')
+    setStage('menu')
+  }
+
+  // Returning options
+  function confirmReturningByEmail() {
+    if (!email) return alert('Enter your email')
+    setStage('menu')
+  }
+  function confirmReturningByPhone() {
+    if (!phone) return alert('Enter your phone')
+    setEmail(`p${phone.replace(/\D/g, '')}@snapburger.demo`)
+    setStage('menu')
+  }
+  function confirmReturningByCard() {
+    if (!loyaltyId) return alert('Enter your loyalty ID')
+    setEmail(`card${loyaltyId}@snapburger.demo`)
+    setStage('menu')
+  }
+
+  // ===== Helpers =====
   const fmt = (c) => `$${(c / 100).toFixed(2)}`
   const subtotal = useMemo(
     () => cart.reduce((s, c) => s + c.item.price_cents * c.qty, 0),
     [cart]
   )
 
+  // ===== Load menu =====
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase
@@ -77,6 +79,7 @@ export default function App() {
     }
   }, [])
 
+  // ===== Cart ops =====
   const addToCart = (item) =>
     setCart((prev) => {
       const i = prev.findIndex((c) => c.item.id === item.id)
@@ -99,6 +102,7 @@ export default function App() {
 
   const clearCart = () => setCart([])
 
+  // ===== Order subscription =====
   const subscribeOrder = (orderId) => {
     if (orderSubRef.current) {
       supabase.removeChannel(orderSubRef.current)
@@ -122,6 +126,7 @@ export default function App() {
     orderSubRef.current = ch
   }
 
+  // ===== Place order =====
   const placeOrder = async () => {
     if (!cart.length) return alert('Your cart is empty')
     setPlacing(true)
@@ -166,225 +171,204 @@ export default function App() {
     setPlacing(false)
   }
 
+  // ===== Render =====
   return (
     <div className="page container">
       {/* HERO */}
-<header className="hero" style={{background:'transparent',border:'1px solid var(--sb-border)',borderRadius:28,padding:'36px 24px',boxShadow:'var(--shadow)'}}>
-  <div style={{position:'relative',zIndex:1,display:'grid',placeItems:'center',gap:10,textAlign:'center'}}>
-    <img src="/assets/theo.png" alt="Theo mascot" style={{ height:88, width:'auto', objectFit:'contain' }} />
-    <h1 className="hero-title shimmer">
-      Order with Theo + Earn SnapCoins + Light Up the SnapBoard <span className="glow"> = Theo-Kiosk</span>
-    </h1>
-  </div>
-</header>
-{/* —— Stage router —— */}
-{stage === 'landing' && (
-  <section className="grid-2">
-    <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
-      <h2 style={{margin:0}}>First-Time Customer</h2>
-      <p className="meta">Create your account to earn SnapCoins</p>
-      <button className="btn" onClick={startNewFlow} style={{width:'100%'}}>New Customer</button>
-    </div>
-    <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
-      <h2 style={{margin:0}}>Returning Customer</h2>
-      <p className="meta">Use your loyalty to sign in</p>
-      <button className="btn" onClick={startReturningFlow} style={{width:'100%'}}>Returning Customer</button>
-    </div>
-  </section>
-)}
-
-{stage === 'new' && (
-  <section className="grid-2">
-    {/* Left: phone/QR */}
-    <div className="card" style={{display:'grid',gap:10,justifyItems:'center',textAlign:'center'}}>
-      <h2 style={{margin:0}}>Set up on your phone</h2>
-      <img src={QR_SRC} alt="Scan to sign up" style={{width:240,height:240, borderRadius:12, border:'1px solid var(--sb-border)'}}/>
-      <a className="btn" href={SIGNUP_URL} target="_blank" rel="noreferrer">Open Signup Link</a>
-      <span className="meta">Scan the QR or tap the link</span>
-      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
-    </div>
-
-    {/* Right: on-kiosk (Netflix-style) */}
-    <div className="card" style={{display:'grid',gap:10}}>
-      <h2 style={{margin:0}}>Set up on this kiosk</h2>
-      <label className="kv">
-        <span>Email</span>
-        <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
-      </label>
-      <label className="kv">
-        <span>Phone (optional)</span>
-        <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
-      </label>
-      <button className="btn" onClick={confirmNewOnKiosk}>Create & Continue</button>
-      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
-      <span className="meta">Demo only — no password needed here</span>
-    </div>
-  </section>
-)}
-
-{stage === 'returning' && (
-  <section className="grid-2">
-    <div className="card" style={{display:'grid',gap:10}}>
-      <h2 style={{margin:0}}>Scan Loyalty Card</h2>
-      <input className="input" placeholder="Enter card ID (stub)" value={loyaltyId} onChange={e=>setLoyaltyId(e.target.value)} />
-      <button className="btn" onClick={confirmReturningByCard}>Continue</button>
-      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
-      <span className="meta">Scanner stub for demo</span>
-    </div>
-
-    <div className="card" style={{display:'grid',gap:10}}>
-      <h2 style={{margin:0}}>Sign in with Email or Phone</h2>
-      <label className="kv">
-        <span>Email</span>
-        <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
-      </label>
-      <button className="btn" onClick={confirmReturningByEmail}>Continue with Email</button>
-      <div style={{height:1, background:'var(--sb-border)', margin:'6px 0'}}/>
-      <label className="kv">
-        <span>Phone</span>
-        <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
-      </label>
-      <button className="btn" onClick={confirmReturningByPhone}>Continue with Phone</button>
-      <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
-    </div>
-  </section>
-)}
-
-      {/* —— Stage router already above here —— */}
-
-{stage === 'menu' && (
-  <>
-    {/* MENU + CART */}
-    <section className="grid-2">
-      <div className="card">
-        <div className="space">
-          <h2 style={{ margin: 0 }}>Menu</h2>
+      <header className="hero" style={{background:'transparent',border:'1px solid var(--sb-border)',borderRadius:28,padding:'36px 24px',boxShadow:'var(--shadow)'}}>
+        <div style={{position:'relative',zIndex:1,display:'grid',placeItems:'center',gap:10,textAlign:'center'}}>
+          <img src="/assets/theo.png" alt="Theo mascot" style={{ height:88, width:'auto', objectFit:'contain' }} />
+          <h1 className="hero-title shimmer">
+            Order with Theo + Earn SnapCoins + Light Up the SnapBoard <span className="glow"> = Theo-Kiosk</span>
+          </h1>
         </div>
-        {loading ? (
-          <div>Loading menu…</div>
-        ) : menu.length === 0 ? (
-          <div className="meta">No active items yet.</div>
-        ) : (
-          <ul className="menu">
-            {menu.map((m) => (
-              <li key={m.id} className="item">
-                {m.image_url && (
-                  <div className="thumb">
-                    <img src={m.image_url} alt={m.name} />
-                  </div>
-                )}
-                <div className="title">{m.name}</div>
-                <div className="meta" style={{ textTransform: 'capitalize' }}>
-                  {m.category}
-                </div>
-                <div className="price">{fmt(m.price_cents)}</div>
-                <button
-                  className="btn"
-                  style={{ marginTop: 8 }}
-                  onClick={() => addToCart(m)}
-                >
-                  Add
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      </header>
 
-      <div className="card">
-        <div className="space">
-          <h2 style={{ margin: 0 }}>Your Cart</h2>
-          <span className="badge">Subtotal {fmt(subtotal)}</span>
-        </div>
-        {!cart.length ? (
-          <div className="meta">No items yet.</div>
-        ) : (
-          <ul className="cart-list">
-            {cart.map((c) => (
-              <li key={c.item.id} className="cart-item">
-                <div>
-                  <div style={{ fontWeight: 700 }}>{c.item.name}</div>
-                  <div className="meta">
-                    {fmt(c.item.price_cents)} × {c.qty}
-                  </div>
-                </div>
-                <div className="qty row">
-                  <button onClick={() => updateQty(c.item.id, -1)}>-</button>
-                  <button onClick={() => updateQty(c.item.id, +1)}>+</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="row" style={{ gap: 12, marginTop: 10 }}>
-          <button className="btn" onClick={clearCart}>Clear</button>
-          <button className="btn" onClick={placeOrder} disabled={placing || !cart.length}>
-            {placing ? 'Placing…' : 'Place Order'}
-          </button>
-        </div>
-      </div>
-    </section>
-
-    {/* ORDER + FEED */}
-    <section className="grid-2">
-      <div className="card">
-        <h2 style={{ marginTop: 0 }}>Order</h2>
-        {!order ? (
-          <div className="meta">Place an order to see status updates.</div>
-        ) : (
-          <div className="kv">
-            <div>
-              <span className="meta">Order ID:</span> <code>{order.id}</code>
-            </div>
-            <div>
-              <span className="meta">Status:</span> <b>{String(order.status).toUpperCase()}</b>
-            </div>
-            <p className="meta">
-              Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> → <code>ready</code> → <code>served</code>.
-            </p>
+      {/* —— Stage router —— */}
+      {stage === 'landing' && (
+        <section className="grid-2">
+          <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
+            <h2 style={{margin:0}}>First-Time Customer</h2>
+            <p className="meta">Create your account to earn SnapCoins</p>
+            <button className="btn" onClick={startNewFlow} style={{width:'100%'}}>New Customer</button>
           </div>
-        )}
-      </div>
+          <div className="card" style={{display:'grid',placeItems:'center',gap:12}}>
+            <h2 style={{margin:0}}>Returning Customer</h2>
+            <p className="meta">Use your loyalty to sign in</p>
+            <button className="btn" onClick={startReturningFlow} style={{width:'100%'}}>Returning Customer</button>
+          </div>
+        </section>
+      )}
 
-      <div className="card">
-        <h2 style={{ marginTop: 0 }}>Live Feed</h2>
-        <ul
-          style={{
-            display: 'grid',
-            gap: 6,
-            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-            fontSize: 12,
-          }}
-        >
-          {statusFeed.map((line, i) => (<li key={i}>{line}</li>))}
-          {!statusFeed.length && <li className="meta">No updates yet.</li>}
-        </ul>
-      </div>
-    </section>
-  </>
-)}
+      {stage === 'new' && (
+        <section className="grid-2">
+          {/* Left: phone/QR */}
+          <div className="card" style={{display:'grid',gap:10,justifyItems:'center',textAlign:'center'}}>
+            <h2 style={{margin:0}}>Set up on your phone</h2>
+            <img src={QR_SRC} alt="Scan to sign up" style={{width:240,height:240, borderRadius:12, border:'1px solid var(--sb-border)'}}/>
+            <a className="btn" href={SIGNUP_URL} target="_blank" rel="noreferrer">Open Signup Link</a>
+            <span className="meta">Scan the QR or tap the link</span>
+            <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+          </div>
 
+          {/* Right: on-kiosk (Netflix-style) */}
+          <div className="card" style={{display:'grid',gap:10}}>
+            <h2 style={{margin:0}}>Set up on this kiosk</h2>
+            <label className="kv">
+              <span>Email</span>
+              <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
+            </label>
+            <label className="kv">
+              <span>Phone (optional)</span>
+              <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
+            </label>
+            <button className="btn" onClick={confirmNewOnKiosk}>Create & Continue</button>
+            <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+            <span className="meta">Demo only — no password needed here</span>
+          </div>
+        </section>
+      )}
 
-        <div className="card">
-          <h2 style={{ marginTop: 0 }}>Live Feed</h2>
-          <ul
-            style={{
-              display: 'grid',
-              gap: 6,
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-              fontSize: 12,
-            }}
-          >
-            {statusFeed.map((line, i) => (
-              <li key={i}>{line}</li>
-            ))}
-            {!statusFeed.length && <li className="meta">No updates yet.</li>}
-          </ul>
-        </div>
+      {stage === 'returning' && (
+        <section className="grid-2">
+          <div className="card" style={{display:'grid',gap:10}}>
+            <h2 style={{margin:0}}>Scan Loyalty Card</h2>
+            <input className="input" placeholder="Enter card ID (stub)" value={loyaltyId} onChange={e=>setLoyaltyId(e.target.value)} />
+            <button className="btn" onClick={confirmReturningByCard}>Continue</button>
+            <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+            <span className="meta">Scanner stub for demo</span>
+          </div>
 
-          </>
-)}
-      </section>
+          <div className="card" style={{display:'grid',gap:10}}>
+            <h2 style={{margin:0}}>Sign in with Email or Phone</h2>
+            <label className="kv">
+              <span>Email</span>
+              <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
+            </label>
+            <button className="btn" onClick={confirmReturningByEmail}>Continue with Email</button>
+            <div style={{height:1, background:'var(--sb-border)', margin:'6px 0'}}/>
+            <label className="kv">
+              <span>Phone</span>
+              <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
+            </label>
+            <button className="btn" onClick={confirmReturningByPhone}>Continue with Phone</button>
+            <button className="btn-ghost" onClick={()=>setStage('landing')}>Back</button>
+          </div>
+        </section>
+      )}
+
+      {/* MENU + ORDER are shown only in stage 'menu' */}
+      {stage === 'menu' && (
+        <>
+          {/* MENU + CART */}
+          <section className="grid-2">
+            <div className="card">
+              <div className="space">
+                <h2 style={{ margin: 0 }}>Menu</h2>
+              </div>
+              {loading ? (
+                <div>Loading menu…</div>
+              ) : menu.length === 0 ? (
+                <div className="meta">No active items yet.</div>
+              ) : (
+                <ul className="menu">
+                  {menu.map((m) => (
+                    <li key={m.id} className="item">
+                      {m.image_url && (
+                        <div className="thumb">
+                          <img src={m.image_url} alt={m.name} />
+                        </div>
+                      )}
+                      <div className="title">{m.name}</div>
+                      <div className="meta" style={{ textTransform: 'capitalize' }}>
+                        {m.category}
+                      </div>
+                      <div className="price">{fmt(m.price_cents)}</div>
+                      <button
+                        className="btn"
+                        style={{ marginTop: 8 }}
+                        onClick={() => addToCart(m)}
+                      >
+                        Add
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="card">
+              <div className="space">
+                <h2 style={{ margin: 0 }}>Your Cart</h2>
+                <span className="badge">Subtotal {fmt(subtotal)}</span>
+              </div>
+              {!cart.length ? (
+                <div className="meta">No items yet.</div>
+              ) : (
+                <ul className="cart-list">
+                  {cart.map((c) => (
+                    <li key={c.item.id} className="cart-item">
+                      <div>
+                        <div style={{ fontWeight: 700 }}>{c.item.name}</div>
+                        <div className="meta">
+                          {fmt(c.item.price_cents)} × {c.qty}
+                        </div>
+                      </div>
+                      <div className="qty row">
+                        <button onClick={() => updateQty(c.item.id, -1)}>-</button>
+                        <button onClick={() => updateQty(c.item.id, +1)}>+</button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="row" style={{ gap: 12, marginTop: 10 }}>
+                <button className="btn" onClick={clearCart}>Clear</button>
+                <button className="btn" onClick={placeOrder} disabled={placing || !cart.length}>
+                  {placing ? 'Placing…' : 'Place Order'}
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* ORDER + FEED */}
+          <section className="grid-2">
+            <div className="card">
+              <h2 style={{ marginTop: 0 }}>Order</h2>
+              {!order ? (
+                <div className="meta">Place an order to see status updates.</div>
+              ) : (
+                <div className="kv">
+                  <div>
+                    <span className="meta">Order ID:</span> <code>{order.id}</code>
+                  </div>
+                  <div>
+                    <span className="meta">Status:</span> <b>{String(order.status).toUpperCase()}</b>
+                  </div>
+                  <p className="meta">
+                    Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> → <code>ready</code> → <code>served</code>.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="card">
+              <h2 style={{ marginTop: 0 }}>Live Feed</h2>
+              <ul
+                style={{
+                  display: 'grid',
+                  gap: 6,
+                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+                  fontSize: 12,
+                }}
+              >
+                {statusFeed.map((line, i) => (<li key={i}>{line}</li>))}
+                {!statusFeed.length && <li className="meta">No updates yet.</li>}
+              </ul>
+            </div>
+          </section>
+        </>
+      )}
 
       <div className="footer">SnapBurger: Where Dining Meets Technology</div>
     </div>
