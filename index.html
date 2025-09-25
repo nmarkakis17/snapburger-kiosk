@@ -117,6 +117,48 @@ body{
   .hero-stage{ grid-template-columns: 1fr }
   .brand-images{ justify-items: start }
 }
+
+  /* ——— STRONGER GRID + BUBBLES ——— */
+body{
+  background:
+    radial-gradient(circle at 0 0, rgba(255,255,255,0.12) 1px, transparent 1px) 0 0/24px 24px,
+    radial-gradient(circle at 12px 12px, rgba(255,255,255,0.07) 1px, transparent 1px) 0 0/24px 24px,
+    conic-gradient(from 180deg at 50% -10%, rgba(29,161,255,.45), transparent 40%),
+    conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.45), transparent 45%),
+    var(--sb-bg);
+}
+
+/* Make the hero “blobs” pop more */
+.hero::before{
+  background: radial-gradient(closest-side, rgba(29,161,255,.28), transparent 70%);
+  opacity: .9;
+}
+.hero::after{
+  background: radial-gradient(closest-side, rgba(255,122,24,.30), transparent 70%);
+  opacity: .95;
+}
+.hero{ min-height: 220px; }  /* gives space to see the glow */
+/* ——— WHITE CARDS ——— */
+.card{
+  background: #ffffff;
+  color: #0b1020;
+  border: 1px solid rgba(10,15,30,.10);
+  box-shadow: 0 12px 28px rgba(0,0,0,.18);
+}
+
+/* Menu tiles also white */
+.menu .item{
+  background: #ffffff;
+  border: 1px solid rgba(10,15,30,.10);
+}
+
+/* Fine-tune small text on light */
+.menu .meta, .kv label, .footer, .meta{
+  color: #51607a;
+}
+<img src="/assets/logo.png" alt="SnapBurger logo" />
+<img src="/assets/theo.png"  alt="Theo mascot" />
+
 </style>
   </head>
   <body>
