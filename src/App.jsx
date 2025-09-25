@@ -137,12 +137,10 @@ export default function App() {
 <header className="hero" style={{ background:'transparent', border:'1px solid var(--sb-border)', borderRadius:28, padding:'36px 24px', boxShadow:'var(--shadow)' }}>
   <div style={{ position:'relative', zIndex:1, display:'grid', placeItems:'center', gap:10, textAlign:'center' }}>
     <img src="/assets/theo.png" alt="Theo mascot" style={{ height:88, width:'auto', objectFit:'contain' }} />
-    <h1 style={{ margin:0, fontSize:'clamp(22px,4vw,36px)', fontWeight:800, color:'#fff' }}>
-      Order with Theo + Earn SnapCoins + Light Up the SnapBoard
-    </h1>
-    <h2 style={{ margin:0, fontSize:'clamp(18px,3vw,28px)', fontWeight:800, color:'var(--sb-accent-2)' }}>
-      Theo-Kiosk
-    </h2>
+<h1 className="hero-title">
+  Order with Theo + Earn SnapCoins + Light Up the SnapBoard
+</h1>
+<h2 className="hero-sub">= Theo-Kiosk</h2>
   </div>
 </header>
 
@@ -260,7 +258,7 @@ export default function App() {
         </div>
       </section>
 
-      <div className="footer">SnapBurger · Theo Kiosk · React + Supabase</div>
+      <div className="footer">SnapBurger: Where Dining Meets Technology</div>
     </div>
   )
 }
