@@ -1,0 +1,102 @@
+:root{
+  --sb-bg: #0b1020;
+  --sb-panel: #11172b;
+  --sb-panel-2: #121a33;
+  --sb-text: #eef2ff;
+  --sb-subtext: #b8c2ff;
+  --sb-accent: #ff7a18;
+  --sb-accent-2: #00d4ff;
+  --sb-border: #1f2a44;
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+/* --- Animated tech background --- */
+html,body,#root{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+  color: var(--sb-text);
+  background:
+    /* subtle grid */
+    radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 1px, transparent 1px) 0 0/24px 24px,
+    radial-gradient(circle at 12px 12px, rgba(255,255,255,0.03) 1px, transparent 1px) 0 0/24px 24px,
+    /* animated conic glow */
+    conic-gradient(from 180deg at 50% -10%, rgba(0,212,255,.18), transparent 40%),
+    conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.16), transparent 45%),
+    var(--sb-bg);
+  overflow-x: hidden;
+}
+@keyframes floaty { 0%{ transform: translateY(0) } 50%{ transform: translateY(-10px) } 100%{ transform: translateY(0) } }
+@keyframes drift  { 0%{ transform: translateX(0) } 50%{ transform: translateX(12px) } 100%{ transform: translateX(0) } }
+
+/* container, cards, etc… keep your existing styles */
+
+/* --- Hero header & image layout --- */
+.hero{
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(0,212,255,.20), rgba(255,122,24,.20));
+  border: 1px solid var(--sb-border);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+.hero h1{ margin:0; font-size: 34px }
+.hero p{ margin:8px 0 0; color: var(--sb-subtext) }
+
+.hero-stage{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 14px;
+  align-items: center;
+}
+
+/* floating decorative blobs */
+.hero::before, .hero::after{
+  content:"";
+  position:absolute; inset:auto auto -50% -50%;
+  width: 60vmax; height: 60vmax;
+  background: radial-gradient(closest-side, rgba(0,212,255,.14), transparent 70%);
+  filter: blur(40px);
+  opacity:.7; pointer-events:none; z-index:0;
+  animation: drift 10s ease-in-out infinite;
+}
+.hero::after{
+  inset: -40% -40% auto auto;
+  background: radial-gradient(closest-side, rgba(255,122,24,.14), transparent 70%);
+  animation: floaty 11s ease-in-out infinite;
+}
+
+/* image chips */
+.brand-images{
+  position: relative;
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+.brand-chip{
+  background: var(--sb-panel);
+  border: 1px solid var(--sb-border);
+  border-radius: 18px;
+  padding: 10px 12px;
+  box-shadow: var(--shadow);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-chip img{ display:block; height: 54px; width: auto }
+.brand-chip.small img{ height: 44px }
+.brand-chip.badge{
+  position:absolute; left:-10px; top:-10px;
+  background: #0c1326; color: var(--sb-subtext);
+  border: 1px solid var(--sb-border);
+  font-size: 12px; padding: 6px 10px; border-radius: 999px;
+}
+
+/* make it stack on mobile */
+@media (max-width: 900px){
+  .hero-stage{ grid-template-columns: 1fr; }
+  .brand-images{ justify-items: start; }
+}
