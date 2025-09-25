@@ -168,7 +168,97 @@
   text-shadow: 0 0 8px rgba(29,161,255,.7), 0 0 16px rgba(29,161,255,.4);
   animation: glow-pulse 3.5s ease-in-out infinite;
 }
+/* ===== Neon Totem (landing screen) ===== */
+.totem {
+  --neo-border: #ffb258;          /* warm neon edge */
+  --neo-inner:  #16b2d8;          /* cyan glow */
+  --panel-bg:   #0a1b24;          /* deep teal */
+  --panel-mid:  #0e2531;          /* mid teal */
+  position: relative;
+  border-radius: 28px;
+  padding: 22px;
+  background:
+    linear-gradient(180deg, rgba(255,178,88,.25), transparent 14%),
+    linear-gradient(180deg, rgba(22,178,216,.15), transparent 40%),
+    var(--panel-bg);
+  box-shadow:
+    0 0 0 4px rgba(255,178,88,.3) inset,
+    0 0 0 1px rgba(255,178,88,.65),
+    0 18px 40px rgba(0,0,0,.55),
+    0 0 36px rgba(22,178,216,.35);
+  border: 2px solid var(--neo-border);
+}
 
+.totem-inner {
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(22,178,216,.10), transparent 35%),
+    var(--panel-mid);
+  border: 1px solid rgba(255,178,88,.45);
+  padding: 18px;
+  box-shadow:
+    inset 0 0 0 1px rgba(22,178,216,.25),
+    inset 0 0 22px rgba(22,178,216,.18);
+  display: grid; gap: 16px;
+}
+
+.totem .crest {
+  display:flex; align-items:center; gap:10px;
+  color:#ffd59a; font-weight:900; letter-spacing:.5px;
+  text-shadow: 0 0 10px rgba(255,178,88,.6);
+}
+.totem .crest img { height:42px; width:auto; object-fit:contain }
+
+.totem .title {
+  color:#f7f8fb; font-size: 20px; font-weight:800;
+  text-shadow: 0 0 10px rgba(22,178,216,.35);
+  margin: 2px 0 6px;
+}
+
+.totem .cta {
+  background: linear-gradient(180deg, rgba(22,178,216,.25), rgba(22,178,216,.10));
+  border: 2px solid rgba(255,178,88,.75);
+  color:#f0fbff; font-weight:900; font-size:18px;
+  padding:16px 14px; border-radius:16px; text-align:center; cursor:pointer;
+  box-shadow:
+    inset 0 0 0 1px rgba(22,178,216,.35),
+    0 8px 22px rgba(0,0,0,.35),
+    0 0 20px rgba(255,178,88,.35);
+  transition: transform .08s ease, box-shadow .12s ease;
+}
+.totem .cta:hover { transform: translateY(-1px); }
+.totem .cta:active{ transform: translateY(0); }
+
+.totem .sub { color:#a9d7e6; font-size:14px; text-align:center; margin-top:-6px }
+
+.totem .divider {
+  height:1px; background:
+    linear-gradient(90deg, transparent, rgba(255,178,88,.6), transparent);
+  margin: 4px 0;
+}
+
+.totem .welcome { 
+  color:#f4f7ff; font-size: 26px; font-weight:900; text-align:center;
+  text-shadow: 0 0 12px rgba(22,178,216,.35);
+  margin: 6px 0;
+}
+
+.totem .theo-big {
+  display:block; margin: 2px auto 0; height: 90px; width:auto; object-fit:contain;
+  filter: drop-shadow(0 0 18px rgba(22,178,216,.35));
+}
+
+.totem .tagline {
+  color:#c9f1ff; text-align:center; font-size:15px; font-weight:700;
+  text-shadow: 0 0 10px rgba(22,178,216,.25);
+}
+
+/* make landing row a single centered column on wide screens */
+.landing-wrap{
+  display:grid; grid-template-columns: 1fr; justify-items:center;
+}
+.landing-col{ width:min(480px, 92%); }
+      
     </style>
   </head>
 
