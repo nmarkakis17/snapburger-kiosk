@@ -35,9 +35,7 @@ export default function App(){
     if(i>=0){ const copy=[...prev]; copy[i]={...copy[i], qty: copy[i].qty+1}; return copy }
     return [...prev, { item, qty:1 }]
   })
-  const updateQty = (id, delta)=> setCart(prev=> prev
-    .map(c=> c.item.id===id?{...c, qty: Math.max(0,c.qty+delta)}:c)
-    .filter(c=>c.qty>0))
+  const updateQty = (id, delta)=> setCart(prev=> prev.map(c=> c.item.id===id?{...c, qty: Math.max(0,c.qty+delta)}:c).filter(c=>c.qty>0))
   const clearCart = ()=> setCart([])
 
   const subscribeOrder = (orderId)=>{
@@ -86,6 +84,8 @@ export default function App(){
               <span className="badge">Supabase</span>
             </div>
           </div>
+
+          {/* IMAGE CHIPS (right side) */}
           <div className="brand-images" style={{zIndex:1}}>
             <span className="brand-chip badge">Powered by Theo</span>
             <span className="brand-chip small">
@@ -150,7 +150,7 @@ export default function App(){
                 <li key={c.item.id} className="cart-item">
                   <div>
                     <div style={{fontWeight:700}}>{c.item.name}</div>
-                    <div className="meta">{fmt(m.price_cents)} × {c.qty}</div>
+                    <div className="meta">{fmt(c.item.price_cents)} × {c.qty}</div>
                   </div>
                   <div className="qty row">
                     <button onClick={()=>updateQty(c.item.id,-1)}>-</button>
@@ -171,15 +171,15 @@ export default function App(){
       <section className="grid-2">
         <div className="card">
           <h2 style={{marginTop:0}}>Order</h2>
-          {!order ? (
-            <div style={{color:'var(--sb-subtext)'}}>Place an order to see status updates.</div>
-          ) : (
-            <div className="kv">
-              <div><span className="meta">Order ID:</span> <code>{order.id}</code></div>
-              <div><span className="meta">Status:</span> <b>{String(order.status).toUpperCase()}</b></div>
-              <p className="meta">Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> → <code>ready</code> → <code>served</code>.</p>
-            </div>
-          )}
+        {!order ? (
+          <div style={{color:'var(--sb-subtext)'}}>Place an order to see status updates.</div>
+        ) : (
+          <div className="kv">
+            <div><span className="meta">Order ID:</span> <code>{order.id}</code></div>
+            <div><span className="meta">Status:</span> <b>{String(order.status).toUpperCase()}</b></div>
+            <p className="meta">Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> → <code>ready</code> → <code>served</code>.</p>
+          </div>
+        )}
         </div>
 
         <div className="card">
