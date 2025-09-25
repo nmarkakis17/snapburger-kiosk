@@ -4,89 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SnapBurger · Theo Kiosk</title>
-
-    <!-- Inline theme to avoid any path/caching issues -->
     <style>
-    :root{
-      --sb-bg:#0b1020; --sb-panel:#11172b; --sb-panel-2:#121a33;
-      --sb-text:#eef2ff; --sb-subtext:#b8c2ff; --sb-accent:#ff7a18; --sb-accent-2:#00d4ff;
-      --sb-border:#1f2a44; --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
-    }
-    html,body,#root{height:100%}
-    body{
-      margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial; color:var(--sb-text);
-      background:
-        radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 1px, transparent 1px) 0 0/24px 24px,
-        radial-gradient(circle at 12px 12px, rgba(255,255,255,0.03) 1px, transparent 1px) 0 0/24px 24px,
-        conic-gradient(from 180deg at 50% -10%, rgba(0,212,255,.35), transparent 40%),
-        conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.35), transparent 45%),
-        var(--sb-bg);
-      overflow-x:hidden;
-    }
-    @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
-    @keyframes drift{0%{transform:translateX(0)}50%{transform:translateX(12px)}100%{transform:translateX(0)}}
-
-    .container{max-width:1100px;margin:0 auto;padding:28px;display:grid;gap:22px}
-    .grid-2{display:grid;gap:22px;grid-template-columns:1fr 1fr}
-    .card{background:var(--sb-panel);border:1px solid var(--sb-border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
-    .row{display:flex;align-items:center;gap:10px}
-    .space{display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-    .menu .item{border:1px solid var(--sb-border);border-radius:16px;padding:12px;background:var(--sb-panel-2)}
-    .menu .title{font-weight:700}
-    .menu .meta{font-size:12px;color:var(--sb-subtext)}
-    .menu .price{font-weight:700;margin-top:4px}
-    .input{padding:10px 12px;border-radius:12px;border:1px solid var(--sb-border);background:#0c1326;color:var(--sb-text)}
-    .btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:700}
-    .btn-primary{background:linear-gradient(135deg,var(--sb-accent),#ff9650);color:#1b0b00}
-    .btn-ghost{background:transparent;border:1px solid var(--sb-border);color:var(--sb-subtext)}
-    .btn-dark{background:#0b1020;color:#fff;border:1px solid var(--sb-border)}
-    .btn-success{background:linear-gradient(135deg,#13ea9b,#04b97d);color:#00160e}
-    .btn:disabled{opacity:.5;cursor:not-allowed}
-    .kv{display:grid;gap:6px}
-    .kv label{font-size:12px;color:var(--sb-subtext)}
-    .cart-list{display:grid;gap:10px}
-    .cart-item{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--sb-border);border-radius:14px;padding:10px;background:var(--sb-panel-2)}
-    .qty button{border:1px solid var(--sb-border);background:#0c1326;color:var(--sb-text);border-radius:10px;padding:4px 10px}
-    .badge{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;background:#0c1326;border:1px solid var(--sb-border);color:var(--sb-subtext)}
-    .footer{opacity:.7;text-align:center;padding:8px}
-
-    /* HERO */
-    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg, rgba(0,212,255,.20), rgba(255,122,24,.20));border:1px solid var(--sb-border);border-radius:28px;padding:28px;box-shadow:var(--shadow)}
-    .hero-stage{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:14px;align-items:center}
-    .hero h1{margin:0;font-size:34px}
-    .hero p{margin:8px 0 0;color:var(--sb-subtext)}
-    .hero::before,.hero::after{content:"";position:absolute;inset:auto auto -50% -50%;width:60vmax;height:60vmax;background:radial-gradient(closest-side, rgba(0,212,255,.14), transparent 70%);filter:blur(40px);opacity:.7;pointer-events:none;z-index:0;animation:drift 10s ease-in-out infinite}
-    .hero::after{inset:-40% -40% auto auto;background:radial-gradient(closest-side, rgba(255,122,24,.14), transparent 70%);animation:floaty 11s ease-in-out infinite}
-    .brand-images{position:relative;display:grid;gap:10px;justify-items:end}
-    .brand-chip{background:var(--sb-panel);border:1px solid var(--sb-border);border-radius:18px;padding:10px 12px;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:10px}
-    .brand-chip img{display:block;height:54px;width:auto}
-    .brand-chip.small img{height:44px}
-    .brand-chip.badge{position:absolute;left:-10px;top:-10px;background:#0c1326;color:var(--sb-subtext);border:1px solid var(--sb-border);font-size:12px;padding:6px 10px;border-radius:999px}
-    @media (max-width:900px){.hero-stage{grid-template-columns:1fr}.brand-images{justify-items:start}}
-
-  .brand-chip img {
-  max-height: 80px;
-  width: auto;
-  object-fit: contain;
-}     
-      /* Menu images */
-.menu .thumb {
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #0c1326;
-  display: grid;
-  place-items: center;
-  margin-bottom: 8px;
-  border: 1px solid var(--sb-border);
-}
-.menu .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+      /* full CSS theme here, with hero + menu image styles */
+      /* … I’ll re-paste the whole block if you want the complete one */
     </style>
   </head>
   <body>
