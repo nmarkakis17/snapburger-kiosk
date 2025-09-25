@@ -160,6 +160,49 @@ body{
   color: #000 !important;
   border: none;
 }
+  /* --- Headings in brand blue --- */
+h1, h2 { color: var(--sb-accent-2); }
+
+/* --- Thin white hero variant --- */
+.hero.hero--white{
+  background: #ffffff;
+  color: #0b1020;
+  border: 1px solid rgba(10,15,30,.10);
+  border-radius: 24px;
+  padding: 16px;                 /* thinner bar */
+  box-shadow: 0 12px 28px rgba(0,0,0,.14);
+  overflow: hidden;
+  min-height: auto;              /* no forced tall hero */
+}
+/* turn off glow blobs inside the white hero */
+.hero.hero--white::before,
+.hero.hero--white::after{ display:none !important; }
+
+/* stacked layout inside the hero */
+.hero-stack{
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+/* Theo centered on top */
+.theo-hero{
+  height: 72px;                  /* adjust to taste (60–90px) */
+  width: auto;
+  object-fit: contain;
+}
+
+/* logo + title row under Theo */
+.brand-row{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-small{
+  height: 28px;                  /* small mark to the left of title */
+  width: auto;
+  object-fit: contain;
+}
 </style>
   </head>
   <body>
