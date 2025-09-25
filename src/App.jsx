@@ -250,104 +250,120 @@ export default function App() {
   </section>
 )}
 
-      {stage === 'menu' && (
+      {/* —— Stage router already above here —— */}
+
+{stage === 'menu' && (
   <>
-
-      {/* MENU + CART */}
-      <section className="grid-2">
-        <div className="card">
-          <div className="space">
-            <h2 style={{ margin: 0 }}>Menu</h2>
-          </div>
-          {loading ? (
-            <div>Loading menu…</div>
-          ) : menu.length === 0 ? (
-            <div className="meta">No active items yet.</div>
-          ) : (
-            <ul className="menu">
-              {menu.map((m) => (
-                <li key={m.id} className="item">
-                  {m.image_url && (
-                    <div className="thumb">
-                      <img src={m.image_url} alt={m.name} />
-                    </div>
-                  )}
-                  <div className="title">{m.name}</div>
-                  <div className="meta" style={{ textTransform: 'capitalize' }}>
-                    {m.category}
-                  </div>
-                  <div className="price">{fmt(m.price_cents)}</div>
-                  <button
-                    className="btn"
-                    style={{ marginTop: 8 }}
-                    onClick={() => addToCart(m)}
-                  >
-                    Add
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+    {/* MENU + CART */}
+    <section className="grid-2">
+      <div className="card">
+        <div className="space">
+          <h2 style={{ margin: 0 }}>Menu</h2>
         </div>
+        {loading ? (
+          <div>Loading menu…</div>
+        ) : menu.length === 0 ? (
+          <div className="meta">No active items yet.</div>
+        ) : (
+          <ul className="menu">
+            {menu.map((m) => (
+              <li key={m.id} className="item">
+                {m.image_url && (
+                  <div className="thumb">
+                    <img src={m.image_url} alt={m.name} />
+                  </div>
+                )}
+                <div className="title">{m.name}</div>
+                <div className="meta" style={{ textTransform: 'capitalize' }}>
+                  {m.category}
+                </div>
+                <div className="price">{fmt(m.price_cents)}</div>
+                <button
+                  className="btn"
+                  style={{ marginTop: 8 }}
+                  onClick={() => addToCart(m)}
+                >
+                  Add
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-        <div className="card">
-          <div className="space">
-            <h2 style={{ margin: 0 }}>Your Cart</h2>
-            <span className="badge">Subtotal {fmt(subtotal)}</span>
-          </div>
-          {!cart.length ? (
-            <div className="meta">No items yet.</div>
-          ) : (
-            <ul className="cart-list">
-              {cart.map((c) => (
-                <li key={c.item.id} className="cart-item">
-                  <div>
-                    <div style={{ fontWeight: 700 }}>{c.item.name}</div>
-                    <div className="meta">
-                      {fmt(c.item.price_cents)} × {c.qty}
-                    </div>
-                  </div>
-                  <div className="qty row">
-                    <button onClick={() => updateQty(c.item.id, -1)}>-</button>
-                    <button onClick={() => updateQty(c.item.id, +1)}>+</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="row" style={{ gap: 12, marginTop: 10 }}>
-            <button className="btn" onClick={clearCart}>
-              Clear
-            </button>
-            <button className="btn" onClick={placeOrder} disabled={placing || !cart.length}>
-              {placing ? 'Placing…' : 'Place Order'}
-            </button>
-          </div>
+      <div className="card">
+        <div className="space">
+          <h2 style={{ margin: 0 }}>Your Cart</h2>
+          <span className="badge">Subtotal {fmt(subtotal)}</span>
         </div>
-      </section>
+        {!cart.length ? (
+          <div className="meta">No items yet.</div>
+        ) : (
+          <ul className="cart-list">
+            {cart.map((c) => (
+              <li key={c.item.id} className="cart-item">
+                <div>
+                  <div style={{ fontWeight: 700 }}>{c.item.name}</div>
+                  <div className="meta">
+                    {fmt(c.item.price_cents)} × {c.qty}
+                  </div>
+                </div>
+                <div className="qty row">
+                  <button onClick={() => updateQty(c.item.id, -1)}>-</button>
+                  <button onClick={() => updateQty(c.item.id, +1)}>+</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="row" style={{ gap: 12, marginTop: 10 }}>
+          <button className="btn" onClick={clearCart}>Clear</button>
+          <button className="btn" onClick={placeOrder} disabled={placing || !cart.length}>
+            {placing ? 'Placing…' : 'Place Order'}
+          </button>
+        </div>
+      </div>
+    </section>
 
-      {/* ORDER + FEED */}
-      <section className="grid-2">
-        <div className="card">
-          <h2 style={{ marginTop: 0 }}>Order</h2>
-          {!order ? (
-            <div className="meta">Place an order to see status updates.</div>
-          ) : (
-            <div className="kv">
-              <div>
-                <span className="meta">Order ID:</span> <code>{order.id}</code>
-              </div>
-              <div>
-                <span className="meta">Status:</span>{' '}
-                <b>{String(order.status).toUpperCase()}</b>
-              </div>
-              <p className="meta">
-                Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> →{' '}
-                <code>ready</code> → <code>served</code>.
-              </p>
+    {/* ORDER + FEED */}
+    <section className="grid-2">
+      <div className="card">
+        <h2 style={{ marginTop: 0 }}>Order</h2>
+        {!order ? (
+          <div className="meta">Place an order to see status updates.</div>
+        ) : (
+          <div className="kv">
+            <div>
+              <span className="meta">Order ID:</span> <code>{order.id}</code>
             </div>
-          )}
-        </div>
+            <div>
+              <span className="meta">Status:</span> <b>{String(order.status).toUpperCase()}</b>
+            </div>
+            <p className="meta">
+              Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> → <code>ready</code> → <code>served</code>.
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="card">
+        <h2 style={{ marginTop: 0 }}>Live Feed</h2>
+        <ul
+          style={{
+            display: 'grid',
+            gap: 6,
+            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+            fontSize: 12,
+          }}
+        >
+          {statusFeed.map((line, i) => (<li key={i}>{line}</li>))}
+          {!statusFeed.length && <li className="meta">No updates yet.</li>}
+        </ul>
+      </div>
+    </section>
+  </>
+)}
+
 
         <div className="card">
           <h2 style={{ marginTop: 0 }}>Live Feed</h2>
