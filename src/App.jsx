@@ -172,7 +172,7 @@ export default function App(){
       {/* MENU + CART */}
       <section className="grid-2">
         <div className="card">
-          <h2 style={{marginTop:0}}>Menu</h2>
+          <h2 style={{marginTop:0}}>Menu <span className="meta">({menu.length})</span></h2>
           {loading ? <div>Loading menu…</div> : (
             <ul className="menu">
               {menu.map(m=> (
