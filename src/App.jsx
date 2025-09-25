@@ -138,9 +138,9 @@ export default function App() {
   <div style={{ position:'relative', zIndex:1, display:'grid', placeItems:'center', gap:10, textAlign:'center' }}>
     <img src="/assets/theo.png" alt="Theo mascot" style={{ height:88, width:'auto', objectFit:'contain' }} />
 <h1 className="hero-title shimmer">
-  Order with Theo + Earn SnapCoins + Light Up the SnapBoard
+  Order with Theo + Earn SnapCoins + Light Up the SnapBoard 
+  <span className="glow"> = Theo-Kiosk</span>
 </h1>
-<h2 className="hero-sub glow">= Theo-Kiosk</h2>
   </div>
 </header>
 
