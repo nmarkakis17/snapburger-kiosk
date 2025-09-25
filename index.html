@@ -17,19 +17,12 @@
 /* Page background (techy grid + blue/orange glow) */
 html,body,#root{height:100%}
 body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
-  color: var(--sb-text);
   background:
-    /* subtle grid */
-    radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 1px, transparent 1px) 0 0/24px 24px,
-    radial-gradient(circle at 12px 12px, rgba(255,255,255,0.03) 1px, transparent 1px) 0 0/24px 24px,
-    /* stronger conic glows */
+    linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px) 0 0/24px 24px,
+    linear-gradient(180deg, rgba(255,255,255,0.08) 1px, transparent 1px) 0 0/24px 24px,
     conic-gradient(from 180deg at 50% -10%, rgba(29,161,255,.35), transparent 40%),
     conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.35), transparent 45%),
-    /* base */
     var(--sb-bg);
-  overflow-x:hidden;
 }
 @keyframes floaty { 0%{ transform: translateY(0) } 50%{ transform: translateY(-10px) } 100%{ transform: translateY(0) } }
 @keyframes drift  { 0%{ transform: translateX(0) } 50%{ transform: translateX(12px) } 100%{ transform: translateX(0) } }
@@ -159,6 +152,14 @@ body{
 <img src="/assets/logo.png" alt="SnapBurger logo" />
 <img src="/assets/theo.png"  alt="Theo mascot" />
 
+  h1, h2 {
+  color: var(--sb-accent-2); /* bright SnapBurger blue */
+}
+  .btn, .btn-primary, .btn-success, .btn-ghost {
+  background: linear-gradient(135deg,var(--sb-accent),#ff9650);
+  color: #000 !important;
+  border: none;
+}
 </style>
   </head>
   <body>
