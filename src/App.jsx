@@ -134,46 +134,13 @@ export default function App() {
   return (
     <div className="container">
       {/* HERO */}
-<header className="hero hero--white">
-  <div className="hero-stack">
-    {/* Theo centered on top */}
+<header className="hero">
+  <div className="hero-center">
     <img src="/assets/theo.png" alt="Theo mascot" className="theo-hero" />
-
-    {/* Logo left + brand title in blue */}
-    <div className="brand-row">
-      <img src="/assets/logo.png" alt="SnapBurger logo" className="logo-small" />
-      <h1>SnapBurger · Theo Kiosk</h1>
-    </div>
-
-    <p style={{margin:0, color:'var(--sb-subtext)'}}>
-      Order with Theo · Earn SnapCoins · Watch the SnapBoard light up
-    </p>
-
-    <div style={{marginTop:8, display:'flex', gap:10}}>
-      <span className="badge">MVP</span>
-      <span className="badge">Realtime</span>
-      <span className="badge">Supabase</span>
-    </div>
+    <h1 className="hero-title">Order with Theo + Earn SnapCoins + Light Up the SnapBoard</h1>
+    <h2 className="hero-sub">Theo-Kiosk</h2>
   </div>
 </header>
-
-
-      {/* EMAIL / ID */}
-      <section className="card space">
-        <div className="kv" style={{ flex: 1 }}>
-          <label>Identify (email)</label>
-          <input
-            className="input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="nick@example.com"
-          />
-          <small style={{ color: 'var(--sb-subtext)' }}>
-            Optional; ties orders to a user for loyalty.
-          </small>
-        </div>
-        <button className="btn">Use demo email</button>
-      </section>
 
       {/* MENU + CART */}
       <section className="grid-2">
