@@ -4,303 +4,118 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SnapBurger · Theo Kiosk</title>
-    
-<style>
-  <body>
-  <div class="global-haze" aria-hidden="true"></div>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
-:root{
-  --sb-bg:#0b1020; --sb-panel:#11172b; --sb-panel-2:#121a33;
-  --sb-text:#eef2ff; --sb-subtext:#b8c2ff;
-  --sb-accent:#ff7a18;         /* brand orange */
-  --sb-accent-2:#1da1ff;       /* electric blue */
-  --sb-border:#1f2a44; --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
-}
 
-/* Page background (techy grid + blue/orange glow) */
-html,body,#root{height:100%}
-body{
-  background:
-    linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px) 0 0/24px 24px,
-    linear-gradient(180deg, rgba(255,255,255,0.08) 1px, transparent 1px) 0 0/24px 24px,
-    conic-gradient(from 180deg at 50% -10%, rgba(29,161,255,.35), transparent 40%),
-    conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.35), transparent 45%),
-    var(--sb-bg);
-}
-@keyframes floaty { 0%{ transform: translateY(0) } 50%{ transform: translateY(-10px) } 100%{ transform: translateY(0) } }
-@keyframes drift  { 0%{ transform: translateX(0) } 50%{ transform: translateX(12px) } 100%{ transform: translateX(0) } }
+    <style>
+      /* ===== Design tokens ===== */
+      :root{
+        --sb-bg:#0b1020; --sb-panel:#11172b; --sb-panel-2:#121a33;
+        --sb-text:#eef2ff; --sb-subtext:#b8c2ff;
+        --sb-accent:#ff7a18;         /* brand orange */
+        --sb-accent-2:#1da1ff;       /* electric blue */
+        --sb-border:#1f2a44; --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
+      }
 
-/* Layout + cards */
-.container{max-width:1100px;margin:0 auto;padding:28px;display:grid;gap:22px}
-.grid-2{display:grid;gap:22px;grid-template-columns:1fr 1fr}
-.card{
-  background: var(--sb-panel);
-  border: 1px solid var(--sb-border);
-  border-radius: var(--radius);
-  padding:16px; box-shadow: var(--shadow);
-}
-.row{display:flex;align-items:center;gap:10px}
-.space{display:flex;justify-content:space-between;align-items:center;gap:10px}
+      html, body, #root { height: 100%; }
 
-/* Buttons, inputs, badges */
-.input{padding:10px 12px;border-radius:12px;border:1px solid var(--sb-border);background:#0c1326;color:var(--sb-text)}
-.btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:700}
-.btn-primary{background:linear-gradient(135deg,var(--sb-accent),#ff9650);color:#1b0b00}
-.btn-ghost{background:transparent;border:1px solid var(--sb-border);color:var(--sb-subtext)}
-.btn-dark{background:#0b1020;color:#fff;border:1px solid var(--sb-border)}
-.btn-success{background:linear-gradient(135deg,#1da1ff,#4ec4ff);color:#001225}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.badge{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;background:#0c1326;border:1px solid var(--sb-border);color:var(--sb-subtext)}
+      /* ===== Website haze (from your site App.jsx) ===== */
+      html { background:#0b1220; }
+      body, #root { background: transparent; }
 
-/* Menu grid */
-.menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.menu .item{border:1px solid var(--sb-border);border-radius:16px;padding:12px;background:var(--sb-panel-2)}
-.menu .title{font-weight:700}
-.menu .meta{font-size:12px;color:var(--sb-subtext)}
-.menu .price{font-weight:700;margin-top:4px}
+      /* Put haze on top of dark base, with faint grid lines */
+      .global-haze{
+        position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        background:
+          radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
+          radial-gradient(900px 600px at 95% 0%, rgba(14,165,233,.30), transparent 60%),
+          radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
+          radial-gradient(900px 600px at 0% 100%, rgba(251,146,60,.28), transparent 60%),
+          linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
+          #0b1220;
+        background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
+        filter: saturate(1.08);
+      }
+      .global-haze::after{
+        content:""; position:absolute; inset:0;
+        background:
+          linear-gradient(transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 100% 28px,
+          linear-gradient(90deg, transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 28px 100%;
+        mix-blend-mode: screen; opacity: .22;
+      }
 
-/* Menu images */
-.menu .thumb{
-  aspect-ratio: 4 / 3;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #0c1326;
-  display: grid;
-  place-items: center;
-  margin-bottom: 8px;
-  border: 1px solid var(--sb-border);
-}
-.menu .thumb img{width:100%;height:100%;object-fit:cover}
+      /* Ensure app content sits above haze */
+      .page, .container { position: relative; z-index: 1; }
 
-/* Cart list */
-.kv{display:grid;gap:6px}
-.kv label{font-size:12px;color:var(--sb-subtext)}
-.cart-list{display:grid;gap:10px}
-.cart-item{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--sb-border);border-radius:14px;padding:10px;background:var(--sb-panel-2)}
-.qty button{border:1px solid var(--sb-border);background:#0c1326;color:var(--sb-text);border-radius:10px;padding:4px 10px}
-.footer{opacity:.7;text-align:center;padding:8px}
+      /* ===== Layout + cards ===== */
+      .container{max-width:1100px;margin:0 auto;padding:28px;display:grid;gap:22px}
+      .grid-2{display:grid;gap:22px;grid-template-columns:1fr 1fr}
+      .card{
+        background:#ffffff;           /* white cards by request */
+        color:#0b1020;
+        border:1px solid rgba(10,15,30,.10);
+        border-radius:var(--radius);
+        padding:16px; box-shadow:0 12px 28px rgba(0,0,0,.18);
+      }
+      .row{display:flex;align-items:center;gap:10px}
+      .space{display:flex;justify-content:space-between;align-items:center;gap:10px}
 
-/* HERO block */
-.hero{
-  position: relative; overflow: hidden;
-  background: linear-gradient(135deg, rgba(29,161,255,.22), rgba(255,122,24,.22));
-  border: 1px solid var(--sb-border); border-radius: 28px; padding: 28px; box-shadow: var(--shadow)
-}
-.hero-stage{ position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; align-items: center }
-.hero h1{ margin:0; font-size: 34px }
-.hero p{ margin:8px 0 0; color: var(--sb-subtext) }
-.hero::before, .hero::after{
-  content:""; position:absolute; inset:auto auto -50% -50%;
-  width: 60vmax; height: 60vmax;
-  background: radial-gradient(closest-side, rgba(29,161,255,.18), transparent 70%);
-  filter: blur(40px); opacity:.7; pointer-events:none; z-index:0; animation: drift 10s ease-in-out infinite
-}
-.hero::after{
-  inset: -40% -40% auto auto;
-  background: radial-gradient(closest-side, rgba(255,122,24,.20), transparent 70%);
-  animation: floaty 11s ease-in-out infinite
-}
+      /* ===== Buttons / inputs / badges ===== */
+      .input{padding:10px 12px;border-radius:12px;border:1px solid var(--sb-border);background:#0c1326;color:var(--sb-text)}
+      .btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:700}
+      /* all pills orange with black text */
+      .btn, .btn-primary, .btn-success, .btn-ghost {
+        background: linear-gradient(135deg, var(--sb-accent), #ff9650);
+        color: #000 !important;
+        border: none;
+      }
+      .btn:disabled{opacity:.5;cursor:not-allowed}
+      .badge{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;background:#0c1326;border:1px solid var(--sb-border);color:var(--sb-subtext)}
 
-/* Right-side chip stack in hero (logo/Theo placeholders) */
-.brand-images{ position: relative; display: grid; gap: 10px; justify-items: end }
-.brand-chip{ background: var(--sb-panel); border: 1px solid var(--sb-border); border-radius: 18px; padding: 10px 12px; box-shadow: var(--shadow); display: inline-flex; align-items: center; gap: 10px }
-.brand-chip img{ display:block; height: 54px; width: auto; object-fit: contain }
-.brand-chip.small img{ height: 44px }
-.brand-chip.badge{ position:absolute; left:-10px; top:-10px; background: #0c1326; color: var(--sb-subtext); border: 1px solid var(--sb-border); font-size: 12px; padding: 6px 10px; border-radius: 999px }
+      /* ===== Headings: brand blue ===== */
+      h1, h2 { color: var(--sb-accent-2); }
 
-/* Responsive */
-@media (max-width: 900px){
-  .hero-stage{ grid-template-columns: 1fr }
-  .brand-images{ justify-items: start }
-}
+      /* ===== Menu grid ===== */
+      .menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+      .menu .item{border:1px solid rgba(10,15,30,.10);border-radius:16px;padding:12px;background:#ffffff}
+      .menu .title{font-weight:700}
+      .menu .meta{font-size:12px;color:#51607a}
+      .menu .price{font-weight:700;margin-top:4px}
+      .menu .thumb{aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#0c1326;display:grid;place-items:center;margin-bottom:8px;border:1px solid var(--sb-border)}
+      .menu .thumb img{width:100%;height:100%;object-fit:cover}
 
-  /* ——— STRONGER GRID + BUBBLES ——— */
-body{
-  background:
-    radial-gradient(circle at 0 0, rgba(255,255,255,0.12) 1px, transparent 1px) 0 0/24px 24px,
-    radial-gradient(circle at 12px 12px, rgba(255,255,255,0.07) 1px, transparent 1px) 0 0/24px 24px,
-    conic-gradient(from 180deg at 50% -10%, rgba(29,161,255,.45), transparent 40%),
-    conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.45), transparent 45%),
-    var(--sb-bg);
-}
+      /* ===== Cart list ===== */
+      .kv{display:grid;gap:6px}
+      .kv label{font-size:12px;color:#51607a}
+      .cart-list{display:grid;gap:10px}
+      .cart-item{display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(10,15,30,.10);border-radius:14px;padding:10px;background:#ffffff}
+      .qty button{border:1px solid var(--sb-border);background:#0c1326;color:#fff;border-radius:10px;padding:4px 10px}
+      .footer{opacity:.7;text-align:center;padding:8px}
 
-/* Make the hero “blobs” pop more */
-.hero::before{
-  background: radial-gradient(closest-side, rgba(29,161,255,.28), transparent 70%);
-  opacity: .9;
-}
-.hero::after{
-  background: radial-gradient(closest-side, rgba(255,122,24,.30), transparent 70%);
-  opacity: .95;
-}
-.hero{ min-height: 220px; }  /* gives space to see the glow */
-/* ——— WHITE CARDS ——— */
-.card{
-  background: #ffffff;
-  color: #0b1020;
-  border: 1px solid rgba(10,15,30,.10);
-  box-shadow: 0 12px 28px rgba(0,0,0,.18);
-}
+      /* ===== Transparent hero w/ bubbles (matches site vibe) ===== */
+      .hero{
+        position:relative; overflow:hidden;
+        background:transparent;
+        border:1px solid var(--sb-border);
+        border-radius:28px;
+        padding:36px 24px;
+        box-shadow:var(--shadow);
+      }
+      .hero::before, .hero::after{
+        content:""; position:absolute; width:65vmax; height:65vmax;
+        filter:blur(40px); pointer-events:none; z-index:0; opacity:.95;
+      }
+      .hero::before{ left:-40%; bottom:-45%; background:radial-gradient(closest-side, rgba(29,161,255,.35), transparent 70%); }
+      .hero::after{  right:-40%; top:-45%;   background:radial-gradient(closest-side, rgba(255,122,24,.35), transparent 70%); }
 
-/* Menu tiles also white */
-.menu .item{
-  background: #ffffff;
-  border: 1px solid rgba(10,15,30,.10);
-}
-
-/* Fine-tune small text on light */
-.menu .meta, .kv label, .footer, .meta{
-  color: #51607a;
-}
-<img src="/assets/logo.png" alt="SnapBurger logo" />
-<img src="/assets/theo.png"  alt="Theo mascot" />
-
-  h1, h2 {
-  color: var(--sb-accent-2); /* bright SnapBurger blue */
-}
-  .btn, .btn-primary, .btn-success, .btn-ghost {
-  background: linear-gradient(135deg,var(--sb-accent),#ff9650);
-  color: #000 !important;
-  border: none;
-}
-  /* --- Headings in brand blue --- */
-h1, h2 { color: var(--sb-accent-2); }
-
-/* --- Thin white hero variant --- */
-.hero.hero--white{
-  background: #ffffff;
-  color: #0b1020;
-  border: 1px solid rgba(10,15,30,.10);
-  border-radius: 24px;
-  padding: 16px;                 /* thinner bar */
-  box-shadow: 0 12px 28px rgba(0,0,0,.14);
-  overflow: hidden;
-  min-height: auto;              /* no forced tall hero */
-}
-/* turn off glow blobs inside the white hero */
-.hero.hero--white::before,
-.hero.hero--white::after{ display:none !important; }
-
-/* stacked layout inside the hero */
-.hero-stack{
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-}
-
-/* Theo centered on top */
-.theo-hero{
-  height: 72px;                  /* adjust to taste (60–90px) */
-  width: auto;
-  object-fit: contain;
-}
-
-/* logo + title row under Theo */
-.brand-row{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-.logo-small{
-  height: 28px;                  /* small mark to the left of title */
-  width: auto;
-  object-fit: contain;
-}
-  /* === Website-like tech grid + glow === */
-body{
-  background-image:
-    /* square grid */
-    linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(255,255,255,0.10) 1px, transparent 1px),
-    /* blue/orange conic glows */
-    conic-gradient(from 180deg at 50% -10%, rgba(29,161,255,.45), transparent 40%),
-    conic-gradient(from 0deg at 120% 0%, rgba(255,122,24,.45), transparent 45%),
-    var(--sb-bg) !important;
-  background-size: 24px 24px, 24px 24px, auto, auto, auto !important;
-  background-position: 0 0, 0 0, center, center, center !important;
-}
-
-/* === Transparent hero with floating bubbles, centered content === */
-.hero{
-  position: relative; 
-  border: 1px solid var(--sb-border);
-  border-radius: 28px;
-  padding: 36px 24px;             /* comfy height like website */
-  background: transparent;        /* no white box */
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-.hero::before,
-.hero::after{
-  content:"";
-  position:absolute;
-  width: 65vmax; height: 65vmax;
-  filter: blur(40px);
-  pointer-events:none;
-  z-index:0;
-  opacity:.95;
-}
-.hero::before{ left:-40%; bottom:-45%; background: radial-gradient(closest-side, rgba(29,161,255,.35), transparent 70%); }
-.hero::after{  right:-40%; top:-45%;   background: radial-gradient(closest-side, rgba(255,122,24,.35), transparent 70%); }
-
-/* Center stack */
-.hero-center{
-  position: relative; z-index: 1;          /* above the bubbles */
-  display: grid; place-items: center;
-  gap: 10px; text-align: center;
-}
-
-/* Theo image */
-.theo-hero{ height: 88px; width: auto; object-fit: contain; }
-
-/* Headline styles */
-.hero-title{ 
-  margin: 0;
-  font-size: clamp(22px, 4vw, 36px);
-  font-weight: 800;
-  color: #fff;                         /* big white line */
-}
-.hero-sub{
-  margin: 0;
-  font-size: clamp(18px, 3vw, 28px);
-  font-weight: 800;
-  color: var(--sb-accent-2);           /* brand blue: “Theo-Kiosk” */
-}
-/* === match website background === */
-html { background:#0b1220; }
-body, #root { background: transparent !important; }
-/* kill old kiosk body background so it doesn't fight the haze */
-body { background-image: none !important; }
-
-/* Website-like blue→orange haze layer + grid lines */
-.global-haze{
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
-    radial-gradient(900px 600px at 95% 0%, rgba(14,165,233,.30), transparent 60%),
-    radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
-    radial-gradient(900px 600px at 0% 100%, rgba(251,146,60,.28), transparent 60%),
-    linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
-    #0b1220;
-  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
-  filter: saturate(1.08);
-}
-.global-haze::after{
-  content:""; position:absolute; inset:0;
-  background:
-    linear-gradient(transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 100% 28px,
-    linear-gradient(90deg, transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 28px 100%;
-  mix-blend-mode: screen; opacity: .22;
-}
-
-/* all your app content should render above the haze */
-.page, .container { position: relative; z-index: 1; }
-
-</style>
+      .theo-hero{ height:88px; width:auto; object-fit:contain }
+      .hero-title{ margin:0; font-size:clamp(22px,4vw,36px); font-weight:800; color:#fff }   /* big white line */
+      .hero-sub{   margin:0; font-size:clamp(18px,3vw,28px); font-weight:800 }               /* h2 will be blue via global rule */
+    </style>
   </head>
+
   <body>
+    <!-- Haze must be before #root so it sits behind app content -->
+    <div class="global-haze" aria-hidden="true"></div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
