@@ -90,6 +90,21 @@ export default function App(){
             <span className="brand-chip badge">Powered by Theo</span>
             <span className="brand-chip small">
               <img src="/assets/logo.png" alt="SnapBurger logo" />
+              
+              <li key={m.id} className="item">
+  {m.image_url && (
+    <div className="thumb">
+      <img src={m.image_url} alt={m.name} />
+    </div>
+  )}
+  <div className="title">{m.name}</div>
+  <div className="meta" style={{ textTransform: 'capitalize' }}>{m.category}</div>
+  <div className="price">{fmt(m.price_cents)}</div>
+  <button className="btn btn-primary" style={{ marginTop: 8 }} onClick={() => addToCart(m)}>
+    Add
+  </button>
+</li>
+
               <b>SnapBurger</b>
             </span>
             <span className="brand-chip">
@@ -101,12 +116,42 @@ export default function App(){
             <span className="brand-chip">
               <img src="/assets/burger.png" alt="Signature burger" />
               <div style={{display:'grid', lineHeight:1.1}}>
+
+                <li key={m.id} className="item">
+  {m.image_url && (
+    <div className="thumb">
+      <img src={m.image_url} alt={m.name} />
+    </div>
+  )}
+  <div className="title">{m.name}</div>
+  <div className="meta" style={{ textTransform: 'capitalize' }}>{m.category}</div>
+  <div className="price">{fmt(m.price_cents)}</div>
+  <button className="btn btn-primary" style={{ marginTop: 8 }} onClick={() => addToCart(m)}>
+    Add
+  </button>
+</li>
+
                 <b>Byte Burger</b><small style={{color:'var(--sb-subtext)'}}>fan favorite</small>
               </div>
             </span>
             <span className="brand-chip small">
               <img src="/assets/fries.png" alt="Crispy fries" />
               <div style={{display:'grid', lineHeight:1.1}}>
+
+                <li key={m.id} className="item">
+  {m.image_url && (
+    <div className="thumb">
+      <img src={m.image_url} alt={m.name} />
+    </div>
+  )}
+  <div className="title">{m.name}</div>
+  <div className="meta" style={{ textTransform: 'capitalize' }}>{m.category}</div>
+  <div className="price">{fmt(m.price_cents)}</div>
+  <button className="btn btn-primary" style={{ marginTop: 8 }} onClick={() => addToCart(m)}>
+    Add
+  </button>
+</li>
+
                 <b>Fries</b><small style={{color:'var(--sb-subtext)'}}>+100 SnapCoins</small>
               </div>
             </span>
