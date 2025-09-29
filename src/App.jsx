@@ -186,14 +186,26 @@ export default function App() {
 
       {/* —— Stage router —— */}
 {stage === 'landing' && (
-  <section className="landing-wrap">
-    <div className="landing-col totem">
-      <div className="totem-inner">
-        {/* Crest row: logo + SNAPBURGER */}
-        <div className="crest">
-          <img src="/assets/logo.png" alt="SnapBurger logo" />
-          <div>SNAPBURGER</div>
-        </div>
+  <section className="tower-wrap">
+    <div className="tower">
+      <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
+
+      <div className="tower-overlay">
+        <button className="btn-neon btn-first" onClick={startNewFlow}>
+          First-Time Customer
+        </button>
+
+        <button className="btn-neon btn-return" onClick={startReturningFlow}>
+          Returning Customer
+        </button>
+
+        {/* Covers the old printed text and shows the new tagline */}
+        <div className="tagline-box">Where Dining Meets Technology</div>
+      </div>
+    </div>
+  </section>
+)}
+
 
         {/* First-time */}
         <div className="divider"></div>
