@@ -174,7 +174,7 @@ export default function App() {
   // ===== Render =====
   return (
     <div className="page container">
-      {/* HERO */}
+      {/* HERO 
       <header className="hero" style={{background:'transparent',border:'1px solid var(--sb-border)',borderRadius:28,padding:'36px 24px',boxShadow:'var(--shadow)'}}>
         <div style={{position:'relative',zIndex:1,display:'grid',placeItems:'center',gap:10,textAlign:'center'}}>
           <img src="/assets/theo.png" alt="Theo mascot" style={{ height:88, width:'auto', objectFit:'contain' }} />
@@ -182,7 +182,7 @@ export default function App() {
             Order with Theo + Earn SnapCoins + Light Up the SnapBoard <span className="glow"> = Theo-Kiosk</span>
           </h1>
         </div>
-      </header>
+      </header>*/}
 
       {/* —— Stage router —— */}
 {stage === 'landing' && (
