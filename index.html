@@ -465,13 +465,14 @@ body, #root { background: transparent; }
 }
 
 /* Square grid lines over the glows */
-       .global-haze::after{
-          content:""; position:absolute; inset:0;
-          background:
-            linear-gradient(transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 100% 28px,
-            linear-gradient(90deg, transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 28px 100%;
-          mix-blend-mode: screen; opacity: .22;
-        }
+.global-haze::after {
+  content:""; position:absolute; inset:0;
+  background:
+    linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.15) 0) 0 0/ 100% 28px,
+    linear-gradient(90deg, transparent calc(100% - 1px), rgba(255,255,255,.15) 0) 0 0/ 28px 100%;
+  mix-blend-mode: screen; 
+  opacity: .65;     /* was .22 → doubled */
+}
 
 /* Optional: slow drifting motion for the glows (subtle) */
 @keyframes driftA { 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(18px,-10px,0)} 100%{transform:translate3d(0,0,0)} }
@@ -599,13 +600,51 @@ body, #root { background: transparent; }
   0%   { transform: translateX(0) }
   100% { transform: translateX(16px) }
 }
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  animation: float 40s ease-in-out infinite;
+}
 
+.orb-blue {
+  width: 400px; height: 400px;
+  background: rgba(14,165,233,.35);
+  top: 10%; left: 5%;
+  animation-delay: 0s;
+}
+
+.orb-orange {
+  width: 300px; height: 300px;
+  background: rgba(249,115,22,.35);
+  bottom: 15%; right: 10%;
+  animation-delay: 10s;
+}
+
+.orb-cyan {
+  width: 500px; height: 500px;
+  background: rgba(6,182,212,.25);
+  top: 40%; left: 60%;
+  animation-delay: 20s;
+}
+
+@keyframes float {
+  0%   { transform: translateY(0) translateX(0); }
+  50%  { transform: translateY(-60px) translateX(30px); }
+  100% { transform: translateY(0) translateX(0); }
+}
     </style>
   </head>
 
   <body>
     <!-- Haze must be before #root so it sits behind app content -->
-    <div class="global-haze" aria-hidden="true"></div>
+    <div class="global-haze" aria-hidden="true">
+  <div class="orb orb-blue"></div>
+  <div class="orb orb-orange"></div>
+  <div class="orb orb-cyan"></div>
+</div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
