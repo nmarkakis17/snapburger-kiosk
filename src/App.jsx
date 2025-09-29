@@ -173,7 +173,8 @@ export default function App() {
 
   // ===== Render =====
   return (
-  <div className="page container">
+  <div className="global-haze" aria-hidden="true" />
+    <div className="page container">
     {/* —— Stage router —— */}
     {stage === 'landing' && (
   <section className="tower-wrap">
@@ -334,5 +335,6 @@ export default function App() {
 
     <div className="footer">SnapBurger: Where Dining Meets Technology</div>
   </div>
+  </>
 )
 }
