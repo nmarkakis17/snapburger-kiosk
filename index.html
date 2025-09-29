@@ -47,6 +47,29 @@
       mix-blend-mode: screen;
       opacity: .75;
     }
+    /* ===== Floating glow ORBS baked into the haze ===== */
+.global-haze::before{
+  content:"";
+  position:absolute; inset:-8%;
+  /* three BIG blurred orbs (blue, orange, cyan) */
+  background:
+    radial-gradient(380px 380px at 12% 18%, rgba(14,165,233,.85), rgba(14,165,233,0) 70%),
+    radial-gradient(420px 420px at 88% 22%, rgba(249,115,22,.85), rgba(249,115,22,0) 70%),
+    radial-gradient(460px 460px at 58% 82%, rgba(6,182,212,.75), rgba(6,182,212,0) 70%);
+  filter: blur(50px);
+  opacity:.55;
+  pointer-events:none;
+  animation: orbs-drift 26s ease-in-out infinite alternate;
+  z-index: 0; /* sits beneath the grid (::after) but above base gradient */
+}
+
+/* drift them a bit so they feel alive */
+@keyframes orbs-drift {
+  0%   { transform: translate3d(0,0,0); }
+  50%  { transform: translate3d(16px,-10px,0) scale(1.02); }
+  100% { transform: translate3d(0,0,0); }
+}
+
 
     /* ===== Floating glow orbs (between haze and app) ===== */
     .orbs{
@@ -156,6 +179,7 @@
 
     /* App layer sits above background layers */
     .page, .container{ position: relative; z-index: 2; }
+    
   </style>
 </head>
 
@@ -163,10 +187,10 @@
   <!-- Haze at the back -->
   <div class="global-haze" aria-hidden="true"></div>
 
-  <!-- Orbs between haze and app -->
+  {<!-- Orbs between haze and app -->
   <div class="orbs" aria-hidden="true">
     <span></span><span></span><span></span><span></span><span></span><span></span>
-  </div>
+  </div>}
 
   <!-- React app -->
   <div id="root"></div>
