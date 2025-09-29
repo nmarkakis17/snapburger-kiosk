@@ -176,21 +176,21 @@ export default function App() {
   <div className="page container">
     {/* —— Stage router —— */}
     {stage === 'landing' && (
-      <section className="tower-wrap">
-        <div className="tower">
-          <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
-          <div className="tower-overlay">
-            <button className="btn-neon btn-first" onClick={startNewFlow}>
-              First-Time Customer
-            </button>
-            <button className="btn-neon btn-return" onClick={startReturningFlow}>
-              Returning Customer
-            </button>
-            <div className="tagline-box">Where Dining Meets Technology</div>
-          </div>
-        </div>
-      </section>
-    )}
+  <section className="tower-wrap">
+    <div className="tower">
+      <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
+      <div className="tower-overlay">
+        <button className="pill-btn btn-first" onClick={startNewFlow}>
+          First-Time Customer
+        </button>
+        <button className="pill-btn btn-return" onClick={startReturningFlow}>
+          Returning Customer
+        </button>
+        <div className="tagline-box">Where Dining Meets Technology</div>
+      </div>
+    </div>
+  </section>
+)}
 
     {stage === 'new' && (
       <section className="grid-2">
