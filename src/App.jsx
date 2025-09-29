@@ -176,6 +176,10 @@ return (
   <>
     <div className="global-haze" aria-hidden="true" />
     <div className="page container">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+    
     {/* —— Stage router —— */}
     {stage === 'landing' && (
   <section className="tower-wrap">
