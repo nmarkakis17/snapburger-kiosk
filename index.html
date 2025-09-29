@@ -465,14 +465,13 @@ body, #root { background: transparent; }
 }
 
 /* Square grid lines over the glows */
-.global-haze::after {
-  content:""; position:absolute; inset:0;
-  background:
-    linear-gradient(transparent 95%, rgba(255,255,255,.18) 95%) 0 0/ 100% 28px,
-    linear-gradient(90deg, transparent 95%, rgba(255,255,255,.65) 95%) 0 0/ 28px 100%;
-  mix-blend-mode: screen;
-  opacity: .45;   /* was .22 */
-}
+       .global-haze::after{
+          content:""; position:absolute; inset:0;
+          background:
+            linear-gradient(transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 100% 28px,
+            linear-gradient(90deg, transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 28px 100%;
+          mix-blend-mode: screen; opacity: .22;
+        }
 
 /* Optional: slow drifting motion for the glows (subtle) */
 @keyframes driftA { 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(18px,-10px,0)} 100%{transform:translate3d(0,0,0)} }
