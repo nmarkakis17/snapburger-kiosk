@@ -496,6 +496,38 @@ body, #root { background: transparent; }
 .tower-overlay .pill-btn{ pointer-events:auto; }
 
       .page, .container { position: relative; z-index: 1; }
+/* ===== Tech grid + floating glow ===== */
+:root { --sb-bg:#0b1220; --grid-gap:28px; }
+html { background: var(--sb-bg); }
+body, #root { background: transparent; }
+
+/* content sits over the haze */
+.page, .container { position: relative; z-index: 1; }
+
+.global-haze{
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
+    radial-gradient(900px 600px at 95% 0%,   rgba(14,165,233,.30), transparent 60%),
+    radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
+    radial-gradient(900px 600px at 0% 100%,  rgba(251,146,60,.28), transparent 60%),
+    linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
+    var(--sb-bg);
+  background-attachment: fixed,fixed,fixed,fixed,fixed,fixed;
+  filter: saturate(1.05);
+  animation: driftA 26s ease-in-out infinite;
+}
+.global-haze::after{
+  content:""; position:absolute; inset:0;
+  background:
+    linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.08) 0) 0 0/100% var(--grid-gap),
+    linear-gradient(90deg, transparent calc(100% - 1px), rgba(255,255,255,.08) 0) 0 0/var(--grid-gap) 100%;
+  mix-blend-mode: screen; opacity:.22;
+  animation: driftB 34s ease-in-out infinite;
+}
+
+@keyframes driftA { 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(18px,-10px,0)} 100%{transform:translate3d(0,0,0)} }
+@keyframes driftB { 0%{transform:translate3d(0,0,0)} 50%{transform:translate3d(-16px,12px,0)} 100%{transform:translate3d(0,0,0)} }
 
     </style>
   </head>
