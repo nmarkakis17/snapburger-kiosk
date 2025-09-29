@@ -403,7 +403,38 @@
   .btn-return { top: 35.5%; }
   .tagline-box{ bottom: 7%; }
 }
-      
+      .pill-btn {
+  position: absolute;
+  left: 50%;                   /* baseline centered horizontally */
+  transform: translateX(-50%); /* keep it centered */
+  width: 70%;                  /* adjust width (smaller = thinner, bigger = wider) */
+  padding: 14px 0;
+  border-radius: 999px;
+  border: none;
+  font-weight: 900;
+  font-size: 18px;
+  color: white;
+  background: linear-gradient(135deg, #0ea5e9, #f97316); /* blue→orange */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+
+/* Button hover (optional) */
+.pill-btn:hover {
+  opacity: 0.9;
+  transform: translateX(-55%) scale(1.02);
+}
+
+/* Individual buttons (adjust these “knobs”) */
+.btn-first {
+  top: 40%;          /* vertical placement – move up/down */
+  transform: translateX(-50%) translateY(0); /* add translateY(px) for fine-tune */
+}
+
+.btn-return {
+  top: 45%;          /* vertical placement – move up/down */
+  transform: translateX(-50%) translateY(0);
+}
     </style>
   </head>
 
