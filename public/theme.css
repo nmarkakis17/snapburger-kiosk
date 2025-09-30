@@ -70,25 +70,32 @@ body{
   z-index: 1;                     /* haze: 0, orbs: 1, app: 2 */
   pointer-events: none;
 }
-.orbs span{
+.orbs span {
   position: absolute;
-  width: 420px; height: 420px;
+  width: 400px;
+  height: 400px;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: .55;
-  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.9), rgba(14,165,233,0) 68%);
-  animation: floatY 18s ease-in-out infinite alternate,
-             floatX 26s ease-in-out infinite alternate;
+  filter: blur(40px);                /* smaller blur so the glow is tighter */
+  opacity: 0.8;                      /* more visible */
+  background: radial-gradient(circle at 40% 40%, 
+    rgba(14,165,233,1),              /* strong blue */
+    rgba(14,165,233,0) 70%);
+  animation: floatY 12s ease-in-out infinite alternate,
+             floatX 20s ease-in-out infinite alternate;
+  z-index: 1;
 }
-/* alternate orange */
-.orbs span:nth-child(2n){
-  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.9), rgba(249,115,22,0) 68%);
+
+/* alternate warm orange ones */
+.orbs span:nth-child(2n) {
+  background: radial-gradient(circle at 40% 40%, 
+    rgba(249,115,22,1), 
+    rgba(249,115,22,0) 70%);
 }
-/* positions */
-.orbs span:nth-child(1){ top:6%;   left:6%; }
-.orbs span:nth-child(2){ top:18%;  right:8%; }
-.orbs span:nth-child(3){ bottom:14%; left:12%; }
-.orbs span:nth-child(4){ bottom:10%; right:14%; }
+.orbs span:nth-child(1){ top:10%; left:10%; }
+.orbs span:nth-child(2){ top:30%; right:15%; }
+.orbs span:nth-child(3){ bottom:20%; left:20%; }
+.orbs span:nth-child(4){ bottom:10%; right:20%; }
+
 @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-26px)} }
 @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(22px)} }
 
@@ -169,48 +176,3 @@ h1, h2 { color: var(--sb-accent-2); }
   .btn-return { top: 35.5%; }
   .tagline-box{ bottom: 7%; }
 }
-
-/* === Floating glow orbs === */
-.orbs {
-  position: fixed;
-  inset: 0;
-  z-index: 1; /* sits above haze, below app */
-  pointer-events: none;
-}
-.orbs span {
-  position: absolute;
-  width: 420px; height: 420px;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: .55;
-  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.9), rgba(14,165,233,0) 70%);
-  animation: floatY 18s ease-in-out infinite alternate,
-             floatX 26s ease-in-out infinite alternate;
-}
-/* make every second orb orange */
-.orbs span:nth-child(2n) {
-  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.9), rgba(249,115,22,0) 70%);
-}
-/* position them around the frame */
-.orbs span:nth-child(1){ top:6%; left:6%; }
-.orbs span:nth-child(2){ top:18%; right:8%; }
-.orbs span:nth-child(3){ bottom:14%; left:12%; }
-.orbs span:nth-child(4){ bottom:10%; right:14%; }
-
-/* animations */
-@keyframes floatY { 
-  0% { transform: translateY(0) } 
-  100% { transform: translateY(-26px) } 
-}
-@keyframes floatX { 
-  0% { transform: translateX(0) } 
-  100% { transform: translateX(22px) } 
-}
-.orbs span {
-  outline: 4px solid lime !important;  /* TEMP debug */
-  background: lime !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-
