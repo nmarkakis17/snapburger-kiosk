@@ -2,24 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0" />
   <title>SnapBurger · Theo Kiosk</title>
 
-  <!-- Load the shared theme (cache-bust with ?v=sb5) -->
-  <link rel="stylesheet" href="/theme.css?v=sb5">
+  <!-- Single source of styles -->
+  <link rel="stylesheet" href="/theme.css" />
 </head>
 
 <body>
-  <!-- Haze sits at the very back -->
+  <!-- Background haze + grid (behind everything) -->
   <div class="global-haze" aria-hidden="true"></div>
 
-  <!-- Orbs layer above haze but below the app -->
-  <div class="orbs" aria-hidden="true">
-    <span></span><span></span><span></span><span></span><span></span><span></span>
-  </div>
-
-  <!-- React app -->
+  <!-- React mounts here -->
   <div id="root"></div>
+
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>
