@@ -206,4 +206,11 @@ h1, h2 { color: var(--sb-accent-2); }
   0% { transform: translateX(0) } 
   100% { transform: translateX(22px) } 
 }
+.orbs span {
+  outline: 4px solid lime !important;  /* TEMP debug */
+  background: lime !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
 
