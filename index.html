@@ -4,99 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SnapBurger · Theo Kiosk</title>
-
-  <style>
-    :root{
-      --sb-bg:#0b1220;
-      --grid-gap:28px;
-      --blue:#0ea5e9; --orange:#f97316;
-      --sb-border:#1f2a44; --radius:18px;
-    }
-
-    html, body, #root { height:100%; margin:0; }
-    html { background: var(--sb-bg); }
-    body, #root { background: transparent; }
-
-    /* ===== Base haze + tech grid ===== */
-    .global-haze{
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
-        radial-gradient(900px 600px  at 95% 0%,   rgba(14,165,233,.30), transparent 60%),
-        radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40),  transparent 62%),
-        radial-gradient(900px 600px  at 0% 100%,  rgba(251,146,60,.28),  transparent 60%),
-        linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
-        var(--sb-bg);
-      filter: saturate(1.05);
-    }
-    .global-haze::after{
-      content:""; position:absolute; inset:0;
-      background:
-        linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.15) 0) 0 0/100% var(--grid-gap),
-        linear-gradient(90deg, transparent calc(100% - 1px), rgba(255,255,255,.15) 0) 0 0/var(--grid-gap) 100%;
-      mix-blend-mode: screen;
-      opacity:.75;
-    }
-
-    /* ===== SUPER-VISIBLE orbs (between haze and app) ===== */
-    .orbs{
-      position: fixed; inset:0;
-      z-index: 1;               /* above .global-haze (0), below app (2) */
-      pointer-events: none;
-    }
-    .orbs span{
-      position: absolute;
-      width: 520px; height: 520px;          /* large so you can’t miss them */
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.7;
-      background: radial-gradient(circle at 40% 40%, rgba(14,165,233,0.95), rgba(14,165,233,0) 68%);
-      animation: floatY 18s ease-in-out infinite alternate,
-                 floatX 26s ease-in-out infinite alternate;
-    }
-    /* alternate orange for every 2nd orb */
-    .orbs span:nth-child(2n){
-      background: radial-gradient(circle at 40% 40%, rgba(249,115,22,0.95), rgba(249,115,22,0) 68%);
-    }
-    /* positions */
-    .orbs span:nth-child(1){ top:6%;   left:6%;  }
-    .orbs span:nth-child(2){ top:18%;  right:8%; }
-    .orbs span:nth-child(3){ bottom:14%; left:12%; }
-    .orbs span:nth-child(4){ bottom:10%; right:14%; }
-
-    @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-40px)} }
-    @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(40px)} }
-
-    /* ===== App sits above background layers ===== */
-    .page, .container{ position: relative; z-index: 2; }
-
-    /* Minimal layout bits your app expects (kept light) */
-    .container{max-width:1100px;margin:0 auto;padding:28px;display:grid;gap:22px}
-    .grid-2{display:grid;gap:22px;grid-template-columns:1fr 1fr}
-    .card{
-      background:#ffffff; color:#0b1020;
-      border:1px solid rgba(10,15,30,.10);
-      border-radius:var(--radius);
-      padding:16px; box-shadow:0 12px 28px rgba(0,0,0,.18);
-    }
-    .input{padding:10px 12px;border-radius:12px;border:1px solid var(--sb-border);background:#0c1326;color:#eef2ff}
-    .btn{cursor:pointer;border:none;border-radius:12px;padding:10px 14px;font-weight:700;background: linear-gradient(135deg, var(--blue), var(--orange)); color:#0b0e14}
-    .menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-    .menu .item{border:1px solid rgba(10,15,30,.10);border-radius:16px;padding:12px;background:#ffffff}
-    .menu .thumb{aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:#0c1326;display:grid;place-items:center;margin-bottom:8px;border:1px solid var(--sb-border)}
-  </style>
+  <link rel="stylesheet" href="/theme.css">
 </head>
 
 <body>
-  <!-- Haze at the back -->
+  <!-- Background layers -->
   <div class="global-haze" aria-hidden="true"></div>
-
-  <!-- Orbs between haze and app (NO braces, NO comments wrapped around) -->
   <div class="orbs" aria-hidden="true">
     <span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- React app -->
+  <!-- React root -->
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
