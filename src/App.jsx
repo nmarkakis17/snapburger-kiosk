@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 
 export default function App() {
-  const [stage, setStage] = useState<'landing' | 'menu'>('landing')
+  // ✅ plain JS, no TS generic here
+  const [stage, setStage] = useState('landing') // 'landing' | 'menu'
 
   return (
     <>
@@ -39,13 +40,23 @@ export default function App() {
         }
         .orbs span{
           position:absolute; border-radius:50%;
-          width:320px; height:320px; filter:blur(60px); opacity:.35;
-          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.9), rgba(14,165,233,0) 68%);
+          width:380px; height:380px;
+          /* make them UNMISSABLE first; we can tone down later */
+          filter: blur(70px);
+          opacity: .75;
+          mix-blend-mode: screen;
+          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,0.95), rgba(14,165,233,0) 68%);
+
+          /* extra safety net for visibility while debugging */
+          outline: 2px dashed rgba(255,255,255,.15);
+          background-color: rgba(0,255,0,.08);
+
           animation: floatY 18s ease-in-out infinite alternate,
                      floatX 26s ease-in-out infinite alternate;
         }
         .orbs span:nth-child(2n){
-          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.9), rgba(249,115,22,0) 68%);
+          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,0.95), rgba(249,115,22,0) 68%);
+          background-color: rgba(255,165,0,.08); /* debug tint */
         }
         .orbs span:nth-child(1){ top:6%; left:6%; }
         .orbs span:nth-child(2){ top:18%; right:8%; }
@@ -92,7 +103,7 @@ export default function App() {
           .tagline-box{ bottom: 7%; }
         }
 
-        /* Simple cards grid for “menu” stage (demo only) */
+        /* demo cards for "menu" */
         .grid-2{ display:grid; gap:22px; grid-template-columns:1fr 1fr; }
         .card{
           background:#ffffff; color:#0b1020;
@@ -106,20 +117,32 @@ export default function App() {
         }
       `}</style>
 
-      {/* Back layers */}
+      {/* Background layers */}
       <div className="global-haze" aria-hidden="true" />
       <div className="orbs" aria-hidden="true">
         <span></span><span></span><span></span><span></span>
       </div>
 
-      {/* Content */}
+      {/* Foreground */}
       <div className="page">
         <div className="container">
           {stage === 'landing' && (
             <section className="tower-wrap">
               <div className="tower">
                 {/* Make sure this file exists: /public/assets/kiosk-main.png */}
-                <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
+                <img
+                  src="/assets/kiosk-main.png"
+                  alt="SnapBurger Kiosk"
+                  onError={(e) => {
+                    // fallback if the image path is wrong
+                    e.currentTarget.replaceWith(
+                      Object.assign(document.createElement('div'), {
+                        innerText: 'Missing /public/assets/kiosk-main.png',
+                        style: 'color:#fff;background:#0008;padding:16px;border-radius:12px;text-align:center'
+                      })
+                    )
+                  }}
+                />
                 <div className="tower-overlay">
                   <button className="pill-btn btn-first"  onClick={() => setStage('menu')}>
                     First-Time Customer
