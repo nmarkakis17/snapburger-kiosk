@@ -42,10 +42,14 @@ export default function App() {
           position:absolute; border-radius:50%;
           width:380px; height:380px;
           /* make them UNMISSABLE first; we can tone down later */
-          filter: blur(70px);
-          opacity: .75;
-          mix-blend-mode: screen;
-          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,0.95), rgba(14,165,233,0) 68%);
+              
+         mix-blend-mode: screen;
+          
+  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 68%) !important;
+  opacity: .75 !important;
+  filter: blur(70px) !important;
+}
+
 
           /* extra safety net for visibility while debugging */
           outline: 2px dashed rgba(255,255,255,.15);
