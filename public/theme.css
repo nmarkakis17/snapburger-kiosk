@@ -118,3 +118,20 @@ h1, h2 { color: var(--sb-accent-2); }
   box-shadow: 0 6px 18px rgba(0,0,0,.35), inset 0 0 10px rgba(29,161,255,.18);
   backdrop-filter: blur(2px); pointer-events:none;
 }
+.pill-btn {
+  background: linear-gradient(135deg, var(--sb-accent-2), var(--sb-accent));
+}
+
+.btn {
+  background: linear-gradient(135deg, var(--sb-accent), #ff9650);
+  color: #000 !important;
+}
+.orbs span {
+  background: radial-gradient(circle at 50% 50%, lime, transparent 70%) !important;
+  width: 600px !important;
+  height: 600px !important;
+  top: 30% !important;
+  left: 30% !important;
+  opacity: 1 !important;
+  filter: blur(0px) !important;
+}
