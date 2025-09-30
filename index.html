@@ -1,24 +1,21 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0" />
-  <title>SnapBurger · Theo Kiosk</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapBurger · Theo Kiosk</title>
+    <meta
+      name="description"
+      content="SnapBurger: Where dining meets technology — featuring SnapCoins, SnapBoard, and Theo the AI co-founder."
+    />
+    <!-- Link to your theme.css -->
+    <link rel="stylesheet" href="/theme.css" />
+  </head>
+  <body>
+    <!-- React root -->
+    <div id="root"></div>
 
-  <!-- Single source of styles -->
-  <link rel="stylesheet" href="/theme.css" />
-  <link rel="stylesheet" href="/theme.css?v=6">
-</head>
-
-<body>
-  <!-- Background haze + grid (behind everything) -->
-  <div class="global-haze" aria-hidden="true"></div>
-
-  <!-- React mounts here -->
-  <div id="root"></div>
-
-  <script type="module" src="/src/main.jsx"></script>
-</body>
+    <!-- React bundle -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
