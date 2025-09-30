@@ -1,368 +1,87 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-
-const SB_URL = import.meta.env.VITE_SUPABASE_URL
-const SB_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
-const supabase = createClient(SB_URL, SB_ANON_KEY)
+import React from "react"
+import { Outlet } from "react-router-dom"
+import NavBar from "./components/NavBar.jsx"
 
 export default function App() {
-  // ===== ORB GLOWS (scoped, injected here so they can't be overridden) =====
-  const heroGlowCSS = `
-    .kiosk-hero{
-      position:relative;
-      overflow:hidden;
-      border-radius: 28px;
-      background: transparent;
-      border:1px solid rgba(29,161,255,.18);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-    .kiosk-hero::before,
-    .kiosk-hero::after{
-      content:"";
-      position:absolute;
-      pointer-events:none;
-      z-index:0;
-      width:65vmax; height:65vmax;
-      filter: blur(40px);
-      opacity:.95;
-    }
-    .kiosk-hero::before{
-      left:-40%; bottom:-45%;
-      background: radial-gradient(closest-side, rgba(29,161,255,.35), transparent 70%);
-      animation: kioskFloatA 12s ease-in-out infinite alternate;
-    }
-    .kiosk-hero::after{
-      right:-40%; top:-45%;
-      background: radial-gradient(closest-side, rgba(255,122,24,.35), transparent 70%);
-      animation: kioskFloatB 14s ease-in-out infinite alternate;
-    }
-    .kiosk-hero > * { position: relative; z-index: 1; }
-
-    @keyframes kioskFloatA { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(18px,-10px,0)} }
-    @keyframes kioskFloatB { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(-16px,12px,0)} }
-  `
-
-  // ===== Global state =====
-  const [loading, setLoading] = useState(true)
-  const [menu, setMenu] = useState([])
-  const [cart, setCart] = useState([])
-  const [email, setEmail] = useState('nick@example.com')
-  const [placing, setPlacing] = useState(false)
-  const [order, setOrder] = useState(null)
-  const [statusFeed, setStatusFeed] = useState([])
-  const orderSubRef = useRef(null)
-
-  // ===== Stage router =====
-  const [stage, setStage] = useState('landing') // 'landing' | 'new' | 'returning' | 'menu'
-  const [phone, setPhone] = useState('')
-  const [loyaltyId, setLoyaltyId] = useState('')
-
-  const SIGNUP_URL = 'https://your-website.example/signup?src=kiosk'
-  const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(SIGNUP_URL)}`
-
-  function startNewFlow() { setStage('new') }
-  function startReturningFlow() { setStage('returning') }
-
-  function confirmNewOnKiosk() {
-    if (!email) setEmail('guest+' + Math.floor(Math.random() * 9999) + '@snapburger.demo')
-    setStage('menu')
-  }
-  function confirmReturningByEmail() {
-    if (!email) return alert('Enter your email')
-    setStage('menu')
-  }
-  function confirmReturningByPhone() {
-    if (!phone) return alert('Enter your phone')
-    setEmail(`p${phone.replace(/\D/g, '')}@snapburger.demo`)
-    setStage('menu')
-  }
-  function confirmReturningByCard() {
-    if (!loyaltyId) return alert('Enter your loyalty ID')
-    setEmail(`card${loyaltyId}@snapburger.demo`)
-    setStage('menu')
-  }
-
-  const fmt = (c) => `$${(c / 100).toFixed(2)}`
-  const subtotal = useMemo(
-    () => cart.reduce((s, c) => s + c.item.price_cents * c.qty, 0),
-    [cart]
-  )
-
-  useEffect(() => {
-    (async () => {
-      const { data, error } = await supabase
-        .from('menu_items')
-        .select('id,name,category,price_cents,image_url,is_active')
-        .eq('is_active', true)
-        .order('category', { ascending: true })
-        .order('name', { ascending: true })
-
-      if (!error) setMenu(data || [])
-      setLoading(false)
-    })()
-
-    return () => {
-      if (orderSubRef.current) {
-        supabase.removeChannel(orderSubRef.current)
-        orderSubRef.current = null
-      }
-    }
-  }, [])
-
-  const addToCart = (item) =>
-    setCart((prev) => {
-      const i = prev.findIndex((c) => c.item.id === item.id)
-      if (i >= 0) {
-        const copy = [...prev]
-        copy[i] = { ...copy[i], qty: copy[i].qty + 1 }
-        return copy
-      }
-      return [...prev, { item, qty: 1 }]
-    })
-
-  const updateQty = (id, delta) =>
-    setCart((prev) =>
-      prev
-        .map((c) =>
-          c.item.id === id ? { ...c, qty: Math.max(0, c.qty + delta) } : c
-        )
-        .filter((c) => c.qty > 0)
-    )
-
-  const clearCart = () => setCart([])
-
-  const subscribeOrder = (orderId) => {
-    if (orderSubRef.current) {
-      supabase.removeChannel(orderSubRef.current)
-      orderSubRef.current = null
-    }
-    const ch = supabase
-      .channel(`order-${orderId}`)
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
-        (payload) => {
-          const newStatus = payload.new?.status
-          setOrder((o) => (o ? { ...o, status: newStatus } : o))
-          setStatusFeed((f) => [
-            `${new Date().toLocaleTimeString()} → ${newStatus}`,
-            ...f,
-          ])
-        }
-      )
-      .subscribe()
-    orderSubRef.current = ch
-  }
-
-  const placeOrder = async () => {
-    if (!cart.length) return alert('Your cart is empty')
-    setPlacing(true)
-
-    let userId = null
-    const { data: users } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .limit(1)
-    userId = users?.[0]?.id ?? null
-
-    const { data: orderRows, error: oErr } = await supabase
-      .from('orders')
-      .insert({
-        user_id: userId,
-        subtotal_cents: subtotal,
-        total_cents: subtotal,
-        status: 'placed',
-      })
-      .select('id,status')
-      .single()
-
-    if (oErr || !orderRows) {
-      alert('Failed to place order')
-      setPlacing(false)
-      return
-    }
-
-    const orderId = orderRows.id
-    setOrder({ id: orderId, status: orderRows.status })
-    subscribeOrder(orderId)
-
-    const itemsPayload = cart.map((c) => ({
-      order_id: orderId,
-      menu_item_id: c.item.id,
-      qty: c.qty,
-      mods_json: {},
-    }))
-    await supabase.from('order_items').insert(itemsPayload)
-    clearCart()
-    setPlacing(false)
-  }
-
   return (
     <>
-      {/* inject the glow CSS here so it overrides anything else */}
-      <style>{heroGlowCSS}</style>
+      <style>{`
+        :root {
+          --cyan:#06b6d4; --teal:#22d3ee; --blue:#0ea5e9;
+          --orange:#f97316; --slate:#0f172a;
+        }
+        html { background:#0b1220; }
+        body, #root { background: transparent; }
 
-      <div className="page container">
-        {/* —— Stage router —— */}
-        {stage === 'landing' && (
-          /* WRAP landing in our scoped hero so the orbs appear */
-          <section className="kiosk-hero">
-            <div className="tower-wrap">
-              <div className="tower">
-                <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
-                <div className="tower-overlay">
-                  <button className="pill-btn btn-first" onClick={startNewFlow}>
-                    First-Time Customer
-                  </button>
-                  <button className="pill-btn btn-return" onClick={startReturningFlow}>
-                    Returning Customer
-                  </button>
-                  <div className="tagline-box">Where Dining Meets Technology</div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+        /* ===== Haze background ===== */
+        .global-haze{
+          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+          background:
+            radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
+            radial-gradient(900px 600px at 95% 0%, rgba(14,165,233,.30), transparent 60%),
+            radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
+            radial-gradient(900px 600px at 0% 100%, rgba(251,146,60,.28), transparent 60%),
+            linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
+            #0b1220;
+          background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
+          filter: saturate(1.08);
+        }
+        .global-haze::after{
+          content:""; position:absolute; inset:0;
+          background:
+            linear-gradient(transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 100% 28px,
+            linear-gradient(90deg, transparent 95%, rgba(255,255,255,.06) 95%) 0 0/ 28px 100%;
+          mix-blend-mode: screen; opacity: .22;
+        }
 
-        {stage === 'new' && (
-          <section className="grid-2">
-            <div className="card" style={{display:'grid',gap:10,justifyItems:'center',textAlign:'center'}}>
-              <h2 style={{margin:0}}>Set up on your phone</h2>
-              <img src={QR_SRC} alt="Scan to sign up" style={{width:240,height:240,borderRadius:12,border:'1px solid var(--sb-border)'}} />
-              <a className="btn" href={SIGNUP_URL} target="_blank" rel="noreferrer">Open Signup Link</a>
-              <span className="meta">Scan the QR or tap the link</span>
-              <button className="btn-ghost btn" onClick={()=>setStage('landing')}>Back</button>
-            </div>
+        /* ===== Floating orbs ===== */
+        .orbs{
+          position: fixed; inset: 0;
+          z-index: 1; pointer-events: none;
+        }
+        .orbs span{
+          position: absolute;
+          width: 320px; height: 320px;
+          border-radius: 50%;
+          filter: blur(60px);
+          opacity: .35;
+          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.9), rgba(14,165,233,0) 68%);
+          animation: floatY 18s ease-in-out infinite alternate,
+                     floatX 26s ease-in-out infinite alternate;
+        }
+        .orbs span:nth-child(2n){
+          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.9), rgba(249,115,22,0) 68%);
+        }
 
-            <div className="card" style={{display:'grid',gap:10}}>
-              <h2 style={{margin:0}}>Set up on this kiosk</h2>
-              <label className="kv">
-                <span>Email</span>
-                <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
-              </label>
-              <label className="kv">
-                <span>Phone (optional)</span>
-                <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
-              </label>
-              <button className="btn" onClick={confirmNewOnKiosk}>Create & Continue</button>
-              <button className="btn-ghost btn" onClick={()=>setStage('landing')}>Back</button>
-              <span className="meta">Demo only — no password needed here</span>
-            </div>
-          </section>
-        )}
+        /* Orb positions */
+        .orbs span:nth-child(1){ top:6%; left:6%; }
+        .orbs span:nth-child(2){ top:18%; right:8%; }
+        .orbs span:nth-child(3){ bottom:14%; left:12%; }
+        .orbs span:nth-child(4){ bottom:10%; right:14%; }
+        .orbs span:nth-child(5){ top:50%; left:40%; }
+        .orbs span:nth-child(6){ top:8%; right:35%; }
+        .orbs span:nth-child(7){ bottom:6%; left:46%; }
+        .orbs span:nth-child(8){ top:30%; left:16%; }
 
-        {stage === 'returning' && (
-          <section className="grid-2">
-            <div className="card" style={{display:'grid',gap:10}}>
-              <h2 style={{margin:0}}>Scan Loyalty Card</h2>
-              <input className="input" placeholder="Enter card ID (stub)" value={loyaltyId} onChange={e=>setLoyaltyId(e.target.value)} />
-              <button className="btn" onClick={confirmReturningByCard}>Continue</button>
-              <button className="btn-ghost btn" onClick={()=>setStage('landing')}>Back</button>
-              <span className="meta">Scanner stub for demo</span>
-            </div>
+        @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
+        @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
 
-            <div className="card" style={{display:'grid',gap:10}}>
-              <h2 style={{margin:0}}>Sign in with Email or Phone</h2>
-              <label className="kv">
-                <span>Email</span>
-                <input className="input" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} />
-              </label>
-              <button className="btn" onClick={confirmReturningByEmail}>Continue with Email</button>
-              <div style={{height:1, background:'var(--sb-border)', margin:'6px 0'}} />
-              <label className="kv">
-                <span>Phone</span>
-                <input className="input" placeholder="(555) 555-5555" value={phone} onChange={e=>setPhone(e.target.value)} />
-              </label>
-              <button className="btn" onClick={confirmReturningByPhone}>Continue with Phone</button>
-              <button className="btn-ghost btn" onClick={()=>setStage('landing')}>Back</button>
-            </div>
-          </section>
-        )}
+        /* Page content above bg layers */
+        .page { position: relative; z-index: 2; }
+      `}</style>
 
-        {stage === 'menu' && (
-          <>
-            <section className="grid-2">
-              <div className="card">
-                <div className="space"><h2 style={{ margin: 0 }}>Menu</h2></div>
-                {loading ? (
-                  <div>Loading menu…</div>
-                ) : menu.length === 0 ? (
-                  <div className="meta">No active items yet.</div>
-                ) : (
-                  <ul className="menu">
-                    {menu.map((m) => (
-                      <li key={m.id} className="item">
-                        {m.image_url && <div className="thumb"><img src={m.image_url} alt={m.name} /></div>}
-                        <div className="title">{m.name}</div>
-                        <div className="meta" style={{ textTransform: 'capitalize' }}>{m.category}</div>
-                        <div className="price">{fmt(m.price_cents)}</div>
-                        <button className="btn" style={{ marginTop: 8 }} onClick={() => addToCart(m)}>Add</button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              <div className="card">
-                <div className="space">
-                  <h2 style={{ margin: 0 }}>Your Cart</h2>
-                  <span className="badge">Subtotal {fmt(subtotal)}</span>
-                </div>
-                {!cart.length ? (
-                  <div className="meta">No items yet.</div>
-                ) : (
-                  <ul className="cart-list">
-                    {cart.map((c) => (
-                      <li key={c.item.id} className="cart-item">
-                        <div>
-                          <div style={{ fontWeight: 700 }}>{c.item.name}</div>
-                          <div className="meta">{fmt(c.item.price_cents)} × {c.qty}</div>
-                        </div>
-                        <div className="qty row">
-                          <button onClick={() => updateQty(c.item.id, -1)}>-</button>
-                          <button onClick={() => updateQty(c.item.id, +1)}>+</button>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <div className="row" style={{ gap: 12, marginTop: 10 }}>
-                  <button className="btn" onClick={clearCart}>Clear</button>
-                  <button className="btn" onClick={placeOrder} disabled={placing || !cart.length}>
-                    {placing ? 'Placing…' : 'Place Order'}
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            <section className="grid-2">
-              <div className="card">
-                <h2 style={{ marginTop: 0 }}>Order</h2>
-                {!order ? (
-                  <div className="meta">Place an order to see status updates.</div>
-                ) : (
-                  <div className="kv">
-                    <div><span className="meta">Order ID:</span> <code>{order.id}</code></div>
-                    <div><span className="meta">Status:</span> <b>{String(order.status).toUpperCase()}</b></div>
-                    <p className="meta">Tip: In Supabase → <b>orders</b>, update status to <code>in_kitchen</code> → <code>ready</code> → <code>served</code>.</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="card">
-                <h2 style={{ marginTop: 0 }}>Live Feed</h2>
-                <ul style={{ display:'grid', gap:6, fontFamily:'ui-monospace, SFMono-Regular, Menlo, monospace', fontSize:12 }}>
-                  {statusFeed.map((line, i) => (<li key={i}>{line}</li>))}
-                  {!statusFeed.length && <li className="meta">No updates yet.</li>}
-                </ul>
-              </div>
-            </section>
-          </>
-        )}
-
-        <div className="footer">SnapBurger: Where Dining Meets Technology</div>
+      {/* Background layers */}
+      <div className="global-haze" aria-hidden="true" />
+      <div className="orbs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
       </div>
+
+      {/* Content */}
+      <NavBar />
+      <main className="page">
+        <Outlet />
+      </main>
     </>
   )
 }
