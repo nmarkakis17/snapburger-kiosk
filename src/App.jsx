@@ -4,12 +4,12 @@ import React, { useState, useMemo } from 'react'
 export default function App() {
   const [stage, setStage] = useState('landing')
 
-  // generate your streak lines (you already tweaked the left range!)
+  // streak lines
   const lines = useMemo(() => {
     const rnd = (min, max) => min + Math.random() * (max - min)
     return Array.from({ length: 30 }).map(() => ({
       top: rnd(10, 90),
-      left: rnd(-100, 100),   // 👈 you already set this, nice scatter
+      left: rnd(-100, 100),   // you already liked this range
       width: rnd(120, 220),
       angle: rnd(-80, 80),
       delay: rnd(0, 5),
@@ -24,17 +24,17 @@ export default function App() {
         html { background:#0b1220; }
         body, #root { margin:0; background:transparent; }
 
-        /* glowing haze */
+        /* === PURE glowing haze (no grid lines) === */
         .global-haze {
           position:fixed; inset:0; z-index:0; pointer-events:none;
           background:
-            radial-gradient(800px 600px at 50% 40%, rgba(34,211,238,.25), transparent 70%),
-            radial-gradient(700px 500px at 50% 60%, rgba(249,115,22,.20), transparent 70%),
+            radial-gradient(900px 700px at 40% 40%, rgba(34,211,238,.25), transparent 70%),
+            radial-gradient(900px 700px at 60% 60%, rgba(249,115,22,.20), transparent 70%),
             #0b1220;
-          filter: saturate(1.1);
+          filter: saturate(1.2);
         }
 
-        /* streaks */
+        /* electric streaks */
         .electric-line {
           position:absolute;
           height:2px;
@@ -78,7 +78,7 @@ export default function App() {
           background:rgba(11,18,32,.85); border:1px solid rgba(29,161,255,.35);
         }
 
-        /* demo menu */
+        /* menu */
         .grid-2{ display:grid; gap:22px; grid-template-columns:1fr 1fr; }
         .card{
           background:#fff; color:#0b1020;
@@ -86,8 +86,10 @@ export default function App() {
         }
       `}</style>
 
-      {/* haze + streaks */}
+      {/* glowing haze */}
       <div className="global-haze" aria-hidden="true"/>
+
+      {/* streaks */}
       {lines.map((l,i)=>(
         <div key={i}
           className="electric-line"
@@ -101,7 +103,7 @@ export default function App() {
           }}/>
       ))}
 
-      {/* page content */}
+      {/* page */}
       <div className="page">
         <div className="container">
           {stage === 'landing' && (
@@ -109,14 +111,17 @@ export default function App() {
               <div className="tower">
                 <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk"/>
                 <div className="tower-overlay">
-                  <button className="pill-btn btn-first" onClick={() => setStage('menu')}>First-Time Customer</button>
-                  <button className="pill-btn btn-return" onClick={() => setStage('menu')}>Returning Customer</button>
+                  <button className="pill-btn btn-first" onClick={() => setStage('menu')}>
+                    First-Time Customer
+                  </button>
+                  <button className="pill-btn btn-return" onClick={() => setStage('menu')}>
+                    Returning Customer
+                  </button>
                   <div className="tagline-box">Where Dining Meets Technology</div>
                 </div>
               </div>
             </section>
           )}
-
           {stage === 'menu' && (
             <section className="grid-2">
               <div className="card">
