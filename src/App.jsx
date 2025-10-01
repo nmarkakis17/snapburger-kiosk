@@ -7,7 +7,7 @@ export default function App() {
   return (
     <>
       <style>{`
-        :root{
+        :root {
           --sb-bg:#0b1220;
           --blue:#0ea5e9; 
           --orange:#f97316;
@@ -23,15 +23,15 @@ export default function App() {
           background:
             repeating-linear-gradient(
               90deg,
-              rgba(0,247,255,0.35) 0px,
-              rgba(0,247,255,0.35) 2px,
+              rgba(0,247,255,0.25) 0px,
+              rgba(0,247,255,0.25) 2px,
               transparent 2px,
               transparent 40px
             ),
             repeating-linear-gradient(
               0deg,
-              rgba(0,247,255,0.35) 0px,
-              rgba(0,247,255,0.35) 2px,
+              rgba(0,247,255,0.25) 0px,
+              rgba(0,247,255,0.25) 2px,
               transparent 2px,
               transparent 40px
             ),
@@ -40,7 +40,7 @@ export default function App() {
           overflow:hidden;
         }
 
-        /* Bright fast energy waves */
+        /* Energy haze */
         .pulse {
           position:absolute;
           width: 300%;
@@ -48,34 +48,46 @@ export default function App() {
           top:-100%; left:-100%;
           background: conic-gradient(
             from 0deg,
-            rgba(14,165,233,.5),
-            rgba(249,115,22,.5),
-            rgba(14,165,233,.5)
+            rgba(14,165,233,.35),
+            rgba(249,115,22,.4),
+            rgba(14,165,233,.35)
           );
           mix-blend-mode: screen;
-          animation: spinPulse 8s linear infinite;
+          animation: spinPulse 12s linear infinite;
         }
 
-        .energy-spark {
+        /* ===== Animated electric pulse lines ===== */
+        .electric-line {
           position:absolute;
-          width:200%;
-          height:200%;
-          top:-50%; left:-50%;
-          background: radial-gradient(circle, rgba(0,247,255,0.25) 0%, transparent 70%);
-          mix-blend-mode: screen;
-          animation: flash 3s ease-in-out infinite alternate;
+          height:2px;
+          background:linear-gradient(90deg, transparent, var(--electric), transparent);
+          opacity:0.7;
+          animation: dashLine 3s linear infinite;
+        }
+        .electric-line:nth-child(1){
+          top:20%; left:-50%; width:200%;
+          animation-delay:0s;
+        }
+        .electric-line:nth-child(2){
+          top:50%; left:-60%; width:220%;
+          animation-delay:1s;
+        }
+        .electric-line:nth-child(3){
+          top:80%; left:-40%; width:180%;
+          animation-delay:2s;
         }
 
         @keyframes spinPulse {
           0%   { transform: rotate(0deg) scale(1); }
-          50%  { transform: rotate(180deg) scale(1.4); }
+          50%  { transform: rotate(180deg) scale(1.3); }
           100% { transform: rotate(360deg) scale(1); }
         }
 
-        @keyframes flash {
-          0%   { opacity:0.2; transform: scale(1);}
-          50%  { opacity:0.7; transform: scale(1.2);}
-          100% { opacity:0.3; transform: scale(1);}
+        @keyframes dashLine {
+          0% { transform: translateX(0); opacity:0; }
+          10%{ opacity:1; }
+          50%{ opacity:0.8; }
+          100%{ transform: translateX(100%); opacity:0; }
         }
 
         /* ===== Foreground Layout ===== */
@@ -110,10 +122,13 @@ export default function App() {
         }
       `}</style>
 
-      {/* Electric Circuit Layers */}
+      {/* Circuit + Pulses */}
       <div className="circuit-bg">
         <div className="pulse"></div>
-        <div className="energy-spark"></div>
+        {/* Electric pulse lines */}
+        <div className="electric-line"></div>
+        <div className="electric-line"></div>
+        <div className="electric-line"></div>
       </div>
 
       {/* Foreground */}
@@ -135,7 +150,6 @@ export default function App() {
               </div>
             </section>
           )}
-
           {stage === "menu" && (
             <section>
               <h2 style={{ color: "#fff" }}>Menu Placeholder</h2>
