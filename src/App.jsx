@@ -147,8 +147,6 @@ export default function App(){
           />
         ))}
       </div>
-
-      </main>
       <a href="/menu" className="mobile-cta">Order Now</a>
     </>
   )
