@@ -150,3 +150,47 @@ body{
   animation-play-state: running !important;
   will-change: transform;
 }
+
+/* === ORBS SYSTEM === */
+.orbs {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orbs span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.9), rgba(14,165,233,0) 70%);
+  animation: driftY 12s ease-in-out infinite alternate,
+             driftX 18s ease-in-out infinite alternate;
+}
+
+/* Orange alt color for half of them */
+.orbs span:nth-child(2n) {
+  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.85), rgba(249,115,22,0) 70%);
+}
+
+/* Randomize sizes + positions */
+.orbs span:nth-child(1n)  { width:80px;  height:80px;  top:10%; left:5%;  animation-duration:12s,20s }
+.orbs span:nth-child(2n)  { width:100px; height:100px; top:25%; left:30%; animation-duration:14s,22s }
+.orbs span:nth-child(3n)  { width:140px; height:140px; top:50%; left:15%; animation-duration:16s,24s }
+.orbs span:nth-child(4n)  { width:120px; height:120px; top:70%; left:40%; animation-duration:18s,26s }
+.orbs span:nth-child(5n)  { width:160px; height:160px; top:20%; right:10%; animation-duration:20s,28s }
+.orbs span:nth-child(6n)  { width:90px;  height:90px;  top:60%; right:20%; animation-duration:22s,30s }
+.orbs span:nth-child(7n)  { width:110px; height:110px; top:80%; left:70%; animation-duration:24s,32s }
+
+/* Repeat pattern cycles */
+@keyframes driftY { 
+  0% { transform: translateY(0); } 
+  100% { transform: translateY(-40px); }
+}
+@keyframes driftX { 
+  0% { transform: translateX(0); } 
+  100% { transform: translateX(40px); }
+}
