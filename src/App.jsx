@@ -34,33 +34,6 @@ export default function App() {
           mix-blend-mode: screen; opacity:.55;
         }
 
-        /* ===== Pretty Glow Orbs (between haze and content) ===== */
-        .orbs{
-          position:fixed; inset:0; z-index:1; pointer-events:none;
-        }
-        .orbs span{
-          position:absolute; border-radius:50%;
-          width:420px; height:420px;
-          /* keep them visible even if a global stylesheet tries to tone them down */
-          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.75), rgba(14,165,233,0) 70%) !important;
-          opacity:.6 !important;
-          filter: blur(100px) !important;
-          mix-blend-mode: screen !important;
-
-          animation: floatY 18s ease-in-out infinite alternate,
-                     floatX 26s ease-in-out infinite alternate;
-        }
-        .orbs span:nth-child(2n){
-          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.75), rgba(249,115,22,0) 70%) !important;
-        }
-        .orbs span:nth-child(1){ top:6%; left:6%; }
-        .orbs span:nth-child(2){ top:18%; right:8%; }
-        .orbs span:nth-child(3){ bottom:14%; left:12%; }
-        .orbs span:nth-child(4){ bottom:10%; right:14%; }
-
-        @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
-        @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
-
         /* ===== Foreground layout ===== */
         .page{ position:relative; z-index:2; }
         .container{ max-width:1100px; margin:0 auto; padding:28px; }
@@ -111,40 +84,29 @@ export default function App() {
           cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:700;
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
-        /* === SnapBurger Orbs — production look === */
-.global-haze{ z-index: 0; }
-.orbs{ position:fixed; inset:0; z-index: 1; pointer-events:none; }
-.page{ position:relative; z-index: 2; }
 
-/* Keep it subtle like the main site */
-.orbs span{
-  position:absolute;
-  display:block;
-  width: 340px; height: 340px;
-  border-radius: 50%;
-  filter: blur(110px);
-  opacity: .42;
-  mix-blend-mode: screen;
-  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 70%);
-  animation: floatY 18s ease-in-out infinite alternate,
-             floatX 26s ease-in-out infinite alternate;
-}
+        /* ===== Orbs (single, authoritative rule) ===== */
+        .orbs{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+        .orbs span{
+          position:absolute; display:block; border-radius:50%;
+          width: 360px; height: 360px;
+          filter: blur(110px) !important;
+          opacity: .42 !important;
+          mix-blend-mode: screen !important;
+          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 70%) !important;
+          animation: floatY 18s ease-in-out infinite alternate,
+                     floatX 26s ease-in-out infinite alternate;
+        }
+        .orbs span:nth-child(2n){
+          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 70%) !important;
+        }
+        .orbs span:nth-child(1){ top: 6%;  left: 6%;  }
+        .orbs span:nth-child(2){ top: 18%; right: 8%; }
+        .orbs span:nth-child(3){ bottom: 14%; left: 12%; }
+        .orbs span:nth-child(4){ bottom: 10%; right: 14%; }
 
-/* warm accents */
-.orbs span:nth-child(2n){
-  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 70%);
-}
-
-/* positions (tweak to taste) */
-.orbs span:nth-child(1){ top: 6%;  left: 6%;  }
-.orbs span:nth-child(2){ top: 18%; right: 8%; }
-.orbs span:nth-child(3){ bottom: 14%; left: 12%; }
-.orbs span:nth-child(4){ bottom: 10%; right: 14%; }
-
-@keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
-@keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
-
-
+        @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
+        @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
       `}</style>
 
       {/* Back layers */}
@@ -159,11 +121,7 @@ export default function App() {
           {stage === 'landing' && (
             <section className="tower-wrap">
               <div className="tower">
-                {/* Ensure this exists: /public/assets/kiosk-main.png */}
-                <img
-                  src="/assets/kiosk-main.png"
-                  alt="SnapBurger Kiosk"
-                />
+                <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
                 <div className="tower-overlay">
                   <button className="pill-btn btn-first"  onClick={() => setStage('menu')}>
                     First-Time Customer
