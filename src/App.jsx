@@ -6,14 +6,15 @@ export default function App() {
 
   return (
     <>
-      {/* background haze from your site stays as-is (theme.css) */}
+      {/* Back haze stays behind everything (from your theme.css) */}
       <div className="global-haze" aria-hidden="true" />
 
-      {/* 120 tiny orbs */}
+      {/* Dense, uniform orbs (100 of them) */}
       <div className="orbs" aria-hidden="true">
-        {Array.from({ length: 120 }).map((_, i) => <span key={i} />)}
+        {Array.from({ length: 100 }).map((_, i) => <span key={i} />)}
       </div>
 
+      {/* Foreground content */}
       <div className="page">
         <div className="container">
           {stage === 'landing' && (
