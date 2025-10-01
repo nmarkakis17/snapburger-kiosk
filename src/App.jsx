@@ -9,7 +9,7 @@ const lines = useMemo(() => {
   const rnd = (min, max) => min + Math.random() * (max - min);
   return Array.from({ length: 30 }).map(() => ({
     top: rnd(10, 90),        // spread vertically
-    left: rnd(-40, 80),       // start more to the right (40–80%)
+    left: rnd(-80, 80),       // start more to the right (40–80%)
     width: rnd(120, 220),
     angle: rnd(-80, 80),
     delay: rnd(0, 5),
