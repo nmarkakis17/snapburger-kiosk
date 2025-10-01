@@ -184,6 +184,21 @@ export default function App() {
 @media (max-width:480px){
   .orbs span{ width:180px !important; height:180px !important; filter:blur(48px) !important; }
 }
+.orbs span {
+  position:absolute !important;
+  display:block !important;
+  width:220px !important; height:220px !important;
+  border-radius:50% !important;
+  filter:blur(60px) !important;
+  opacity:.42 !important;
+  mix-blend-mode:screen !important;
+  background:radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 70%) !important;
+  animation: floatY 18s ease-in-out infinite alternate,
+             floatX 26s ease-in-out infinite alternate !important;
+}
+.orbs span:nth-child(2n) {
+  background:radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 70%) !important;
+}
 
 
       `}</style>
@@ -193,6 +208,9 @@ export default function App() {
 <div className="orbs" aria-hidden="true">
   <span></span><span></span><span></span><span></span>
   <span></span><span></span>
+</div>
+<div className="page">
+  {/* tower and buttons */}
 </div>
 
       {/* Foreground */}
