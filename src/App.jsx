@@ -85,25 +85,32 @@ export default function App() {
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
 
-        /* ===== Orbs (single, authoritative rule) ===== */
-        .orbs{ position:fixed; inset:0; z-index:1; pointer-events:none; }
-        .orbs span{
-          position:absolute; display:block; border-radius:50%;
-          width: 360px; height: 360px;
-          filter: blur(110px) !important;
-          opacity: .42 !important;
-          mix-blend-mode: screen !important;
-          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 70%) !important;
-          animation: floatY 18s ease-in-out infinite alternate,
-                     floatX 26s ease-in-out infinite alternate;
-        }
-        .orbs span:nth-child(2n){
-          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 70%) !important;
-        }
-        .orbs span:nth-child(1){ top: 6%;  left: 6%;  }
-        .orbs span:nth-child(2){ top: 18%; right: 8%; }
-        .orbs span:nth-child(3){ bottom: 14%; left: 12%; }
-        .orbs span:nth-child(4){ bottom: 10%; right: 14%; }
+/* ===== Orbs (boosted visibility for verification) ===== */
+.orbs{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+.orbs span{
+  position:absolute; display:block; border-radius:50%;
+  width: 520px; height: 520px;              /* bigger */
+  filter: blur(70px) !important;            /* softer, but visible */
+  opacity: .88 !important;                  /* much brighter */
+  mix-blend-mode: normal !important;        /* ignore blending for now */
+  background: radial-gradient(circle at 40% 40%,
+              rgba(14,165,233,0.95), rgba(14,165,233,0) 70%) !important;
+  animation: floatY 18s ease-in-out infinite alternate,
+             floatX 26s ease-in-out infinite alternate;
+  /* debug tint to make them unmistakable */
+  box-shadow: 0 0 0 2px rgba(255,255,255,.1) inset;
+}
+.orbs span:nth-child(2n){
+  background: radial-gradient(circle at 40% 40%,
+              rgba(249,115,22,0.95), rgba(249,115,22,0) 70%) !important;
+}
+
+/* positions */
+.orbs span:nth-child(1){ top: 6%;  left: 6%;  }
+.orbs span:nth-child(2){ top: 18%; right: 8%; }
+.orbs span:nth-child(3){ bottom: 14%; left: 12%; }
+.orbs span:nth-child(4){ bottom: 10%; right: 14%; }
+
 
         @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
         @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
