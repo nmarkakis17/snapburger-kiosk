@@ -13,7 +13,7 @@ export default function App() {
         html { background: var(--sb-bg); }
         body, #root { background: transparent; }
 
-        /* ===== Haze + grid (back-most) ===== */
+        /* Back-most haze layer (nice but not critical) */
         .global-haze{
           position:fixed; inset:0; z-index:0; pointer-events:none;
           background:
@@ -33,37 +33,11 @@ export default function App() {
           mix-blend-mode: screen; opacity:.55;
         }
 
-        /* ===== Animated glow orbs (between haze and content) ===== */
-        /* ↑ specificity bump with body .orbs to beat theme.css */
-        body .orbs{
-          position:fixed; inset:0; z-index:1; pointer-events:none;
-        }
-        body .orbs span{
-          position:absolute; border-radius:50%;
-          width:380px; height:380px;
-          filter: blur(70px);
-          opacity: .75;
-          mix-blend-mode: screen;
-          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 68%);
-          animation: floatY 18s ease-in-out infinite alternate,
-                     floatX 26s ease-in-out infinite alternate;
-        }
-        body .orbs span:nth-child(2n){
-          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 68%);
-        }
-        body .orbs span:nth-child(1){ top:6%; left:6%; }
-        body .orbs span:nth-child(2){ top:18%; right:8%; }
-        body .orbs span:nth-child(3){ bottom:14%; left:12%; }
-        body .orbs span:nth-child(4){ bottom:10%; right:14%; }
-
-        @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
-        @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
-
-        /* ===== Layout container (above background) ===== */
+        /* Content sits above haze */
         .page{ position:relative; z-index:2; }
         .container{ max-width:1100px; margin:0 auto; padding:28px; }
 
-        /* ===== Tower + overlay pills ===== */
+        /* Tower + overlay pills */
         .tower-wrap{ display:flex; justify-content:center; padding:8px 0; }
         .tower{ position:relative; width:min(460px, 92vw); filter: drop-shadow(0 18px 40px rgba(0,0,0,.45)); }
         .tower > img{ display:block; width:100%; height:auto; border-radius:22px; }
@@ -79,8 +53,8 @@ export default function App() {
           cursor:pointer; transition: transform .08s ease, box-shadow .16s ease, filter .16s ease;
         }
         .pill-btn:hover{ transform:translateX(-50%) translateY(-1px); filter:saturate(1.06) }
-        .btn-first  { top: 27%; }
-        .btn-return { top: 37%; }
+        .btn-first  { top:27%; }
+        .btn-return { top:37%; }
 
         .tagline-box{
           position:absolute; left:8%; width:84%; bottom:7.5%;
@@ -92,12 +66,12 @@ export default function App() {
         }
 
         @media (max-width:420px){
-          .btn-first  { top: 24%; }
-          .btn-return { top: 35.5%; }
-          .tagline-box{ bottom: 7%; }
+          .btn-first  { top:24%; }
+          .btn-return { top:35.5%; }
+          .tagline-box{ bottom:7%; }
         }
 
-        /* demo cards for "menu" */
+        /* Demo cards for the "menu" stage */
         .grid-2{ display:grid; gap:22px; grid-template-columns:1fr 1fr; }
         .card{
           background:#ffffff; color:#0b1020;
@@ -109,15 +83,35 @@ export default function App() {
           cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:700;
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
+
+        /* ========= NUCLEAR DEBUG ORBS =========
+           Force them ABOVE EVERYTHING, no blend, no blur, solid colors.
+           If you don't see these, something is covering the whole page. */
+        .orbs-debug{
+          position:fixed; inset:0;
+          z-index: 2147483647; /* max int-ish */
+          pointer-events:none;
+        }
+        .orbs-debug span{
+          position:absolute; border-radius:50%;
+          width: 420px; height: 420px;
+          background: rgba(0,255,0,0.45); /* solid green disk */
+          /* no blur, no blend, just obvious */
+        }
+        .orbs-debug span:nth-child(2){ background: rgba(255,0,0,0.45); }
+        .orbs-debug span:nth-child(3){ background: rgba(0,128,255,0.45); }
+        .orbs-debug span:nth-child(4){ background: rgba(255,165,0,0.45); }
+
+        .orbs-debug span:nth-child(1){ top:6%; left:6%; }
+        .orbs-debug span:nth-child(2){ top:18%; right:8%; }
+        .orbs-debug span:nth-child(3){ bottom:14%; left:12%; }
+        .orbs-debug span:nth-child(4){ bottom:10%; right:14%; }
       `}</style>
 
-      {/* Background layers */}
+      {/* Back layer */}
       <div className="global-haze" aria-hidden="true" />
-      <div className="orbs" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </div>
 
-      {/* Foreground */}
+      {/* Foreground content */}
       <div className="page">
         <div className="container">
           {stage === 'landing' && (
@@ -156,6 +150,11 @@ export default function App() {
             SnapBurger: Where Dining Meets Technology
           </div>
         </div>
+      </div>
+
+      {/* ====== NUCLEAR DEBUG ORBS (rendered last so they're most on top) ====== */}
+      <div className="orbs-debug" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
       </div>
     </>
   )
