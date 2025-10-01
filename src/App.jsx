@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState } from 'react'
 
 export default function App() {
@@ -7,13 +8,13 @@ export default function App() {
     <>
       <style>{`
         :root{
-          --sb-bg:#0b0f1e;
+          --sb-bg:#0b1220;
           --blue:#0ea5e9; --orange:#f97316;
         }
         html { background: var(--sb-bg); }
-        body, #root { background: transparent; }
+        body, #root { background: transparent; margin:0; }
 
-        /* Back-most haze layer (nice but not critical) */
+        /* ===== Background haze + grid (back-most) ===== */
         .global-haze{
           position:fixed; inset:0; z-index:0; pointer-events:none;
           background:
@@ -33,7 +34,34 @@ export default function App() {
           mix-blend-mode: screen; opacity:.55;
         }
 
-        /* Content sits above haze */
+        /* ===== Pretty Glow Orbs (between haze and content) ===== */
+        .orbs{
+          position:fixed; inset:0; z-index:1; pointer-events:none;
+        }
+        .orbs span{
+          position:absolute; border-radius:50%;
+          width:420px; height:420px;
+          /* keep them visible even if a global stylesheet tries to tone them down */
+          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.75), rgba(14,165,233,0) 70%) !important;
+          opacity:.6 !important;
+          filter: blur(100px) !important;
+          mix-blend-mode: screen !important;
+
+          animation: floatY 18s ease-in-out infinite alternate,
+                     floatX 26s ease-in-out infinite alternate;
+        }
+        .orbs span:nth-child(2n){
+          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.75), rgba(249,115,22,0) 70%) !important;
+        }
+        .orbs span:nth-child(1){ top:6%; left:6%; }
+        .orbs span:nth-child(2){ top:18%; right:8%; }
+        .orbs span:nth-child(3){ bottom:14%; left:12%; }
+        .orbs span:nth-child(4){ bottom:10%; right:14%; }
+
+        @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
+        @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
+
+        /* ===== Foreground layout ===== */
         .page{ position:relative; z-index:2; }
         .container{ max-width:1100px; margin:0 auto; padding:28px; }
 
@@ -53,8 +81,8 @@ export default function App() {
           cursor:pointer; transition: transform .08s ease, box-shadow .16s ease, filter .16s ease;
         }
         .pill-btn:hover{ transform:translateX(-50%) translateY(-1px); filter:saturate(1.06) }
-        .btn-first  { top:27%; }
-        .btn-return { top:37%; }
+        .btn-first  { top: 27%; }
+        .btn-return { top: 37%; }
 
         .tagline-box{
           position:absolute; left:8%; width:84%; bottom:7.5%;
@@ -66,12 +94,12 @@ export default function App() {
         }
 
         @media (max-width:420px){
-          .btn-first  { top:24%; }
-          .btn-return { top:35.5%; }
-          .tagline-box{ bottom:7%; }
+          .btn-first  { top: 24%; }
+          .btn-return { top: 35.5%; }
+          .tagline-box{ bottom: 7%; }
         }
 
-        /* Demo cards for the "menu" stage */
+        /* Simple demo cards for "menu" stage */
         .grid-2{ display:grid; gap:22px; grid-template-columns:1fr 1fr; }
         .card{
           background:#ffffff; color:#0b1020;
@@ -83,53 +111,25 @@ export default function App() {
           cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:700;
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
-
-       <style>{`
-  /* ===== Pretty Glow Orbs ===== */
-  .orbs{
-    position:fixed; inset:0;
-    z-index:1; /* below .page, above haze */
-    pointer-events:none;
-  }
-  .orbs span{
-    position:absolute; border-radius:50%;
-    width:420px; height:420px;
-    background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.75), rgba(14,165,233,0) 70%);
-    opacity:.6;
-    filter: blur(100px);
-    mix-blend-mode: screen;
-    animation: floatY 18s ease-in-out infinite alternate,
-               floatX 26s ease-in-out infinite alternate;
-  }
-  .orbs span:nth-child(2n){
-    background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.75), rgba(249,115,22,0) 70%);
-  }
-  .orbs span:nth-child(1){ top:6%; left:6%; }
-  .orbs span:nth-child(2){ top:18%; right:8%; }
-  .orbs span:nth-child(3){ bottom:14%; left:12%; }
-  .orbs span:nth-child(4){ bottom:10%; right:14%; }
-
-  @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
-  @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
-`}</style>
-
-{/* Glow orbs */}
-<div className="orbs" aria-hidden="true">
-  <span></span><span></span><span></span><span></span>
-</div>
-
       `}</style>
 
-      {/* Back layer */}
+      {/* Back layers */}
       <div className="global-haze" aria-hidden="true" />
+      <div className="orbs" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </div>
 
-      {/* Foreground content */}
+      {/* Foreground */}
       <div className="page">
         <div className="container">
           {stage === 'landing' && (
             <section className="tower-wrap">
               <div className="tower">
-                <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
+                {/* Ensure this exists: /public/assets/kiosk-main.png */}
+                <img
+                  src="/assets/kiosk-main.png"
+                  alt="SnapBurger Kiosk"
+                />
                 <div className="tower-overlay">
                   <button className="pill-btn btn-first"  onClick={() => setStage('menu')}>
                     First-Time Customer
@@ -162,11 +162,6 @@ export default function App() {
             SnapBurger: Where Dining Meets Technology
           </div>
         </div>
-      </div>
-
-      {/* ====== NUCLEAR DEBUG ORBS (rendered last so they're most on top) ====== */}
-      <div className="orbs-debug" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
       </div>
     </>
   )
