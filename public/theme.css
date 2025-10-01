@@ -230,3 +230,93 @@ body{
   100% { transform: translateX(40px); }
 }
 
+
+/* ===== DENSE, UNIFORM, FAST “FIREFLY” ORBS =====
+   - ~100 tiny orbs
+   - uniform white glow (subtle twinkle)
+   - faster motion than before
+   - evenly distributed across viewport
+*/
+.orbs{
+  position: fixed;
+  inset: 0;
+  z-index: 1;              /* haze:0, orbs:1, app:2 */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Base orb — small, white, fast */
+.orbs span{
+  position: absolute;
+  display: block;
+  width: 22px; height: 22px;                 /* tiny */
+  border-radius: 50%;
+  filter: blur(10px);
+  opacity: .55;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.95), rgba(255,255,255,0) 60%);
+
+  /* faster, constant motion + twinkle */
+  animation:
+    driftY 3s ease-in-out infinite alternate,
+    driftX 4.5s ease-in-out infinite alternate,
+    twinkle 2.4s ease-in-out infinite alternate;
+}
+
+/* Subtle variation (just a touch) */
+.orbs span:nth-child(3n)  { width: 18px; height: 18px; filter: blur(9px) }
+.orbs span:nth-child(5n)  { width: 26px; height: 26px; filter: blur(11px) }
+.orbs span:nth-child(7n)  { opacity: .5 }
+.orbs span:nth-child(11n) { opacity: .48 }
+
+/* Stagger timings so they don’t sync */
+.orbs span:nth-child(2n)  { animation-duration: 2.6s, 4s, 2.0s;  animation-delay: .1s, .0s, .2s; }
+.orbs span:nth-child(3n)  { animation-duration: 3.2s, 4.2s, 2.2s; animation-delay: .3s, .1s, .1s; }
+.orbs span:nth-child(4n)  { animation-duration: 2.8s, 4.6s, 2.6s; animation-delay: .2s, .2s, .3s; }
+.orbs span:nth-child(5n)  { animation-duration: 3.0s, 4.8s, 2.8s; animation-delay: .4s, .3s, .0s; }
+.orbs span:nth-child(6n)  { animation-duration: 3.4s, 5.0s, 2.4s; animation-delay: .0s, .4s, .1s; }
+
+/* Distribute orbs on a 10×10 grid pattern (covers whole viewport) */
+.orbs span:nth-child(10n+1)  { top:  5%; left:  4%; }
+.orbs span:nth-child(10n+2)  { top:  5%; left: 14%; }
+.orbs span:nth-child(10n+3)  { top:  5%; left: 24%; }
+.orbs span:nth-child(10n+4)  { top:  5%; left: 34%; }
+.orbs span:nth-child(10n+5)  { top:  5%; left: 44%; }
+.orbs span:nth-child(10n+6)  { top:  5%; left: 54%; }
+.orbs span:nth-child(10n+7)  { top:  5%; left: 64%; }
+.orbs span:nth-child(10n+8)  { top:  5%; left: 74%; }
+.orbs span:nth-child(10n+9)  { top:  5%; left: 84%; }
+.orbs span:nth-child(10n+10) { top:  5%; left: 94%; }
+
+.orbs span:nth-child(n+11):nth-child(-n+20)  { top: 15%; }
+.orbs span:nth-child(n+21):nth-child(-n+30)  { top: 25%; }
+.orbs span:nth-child(n+31):nth-child(-n+40)  { top: 35%; }
+.orbs span:nth-child(n+41):nth-child(-n+50)  { top: 45%; }
+.orbs span:nth-child(n+51):nth-child(-n+60)  { top: 55%; }
+.orbs span:nth-child(n+61):nth-child(-n+70)  { top: 65%; }
+.orbs span:nth-child(n+71):nth-child(-n+80)  { top: 75%; }
+.orbs span:nth-child(n+81):nth-child(-n+90)  { top: 85%; }
+.orbs span:nth-child(n+91):nth-child(-n+100) { top: 95%; }
+
+/* Nudge columns for rows (checkerboard-ish offset for natural layout) */
+.orbs span:nth-child(n+11):nth-child(-n+20)  { left:  8%; }  /* row 2 */
+.orbs span:nth-child(n+21):nth-child(-n+30)  { left:  4%; }  /* row 3 */
+.orbs span:nth-child(n+31):nth-child(-n+40)  { left:  8%; }  /* row 4 */
+.orbs span:nth-child(n+41):nth-child(-n+50)  { left:  4%; }  /* row 5 */
+.orbs span:nth-child(n+51):nth-child(-n+60)  { left:  8%; }  /* row 6 */
+.orbs span:nth-child(n+61):nth-child(-n+70)  { left:  4%; }  /* row 7 */
+.orbs span:nth-child(n+71):nth-child(-n+80)  { left:  8%; }  /* row 8 */
+.orbs span:nth-child(n+81):nth-child(-n+90)  { left:  4%; }  /* row 9 */
+.orbs span:nth-child(n+91):nth-child(-n+100) { left:  8%; }  /* row 10 */
+
+/* Motion — short, snappy */
+@keyframes driftY { 0% { transform: translateY(0) } 100% { transform: translateY(-16px) } }
+@keyframes driftX { 0% { transform: translateX(0) } 100% { transform: translateX(18px) } }
+@keyframes twinkle {
+  0%   { opacity: .32; transform: scale(1) }
+  100% { opacity: .60; transform: scale(1.08) }
+}
+
+/* Z-layers for app */
+.global-haze{ z-index: 0; }
+.page,.container{ position: relative; z-index: 2; }
