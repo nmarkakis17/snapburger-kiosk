@@ -111,6 +111,42 @@ export default function App() {
           cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:700;
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
+        /* === ORB RESCUE OVERRIDES (put at END of the style block) === */
+.global-haze{ z-index: 0 !important; }     /* back-most */
+.orbs{ position:fixed; inset:0; z-index: 999000 !important; pointer-events:none !important; }
+.page{ position:relative; z-index: 999500 !important; }  /* content above orbs */
+
+.orbs span{
+  /* make them unmistakeable */
+  display:block !important;
+  position:absolute !important;
+  width: 420px !important; height: 420px !important;
+  border-radius: 50% !important;
+
+  /* **temporarily disable blend mode** so they show on any bg */
+  mix-blend-mode: normal !important;
+
+  /* bright core, lighter edge */
+  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,0.95), rgba(14,165,233,0) 70%) !important;
+  opacity: 0.85 !important;
+  filter: blur(50px) !important;
+
+  /* keep the float */
+  animation: floatY 18s ease-in-out infinite alternate,
+             floatX 26s ease-in-out infinite alternate !important;
+}
+
+/* some orange ones */
+.orbs span:nth-child(2n){
+  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,0.95), rgba(249,115,22,0) 70%) !important;
+}
+
+/* fixed positions so you can spot them quickly */
+.orbs span:nth-child(1){ top: 6%  !important; left: 6%  !important; }
+.orbs span:nth-child(2){ top: 18% !important; right: 8% !important; }
+.orbs span:nth-child(3){ bottom: 14% !important; left: 12% !important; }
+.orbs span:nth-child(4){ bottom: 10% !important; right: 14% !important; }
+
       `}</style>
 
       {/* Back layers */}
