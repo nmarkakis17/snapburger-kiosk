@@ -111,43 +111,39 @@ export default function App() {
           cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:700;
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
-        /* === ORB RESCUE OVERRIDES (put at END of the style block) === */
-.global-haze{ z-index: 0 !important; }     /* back-most */
-.orbs{ position:fixed; inset:0; z-index: 999000 !important; pointer-events:none !important; }
-.page{ position:relative; z-index: 999500 !important; }  /* content above orbs */
+        /* === SnapBurger Orbs — production look === */
+.global-haze{ z-index: 0; }
+.orbs{ position:fixed; inset:0; z-index: 1; pointer-events:none; }
+.page{ position:relative; z-index: 2; }
 
+/* Keep it subtle like the main site */
 .orbs span{
-  /* make them unmistakeable */
-  display:block !important;
-  position:absolute !important;
-  width: 420px !important; height: 420px !important;
-  border-radius: 50% !important;
-
-  /* **temporarily disable blend mode** so they show on any bg */
-  mix-blend-mode: normal !important;
-
-  /* bright core, lighter edge */
-  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,0.95), rgba(14,165,233,0) 70%) !important;
-  opacity: 0.85 !important;
-  filter: blur(50px) !important;
-
-  /* keep the float */
+  position:absolute;
+  display:block;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: .42;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 70%);
   animation: floatY 18s ease-in-out infinite alternate,
-             floatX 26s ease-in-out infinite alternate !important;
+             floatX 26s ease-in-out infinite alternate;
 }
 
-/* some orange ones */
+/* warm accents */
 .orbs span:nth-child(2n){
-  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,0.95), rgba(249,115,22,0) 70%) !important;
+  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 70%);
 }
 
-/* fixed positions so you can spot them quickly */
-.orbs span:nth-child(1){ top: 6%  !important; left: 6%  !important; }
-.orbs span:nth-child(2){ top: 18% !important; right: 8% !important; }
-.orbs span:nth-child(3){ bottom: 14% !important; left: 12% !important; }
-.orbs span:nth-child(4){ bottom: 10% !important; right: 14% !important; }
+/* positions (tweak to taste) */
+.orbs span:nth-child(1){ top: 6%;  left: 6%;  }
+.orbs span:nth-child(2){ top: 18%; right: 8%; }
+.orbs span:nth-child(3){ bottom: 14%; left: 12%; }
+.orbs span:nth-child(4){ bottom: 10%; right: 14%; }
 
-.orbs span{ background: rgba(0,255,0,0.6) !important; filter:none !important; }
+@keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
+@keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
+
 
       `}</style>
 
