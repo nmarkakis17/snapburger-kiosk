@@ -158,5 +158,60 @@ h1, h2 { color: var(--sb-accent-2); }
   .btn-return { top: 35.5%; }
   .tagline-box{ bottom: 7%; }
 }
+/* ===== SnapBurger Orbs — definitive override (place at END of theme.css) ===== */
+.global-haze{ z-index:0; }
+.orbs{
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1 !important;         /* sits above haze, below app */
+  pointer-events: none !important;
+}
+.orbs span{
+  position: absolute !important;
+  display: block !important;
+  width: 260px !important;
+  height: 260px !important;
+  border-radius: 50% !important;
+
+  /* glow look */
+  filter: blur(60px) !important;
+  opacity: 0.66 !important;
+  mix-blend-mode: screen !important;
+  background: radial-gradient(circle at 40% 40%,
+    rgba(14,165,233,0.95), rgba(14,165,233,0) 70%) !important;
+
+  /* movement */
+  animation: floatY 18s ease-in-out infinite alternate,
+             floatX 26s ease-in-out infinite alternate !important;
+}
+
+/* alternate warm orbs */
+.orbs span:nth-child(2n){
+  background: radial-gradient(circle at 40% 40%,
+    rgba(249,115,22,0.95), rgba(249,115,22,0) 70%) !important;
+}
+
+/* positions (6 orbs) */
+.orbs span:nth-child(1){ top: 6%;  left: 6%;  }
+.orbs span:nth-child(2){ top: 18%; right: 8%; }
+.orbs span:nth-child(3){ bottom: 14%; left: 12%; }
+.orbs span:nth-child(4){ bottom: 10%; right: 14%; }
+.orbs span:nth-child(5){ top: 50%; left: 40%; }
+.orbs span:nth-child(6){ top: 10%; right: 35%; }
+
+/* movement keyframes */
+@keyframes floatY { 0% { transform: translateY(0) } 100% { transform: translateY(-22px) } }
+@keyframes floatX { 0% { transform: translateX(0) } 100% { transform: translateX(18px) } }
+
+/* If your OS/browser has “Reduce motion” ON, animations may be disabled.
+   For testing only, force-enable movement even under reduce-motion: */
+@media (prefers-reduced-motion: reduce){
+  .orbs span{
+    animation: floatY 18s ease-in-out infinite alternate,
+               floatX 26s ease-in-out infinite alternate !important;
+  }
+}
+
+
 
 
