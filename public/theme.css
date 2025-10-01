@@ -65,18 +65,16 @@ body{
   position: fixed; inset: 0; z-index: 1; pointer-events: none;
 }
 .orbs span{
-  position: absolute;
+  position:absolute;
   display:block;
-  width: 320px; height: 320px;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: .42;
-  mix-blend-mode: screen;
-  background: radial-gradient(circle at 40% 40%,
-    rgba(14,165,233,.95), rgba(14,165,233,0) 70%);
-  animation: floatY 18s ease-in-out infinite alternate,
-             floatX 26s ease-in-out infinite alternate;
+  width:100px; height:100px;    /* small and obvious */
+  border-radius:50%;
+  background:red !important;    /* bright red test color */
+  opacity:1 !important;
+  filter:none !important;
+  z-index: 10 !important;
 }
+
 /* Warm accents */
 .orbs span:nth-child(2n){
   background: radial-gradient(circle at 40% 40%,
@@ -159,3 +157,4 @@ h1, h2 { color: var(--sb-accent-2); }
   .btn-return { top: 35.5%; }
   .tagline-box{ bottom: 7%; }
 }
+
