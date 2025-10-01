@@ -127,14 +127,73 @@ export default function App() {
 @media (max-width: 480px){
   .orbs span{ width: 280px; height: 280px; filter: blur(90px) !important; }
 }
+/* ===== Layers: haze (0) → orbs (1) → app (2) ===== */
+.global-haze{ position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
+    radial-gradient(900px 600px at 95% 0%,   rgba(14,165,233,.30), transparent 60%),
+    radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
+    radial-gradient(900px 600px at 0% 100%,  rgba(251,146,60,.28), transparent 60%),
+    linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
+    #0b1220;
+  background-attachment: fixed,fixed,fixed,fixed,fixed,fixed;
+  filter:saturate(1.05);
+}
+.page{ position:relative; z-index:2; }
+
+/* ===== Tiny floating ORBS (like the main site) ===== */
+.orbs{
+  position:fixed !important; inset:0 !important;
+  z-index:1 !important; pointer-events:none !important;
+  /* wipe out any inherited display/filters from theme.css */
+  display:block !important; mix-blend-mode: initial !important;
+}
+
+.orbs span{
+  position:absolute !important; display:block !important;
+  width:220px !important; height:220px !important;
+  border-radius:50% !important;
+  /* subtle but visible glow */
+  filter:blur(60px) !important; opacity:.42 !important;
+  mix-blend-mode:screen !important;
+  background:radial-gradient(circle at 40% 40%,
+    rgba(14,165,233,.95), rgba(14,165,233,0) 70%) !important;
+  animation: floatY 18s ease-in-out infinite alternate,
+             floatX 26s ease-in-out infinite alternate !important;
+}
+
+/* every 2nd orb is warm */
+.orbs span:nth-child(2n){
+  background:radial-gradient(circle at 40% 40%,
+    rgba(249,115,22,.95), rgba(249,115,22,0) 70%) !important;
+}
+
+/* placements (feel free to tweak) */
+.orbs span:nth-child(1){ top:8%;  left:8%;  }
+.orbs span:nth-child(2){ top:18%; right:10%; }
+.orbs span:nth-child(3){ bottom:18%; left:14%; }
+.orbs span:nth-child(4){ bottom:12%; right:16%; }
+.orbs span:nth-child(5){ top:46%; left:40%; }
+.orbs span:nth-child(6){ top:12%; right:36%; }
+
+/* gentle drift */
+@keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-18px)} }
+@keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(16px)} }
+
+/* phones: slightly smaller glows */
+@media (max-width:480px){
+  .orbs span{ width:180px !important; height:180px !important; filter:blur(48px) !important; }
+}
+
 
       `}</style>
 
       {/* Back layers */}
-      <div className="global-haze" aria-hidden="true" />
-      <div className="orbs" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </div>
+<div className="global-haze" aria-hidden="true" />
+<div className="orbs" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+  <span></span><span></span>
+</div>
 
       {/* Foreground */}
       <div className="page">
