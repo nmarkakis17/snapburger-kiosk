@@ -147,6 +147,8 @@ export default function App() {
 .orbs span:nth-child(3){ bottom: 14% !important; left: 12% !important; }
 .orbs span:nth-child(4){ bottom: 10% !important; right: 14% !important; }
 
+.orbs span{ background: rgba(0,255,0,0.6) !important; filter:none !important; }
+
       `}</style>
 
       {/* Back layers */}
