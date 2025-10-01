@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 
 export default function App() {
-  // ✅ plain JS, no TS generic here
   const [stage, setStage] = useState('landing') // 'landing' | 'menu'
 
   return (
     <>
       <style>{`
         :root{
-          --sb-bg:#0b1220;
+          --sb-bg:#0b0f1e;
           --blue:#0ea5e9; --orange:#f97316;
         }
         html { background: var(--sb-bg); }
@@ -34,38 +33,29 @@ export default function App() {
           mix-blend-mode: screen; opacity:.55;
         }
 
-        /* ===== Animated glow orbs ===== */
-        .orbs{
+        /* ===== Animated glow orbs (between haze and content) ===== */
+        /* ↑ specificity bump with body .orbs to beat theme.css */
+        body .orbs{
           position:fixed; inset:0; z-index:1; pointer-events:none;
         }
-        .orbs span{
+        body .orbs span{
           position:absolute; border-radius:50%;
           width:380px; height:380px;
-          /* make them UNMISSABLE first; we can tone down later */
-              
-         mix-blend-mode: screen;
-          
-  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 68%) !important;
-  opacity: .75 !important;
-  filter: blur(70px) !important;
-}
-
-
-          /* extra safety net for visibility while debugging */
-          outline: 2px dashed rgba(255,255,255,.15);
-          background-color: rgba(0,255,0,.08);
-
+          filter: blur(70px);
+          opacity: .75;
+          mix-blend-mode: screen;
+          background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 68%);
           animation: floatY 18s ease-in-out infinite alternate,
                      floatX 26s ease-in-out infinite alternate;
         }
-        .orbs span:nth-child(2n){
-          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,0.95), rgba(249,115,22,0) 68%);
-          background-color: rgba(255,165,0,.08); /* debug tint */
+        body .orbs span:nth-child(2n){
+          background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 68%);
         }
-        .orbs span:nth-child(1){ top:6%; left:6%; }
-        .orbs span:nth-child(2){ top:18%; right:8%; }
-        .orbs span:nth-child(3){ bottom:14%; left:12%; }
-        .orbs span:nth-child(4){ bottom:10%; right:14%; }
+        body .orbs span:nth-child(1){ top:6%; left:6%; }
+        body .orbs span:nth-child(2){ top:18%; right:8%; }
+        body .orbs span:nth-child(3){ bottom:14%; left:12%; }
+        body .orbs span:nth-child(4){ bottom:10%; right:14%; }
+
         @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
         @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
 
@@ -133,20 +123,7 @@ export default function App() {
           {stage === 'landing' && (
             <section className="tower-wrap">
               <div className="tower">
-                {/* Make sure this file exists: /public/assets/kiosk-main.png */}
-                <img
-                  src="/assets/kiosk-main.png"
-                  alt="SnapBurger Kiosk"
-                  onError={(e) => {
-                    // fallback if the image path is wrong
-                    e.currentTarget.replaceWith(
-                      Object.assign(document.createElement('div'), {
-                        innerText: 'Missing /public/assets/kiosk-main.png',
-                        style: 'color:#fff;background:#0008;padding:16px;border-radius:12px;text-align:center'
-                      })
-                    )
-                  }}
-                />
+                <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
                 <div className="tower-overlay">
                   <button className="pill-btn btn-first"  onClick={() => setStage('menu')}>
                     First-Time Customer
