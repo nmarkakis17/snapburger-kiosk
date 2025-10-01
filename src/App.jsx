@@ -2,55 +2,83 @@
 import React, { useState } from "react";
 
 export default function App() {
-  const [stage, setStage] = useState("landing"); // 'landing' | 'menu'
+  const [stage, setStage] = useState("landing");
 
   return (
     <>
       <style>{`
         :root{
-          --sb-bg:#0b1220; --blue:#0ea5e9; --orange:#f97316;
+          --sb-bg:#0b1220;
+          --blue:#0ea5e9; 
+          --orange:#f97316;
+          --electric:#00f7ff;
         }
         html, body, #root { height: 100%; margin:0; }
         html { background: var(--sb-bg); }
         body, #root { background: transparent; }
 
-        /* ===== Animated Circuit Background ===== */
-        .circuit-bg{
+        /* ===== Electric Circuit Background ===== */
+        .circuit-bg {
           position: fixed; inset: 0;
-          background: repeating-linear-gradient(
+          background:
+            repeating-linear-gradient(
               90deg,
-              rgba(14,165,233,0.08) 0px,
-              rgba(14,165,233,0.08) 1px,
-              transparent 1px,
+              rgba(0,247,255,0.35) 0px,
+              rgba(0,247,255,0.35) 2px,
+              transparent 2px,
               transparent 40px
             ),
             repeating-linear-gradient(
               0deg,
-              rgba(14,165,233,0.08) 0px,
-              rgba(14,165,233,0.08) 1px,
-              transparent 1px,
+              rgba(0,247,255,0.35) 0px,
+              rgba(0,247,255,0.35) 2px,
+              transparent 2px,
               transparent 40px
-            );
+            ),
+            var(--sb-bg);
           z-index:0;
+          overflow:hidden;
         }
 
-        /* glowing animated pulse */
-        .circuit-pulse {
-          position: absolute;
-          width: 200%;
-          height: 200%;
-          top: -50%; left: -50%;
-          background: radial-gradient(circle, rgba(0,212,255,0.25) 0%, transparent 70%);
-          animation: pulse 6s linear infinite;
+        /* Bright fast energy waves */
+        .pulse {
+          position:absolute;
+          width: 300%;
+          height: 300%;
+          top:-100%; left:-100%;
+          background: conic-gradient(
+            from 0deg,
+            rgba(14,165,233,.5),
+            rgba(249,115,22,.5),
+            rgba(14,165,233,.5)
+          );
           mix-blend-mode: screen;
-        }
-        @keyframes pulse {
-          0%   { transform: rotate(0deg) scale(1); opacity:0.6; }
-          50%  { transform: rotate(180deg) scale(1.2); opacity:0.2; }
-          100% { transform: rotate(360deg) scale(1); opacity:0.6; }
+          animation: spinPulse 8s linear infinite;
         }
 
-        /* ===== Foreground layout ===== */
+        .energy-spark {
+          position:absolute;
+          width:200%;
+          height:200%;
+          top:-50%; left:-50%;
+          background: radial-gradient(circle, rgba(0,247,255,0.25) 0%, transparent 70%);
+          mix-blend-mode: screen;
+          animation: flash 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes spinPulse {
+          0%   { transform: rotate(0deg) scale(1); }
+          50%  { transform: rotate(180deg) scale(1.4); }
+          100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes flash {
+          0%   { opacity:0.2; transform: scale(1);}
+          50%  { opacity:0.7; transform: scale(1.2);}
+          100% { opacity:0.3; transform: scale(1);}
+        }
+
+        /* ===== Foreground Layout ===== */
         .page{ position:relative; z-index:2; }
         .container{ max-width:1100px; margin:0 auto; padding:28px; }
 
@@ -65,10 +93,10 @@ export default function App() {
           width:70%; padding:26px 0; border-radius:9999px; border:none;
           font-weight:900; font-size:18px; color:#0b0e14;
           background: linear-gradient(135deg, var(--blue), var(--orange));
-          box-shadow: 0 10px 30px rgba(14,165,233,.28), inset 0 0 0 1px rgba(255,255,255,.22);
+          box-shadow: 0 10px 30px rgba(14,165,233,.4), inset 0 0 0 1px rgba(255,255,255,.22);
           cursor:pointer; transition: transform .08s ease, box-shadow .16s ease, filter .16s ease;
         }
-        .pill-btn:hover{ transform:translateX(-50%) translateY(-1px); filter:saturate(1.06) }
+        .pill-btn:hover{ transform:translateX(-50%) translateY(-2px); filter:saturate(1.2) }
         .btn-first  { top: 27%; }
         .btn-return { top: 37%; }
 
@@ -76,15 +104,16 @@ export default function App() {
           position:absolute; left:8%; width:84%; bottom:7.5%;
           padding:14px 16px; border-radius:14px;
           background: rgba(11,18,32,.88); color:#fff; font-weight:800; text-align:center;
-          border:1px solid rgba(29,161,255,.35);
-          box-shadow: 0 6px 18px rgba(0,0,0,.35), inset 0 0 10px rgba(29,161,255,.18);
+          border:1px solid rgba(29,161,255,.5);
+          box-shadow: 0 6px 18px rgba(0,0,0,.5), inset 0 0 14px rgba(29,161,255,.3);
           backdrop-filter: blur(2px); pointer-events:none;
         }
       `}</style>
 
-      {/* Background */}
+      {/* Electric Circuit Layers */}
       <div className="circuit-bg">
-        <div className="circuit-pulse"></div>
+        <div className="pulse"></div>
+        <div className="energy-spark"></div>
       </div>
 
       {/* Foreground */}
