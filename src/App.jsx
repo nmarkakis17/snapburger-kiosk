@@ -84,28 +84,40 @@ export default function App() {
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
 
-        /* ========= NUCLEAR DEBUG ORBS =========
-           Force them ABOVE EVERYTHING, no blend, no blur, solid colors.
-           If you don't see these, something is covering the whole page. */
-        .orbs-debug{
-          position:fixed; inset:0;
-          z-index: 2147483647; /* max int-ish */
-          pointer-events:none;
-        }
-        .orbs-debug span{
-          position:absolute; border-radius:50%;
-          width: 420px; height: 420px;
-          background: rgba(0,255,0,0.45); /* solid green disk */
-          /* no blur, no blend, just obvious */
-        }
-        .orbs-debug span:nth-child(2){ background: rgba(255,0,0,0.45); }
-        .orbs-debug span:nth-child(3){ background: rgba(0,128,255,0.45); }
-        .orbs-debug span:nth-child(4){ background: rgba(255,165,0,0.45); }
+       <style>{`
+  /* ===== Pretty Glow Orbs ===== */
+  .orbs{
+    position:fixed; inset:0;
+    z-index:1; /* below .page, above haze */
+    pointer-events:none;
+  }
+  .orbs span{
+    position:absolute; border-radius:50%;
+    width:420px; height:420px;
+    background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.75), rgba(14,165,233,0) 70%);
+    opacity:.6;
+    filter: blur(100px);
+    mix-blend-mode: screen;
+    animation: floatY 18s ease-in-out infinite alternate,
+               floatX 26s ease-in-out infinite alternate;
+  }
+  .orbs span:nth-child(2n){
+    background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.75), rgba(249,115,22,0) 70%);
+  }
+  .orbs span:nth-child(1){ top:6%; left:6%; }
+  .orbs span:nth-child(2){ top:18%; right:8%; }
+  .orbs span:nth-child(3){ bottom:14%; left:12%; }
+  .orbs span:nth-child(4){ bottom:10%; right:14%; }
 
-        .orbs-debug span:nth-child(1){ top:6%; left:6%; }
-        .orbs-debug span:nth-child(2){ top:18%; right:8%; }
-        .orbs-debug span:nth-child(3){ bottom:14%; left:12%; }
-        .orbs-debug span:nth-child(4){ bottom:10%; right:14%; }
+  @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
+  @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
+`}</style>
+
+{/* Glow orbs */}
+<div className="orbs" aria-hidden="true">
+  <span></span><span></span><span></span><span></span>
+</div>
+
       `}</style>
 
       {/* Back layer */}
