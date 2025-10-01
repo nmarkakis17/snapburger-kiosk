@@ -132,3 +132,21 @@ body{
   .btn-return { top: 35.5%; }
   .tagline-box{ bottom: 7%; }
 }
+
+/* === ORBS ANIMATION (forced) === */
+@keyframes orbY { 
+  0%   { transform: translateY(0) }
+  100% { transform: translateY(-60px) }
+}
+@keyframes orbX { 
+  0%   { transform: translateX(0) }
+  100% { transform: translateX(60px) }
+}
+
+/* Make sure we actually animate (override any other rules) */
+.orbs span{
+  animation: orbY 14s ease-in-out infinite alternate,
+             orbX 20s ease-in-out infinite alternate !important;
+  animation-play-state: running !important;
+  will-change: transform;
+}
