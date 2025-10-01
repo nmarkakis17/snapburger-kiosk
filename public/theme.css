@@ -46,43 +46,78 @@ body{
   mix-blend-mode: screen; opacity:.55;
 }
 
-/* === Floating orbs === */
+/* ====== ORBS (small, whitish, lots, always moving) ====== */
 .orbs{
-  position: fixed; inset: 0;
-  z-index: 1;
+  position: fixed;
+  inset: 0;
+  z-index: 1;           /* haze:0, orbs:1, app:2 */
   pointer-events: none;
+  overflow: hidden;
 }
+
+/* Base: small white glow, subtle color hint comes from nth rules */
 .orbs span{
   position: absolute;
-  width: 180px; height: 180px;
+  display: block;
+  width: 70px; height: 70px;             /* default size — many will be smaller via nth rules */
   border-radius: 50%;
-  filter: blur(40px);
-  opacity: 0.6;
+  filter: blur(18px);
+  opacity: .38;
   mix-blend-mode: screen;
-  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,0.95), rgba(14,165,233,0) 70%);
-  animation: floatY 12s ease-in-out infinite alternate,
-             floatX 16s ease-in-out infinite alternate;
-}
-.orbs span:nth-child(2n){
-  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,0.95), rgba(249,115,22,0) 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.90), rgba(255,255,255,0) 60%);
+  animation:
+    driftY 8s ease-in-out infinite alternate,
+    driftX 12s ease-in-out infinite alternate,
+    twinkle 5.5s ease-in-out infinite alternate;
 }
 
-/* orb positions */
-.orbs span:nth-child(1){ top:10%; left:15%; }
-.orbs span:nth-child(2){ top:20%; right:20%; }
-.orbs span:nth-child(3){ bottom:15%; left:25%; }
-.orbs span:nth-child(4){ bottom:20%; right:25%; }
-.orbs span:nth-child(5){ top:50%; left:45%; }
-.orbs span:nth-child(6){ bottom:45%; right:40%; }
+/* Slight blue/orange tint on a fraction of the orbs (most stay white) */
+.orbs span:nth-child(6n) {
+  background: radial-gradient(circle at 50% 50%, rgba(14,165,233,.85), rgba(14,165,233,0) 60%);
+  opacity: .32;
+}
+.orbs span:nth-child(9n) {
+  background: radial-gradient(circle at 50% 50%, rgba(249,115,22,.80), rgba(249,115,22,0) 60%);
+  opacity: .30;
+}
 
-@keyframes floatY { 
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-60px); }
+/* Sizes mix — smaller for “sparkle” feel */
+.orbs span:nth-child(3n)  { width: 42px; height: 42px; filter: blur(12px) }
+.orbs span:nth-child(4n)  { width: 56px; height: 56px; filter: blur(14px) }
+.orbs span:nth-child(5n)  { width: 84px; height: 84px;  filter: blur(20px) }
+.orbs span:nth-child(7n)  { width: 32px; height: 32px; filter: blur(10px) }
+.orbs span:nth-child(11n) { width: 96px; height: 96px; filter: blur(22px) }
+
+/* Stagger delay & durations so motion feels natural */
+.orbs span:nth-child(2n)  { animation-duration: 7.5s, 11s, 6.5s;  animation-delay: .2s, .1s, .3s; }
+.orbs span:nth-child(3n)  { animation-duration: 9s,   13s, 7.2s;  animation-delay: .6s, .5s, .4s; }
+.orbs span:nth-child(5n)  { animation-duration: 10s,  15s, 7.8s;  animation-delay: .9s, .7s, .8s; }
+.orbs span:nth-child(8n)  { animation-duration: 8.6s, 12.4s, 6.8s;animation-delay: .3s, .9s, .1s; }
+.orbs span:nth-child(13n) { animation-duration: 11s,  16s, 8.6s;  animation-delay: 1.1s, .6s, .2s; }
+
+/* Position pattern across viewport — repeats every 12 orbs */
+.orbs span:nth-child(12n+1)  { top: 6%;  left: 4%;  }
+.orbs span:nth-child(12n+2)  { top: 12%; left: 18%; }
+.orbs span:nth-child(12n+3)  { top: 20%; left: 32%; }
+.orbs span:nth-child(12n+4)  { top: 28%; left: 48%; }
+.orbs span:nth-child(12n+5)  { top: 18%; left: 64%; }
+.orbs span:nth-child(12n+6)  { top: 8%;  left: 78%; }
+.orbs span:nth-child(12n+7)  { top: 40%; left: 10%; }
+.orbs span:nth-child(12n+8)  { top: 52%; left: 26%; }
+.orbs span:nth-child(12n+9)  { top: 64%; left: 44%; }
+.orbs span:nth-child(12n+10) { top: 58%; left: 62%; }
+.orbs span:nth-child(12n+11) { top: 46%; left: 80%; }
+.orbs span:nth-child(12n+12) { top: 70%; left: 30%; }
+
+/* Motion */
+@keyframes driftY { 0% { transform: translateY(0) } 100% { transform: translateY(-28px) } }
+@keyframes driftX { 0% { transform: translateX(0) } 100% { transform: translateX(26px) } }
+/* Tiny “breathing” flicker — keeps them alive */
+@keyframes twinkle {
+  0%   { opacity: .22; transform: scale(1) }
+  100% { opacity: .42; transform: scale(1.05) }
 }
-@keyframes floatX { 
-  0% { transform: translateX(0); }
-  100% { transform: translateX(60px); }
-}
+
 
 /* === Foreground layout === */
 .page{ position:relative; z-index:2; }
@@ -194,3 +229,4 @@ body{
   0% { transform: translateX(0); } 
   100% { transform: translateX(40px); }
 }
+
