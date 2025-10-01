@@ -85,31 +85,50 @@ export default function App() {
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
 
-/* ===== Orbs (boosted visibility for verification) ===== */
-.orbs{ position:fixed; inset:0; z-index:1; pointer-events:none; }
-.orbs span{
-  position:absolute; display:block; border-radius:50%;
-  width: 520px; height: 520px;              /* bigger */
-  filter: blur(70px) !important;            /* softer, but visible */
-  opacity: .88 !important;                  /* much brighter */
-  mix-blend-mode: normal !important;        /* ignore blending for now */
-  background: radial-gradient(circle at 40% 40%,
-              rgba(14,165,233,0.95), rgba(14,165,233,0) 70%) !important;
-  animation: floatY 18s ease-in-out infinite alternate,
-             floatX 26s ease-in-out infinite alternate;
-  /* debug tint to make them unmistakable */
-  box-shadow: 0 0 0 2px rgba(255,255,255,.1) inset;
-}
-.orbs span:nth-child(2n){
-  background: radial-gradient(circle at 40% 40%,
-              rgba(249,115,22,0.95), rgba(249,115,22,0) 70%) !important;
+/* ===== ORBS — DEBUG MODE (make them impossible to miss) ===== */
+.orbs{
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;       /* jump to the very top for testing */
+  pointer-events: none !important;
+  display: block !important;
+  outline: 2px dashed lime !important;   /* draw the container */
 }
 
-/* positions */
-.orbs span:nth-child(1){ top: 6%;  left: 6%;  }
-.orbs span:nth-child(2){ top: 18%; right: 8%; }
-.orbs span:nth-child(3){ bottom: 14%; left: 12%; }
-.orbs span:nth-child(4){ bottom: 10%; right: 14%; }
+.orbs span{
+  position: absolute !important;
+  display: block !important;
+  left: 0 !important; top: 0 !important; /* pin the first one top-left */
+  width: 520px !important;
+  height: 520px !important;
+  border-radius: 50% !important;
+
+  /* turn OFF any subtle blending while debugging */
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+  filter: none !important;
+
+  /* neon-solid colors so you cannot miss them */
+  background: magenta !important;
+  border: 6px solid yellow !important;
+
+  animation: none !important;  /* stop moving for now */
+}
+
+/* make the second one blue and place it elsewhere so it's obvious there are multiple */
+.orbs span:nth-child(2){
+  background: cyan !important;
+  left: auto !important; right: 0 !important; top: 0 !important;
+}
+.orbs span:nth-child(3){
+  background: orange !important;
+  left: 0 !important; bottom: 0 !important; top: auto !important;
+}
+.orbs span:nth-child(4){
+  background: red !important;
+  right: 0 !important; bottom: 0 !important; top: auto !important; left: auto !important;
+}
+
 
 
         @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
@@ -120,6 +139,23 @@ export default function App() {
       <div className="global-haze" aria-hidden="true" />
       <div className="orbs" aria-hidden="true">
         <span></span><span></span><span></span><span></span>
+
+        {/* DEBUG BOX — should appear at top-left, above everything */}
+<div style={{
+  position:'fixed',
+  zIndex: 100000,
+  left: 8, top: 8,
+  background: '#111',
+  color: '#0f0',
+  padding: '6px 10px',
+  border: '2px solid #0f0',
+  borderRadius: 8,
+  pointerEvents: 'none',
+  fontFamily: 'monospace',
+}}>
+  ORBS LAYER (debug)
+</div>
+
       </div>
 
       {/* Foreground */}
