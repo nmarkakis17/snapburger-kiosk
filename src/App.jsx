@@ -2,17 +2,16 @@
 import React, { useState } from 'react'
 
 export default function App() {
-  const [stage, setStage] = useState('landing')
+  const [stage, setStage] = useState('landing') // 'landing' | 'menu'
 
   return (
     <>
+      {/* background haze from your site stays as-is (theme.css) */}
       <div className="global-haze" aria-hidden="true" />
 
-      {/* === 50 floating orbs === */}
+      {/* 120 tiny orbs */}
       <div className="orbs" aria-hidden="true">
-        {Array.from({ length: 50 }).map((_, i) => (
-          <span key={i}></span>
-        ))}
+        {Array.from({ length: 120 }).map((_, i) => <span key={i} />)}
       </div>
 
       <div className="page">
