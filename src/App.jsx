@@ -85,77 +85,55 @@ export default function App() {
           background: linear-gradient(135deg, var(--orange), #ff9b53); color:#000;
         }
 
-/* ===== ORBS — DEBUG MODE (make them impossible to miss) ===== */
+/* ===== SnapBurger Orbs — production look ===== */
+.global-haze{ z-index: 0; }
 .orbs{
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 99999 !important;       /* jump to the very top for testing */
-  pointer-events: none !important;
-  display: block !important;
-  outline: 2px dashed lime !important;   /* draw the container */
+  position: fixed;
+  inset: 0;
+  z-index: 1;             /* behind your app content */
+  pointer-events: none;
 }
+.page{ position: relative; z-index: 2; }
 
 .orbs span{
-  position: absolute !important;
-  display: block !important;
-  left: 0 !important; top: 0 !important; /* pin the first one top-left */
-  width: 520px !important;
-  height: 520px !important;
-  border-radius: 50% !important;
-
-  /* turn OFF any subtle blending while debugging */
-  mix-blend-mode: normal !important;
-  opacity: 1 !important;
-  filter: none !important;
-
-  /* neon-solid colors so you cannot miss them */
-  background: magenta !important;
-  border: 6px solid yellow !important;
-
-  animation: none !important;  /* stop moving for now */
+  position: absolute;
+  display: block;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  filter: blur(110px) !important;     /* keep the glow even if theme.css tries to tone it down */
+  opacity: .42 !important;
+  mix-blend-mode: screen !important;
+  background: radial-gradient(circle at 40% 40%, rgba(14,165,233,.95), rgba(14,165,233,0) 70%);
+  animation: floatY 18s ease-in-out infinite alternate,
+             floatX 26s ease-in-out infinite alternate;
 }
 
-/* make the second one blue and place it elsewhere so it's obvious there are multiple */
-.orbs span:nth-child(2){
-  background: cyan !important;
-  left: auto !important; right: 0 !important; top: 0 !important;
-}
-.orbs span:nth-child(3){
-  background: orange !important;
-  left: 0 !important; bottom: 0 !important; top: auto !important;
-}
-.orbs span:nth-child(4){
-  background: red !important;
-  right: 0 !important; bottom: 0 !important; top: auto !important; left: auto !important;
+/* warm accents */
+.orbs span:nth-child(2n){
+  background: radial-gradient(circle at 40% 40%, rgba(249,115,22,.95), rgba(249,115,22,0) 70%);
 }
 
+/* positions (match the site vibe) */
+.orbs span:nth-child(1){ top: 6%;  left: 6%;  }
+.orbs span:nth-child(2){ top: 18%; right: 8%; }
+.orbs span:nth-child(3){ bottom: 14%; left: 12%; }
+.orbs span:nth-child(4){ bottom: 10%; right: 14%; }
 
+/* motion */
+@keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
+@keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
 
-        @keyframes floatY { 0%{transform:translateY(0)} 100%{transform:translateY(-22px)} }
-        @keyframes floatX { 0%{transform:translateX(0)} 100%{transform:translateX(18px)} }
+/* tiny screens: slightly smaller */
+@media (max-width: 480px){
+  .orbs span{ width: 280px; height: 280px; filter: blur(90px) !important; }
+}
+
       `}</style>
 
       {/* Back layers */}
       <div className="global-haze" aria-hidden="true" />
       <div className="orbs" aria-hidden="true">
         <span></span><span></span><span></span><span></span>
-
-        {/* DEBUG BOX — should appear at top-left, above everything */}
-<div style={{
-  position:'fixed',
-  zIndex: 100000,
-  left: 8, top: 8,
-  background: '#111',
-  color: '#0f0',
-  padding: '6px 10px',
-  border: '2px solid #0f0',
-  borderRadius: 8,
-  pointerEvents: 'none',
-  fontFamily: 'monospace',
-}}>
-  ORBS LAYER (debug)
-</div>
-
       </div>
 
       {/* Foreground */}
