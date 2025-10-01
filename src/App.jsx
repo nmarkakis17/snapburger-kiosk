@@ -4,18 +4,18 @@ import React, { useMemo, useState } from "react";
 export default function App() {
   const [stage, setStage] = useState("landing");
 
-  // Generate ~30 random electric lines once
-  const lines = useMemo(() => {
-    const rnd = (min, max) => min + Math.random() * (max - min);
-    return Array.from({ length: 30 }).map(() => ({
-      top: rnd(10, 90),        // % from top (keep them spread vertically)
-      left: rnd(20, 60),       // start more central (20%–60%)
-      width: rnd(120, 220),    // line length
-      angle: rnd(-80, 80),     // wider angle range
-      delay: rnd(0, 5),        // animation start offset
-      duration: rnd(2, 4)      // speed
-    }));
-  }, []);
+// Generate ~30 random electric lines once
+const lines = useMemo(() => {
+  const rnd = (min, max) => min + Math.random() * (max - min);
+  return Array.from({ length: 30 }).map(() => ({
+    top: rnd(10, 90),        // spread vertically
+    left: rnd(40, 80),       // start more to the right (40–80%)
+    width: rnd(120, 220),
+    angle: rnd(-80, 80),
+    delay: rnd(0, 5),
+    duration: rnd(2, 4)
+  }));
+}, []);
 
   return (
     <>
@@ -49,23 +49,24 @@ export default function App() {
           100%{transform:rotate(360deg) scale(1)}
         }
 
-        /* ===== Electric streaks ===== */
-        .electric-line {
-          position:absolute;
-          height:2px;
-          background:linear-gradient(90deg, transparent, var(--electric), transparent);
-          opacity:0.9;
-          animation: dashLine var(--dur) linear var(--delay) infinite,
-                     blink .6s ease-in-out infinite alternate;
-          transform:rotate(var(--angle)) translateX(0);
-        }
+/* ===== Electric streaks ===== */
+.electric-line {
+  position:absolute;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--electric), transparent);
+  opacity:0.9;
+  animation: dashLine var(--dur) linear var(--delay) infinite,
+             blink .6s ease-in-out infinite alternate;
+  transform:rotate(var(--angle)) translateX(0);
+}
 
-        @keyframes dashLine {
-          0% { transform: rotate(var(--angle)) translateX(0); opacity:0; }
-          10%{ opacity:1; }
-          50%{ opacity:0.9; }
-          100%{ transform: rotate(var(--angle)) translateX(140%); opacity:0; }
-        }
+@keyframes dashLine {
+  0%   { transform: rotate(var(--angle)) translateX(0); opacity:0; }
+  10%  { opacity:1; }
+  50%  { opacity:0.9; }
+  100% { transform: rotate(var(--angle)) translateX(-140%); opacity:0; } /* flipped negative */
+}
+
         @keyframes blink {
           from { opacity:0.5; }
           to   { opacity:1; }
