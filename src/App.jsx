@@ -8,12 +8,12 @@ export default function App() {
   const lines = useMemo(() => {
     const rnd = (min, max) => min + Math.random() * (max - min);
     return Array.from({ length: 30 }).map(() => ({
-      top: rnd(0, 100),        // % from top
-      left: rnd(-50, 50),      // start offset
-      width: rnd(120, 220),    // line length in vw
-      angle: rnd(-60, 60),     // tilt degrees
+      top: rnd(10, 90),        // % from top (keep them spread vertically)
+      left: rnd(20, 60),       // start more central (20%–60%)
+      width: rnd(120, 220),    // line length
+      angle: rnd(-80, 80),     // wider angle range
       delay: rnd(0, 5),        // animation start offset
-      duration: rnd(2, 5)      // animation speed
+      duration: rnd(2, 4)      // speed
     }));
   }, []);
 
@@ -30,22 +30,18 @@ export default function App() {
         html { background: var(--sb-bg); }
         body, #root { background: transparent; }
 
-        /* ===== Circuit grid background ===== */
-        .circuit-bg {
+        /* ===== Swirling glowing haze only ===== */
+        .haze {
           position: fixed; inset: 0;
-          background:
-            repeating-linear-gradient(90deg, rgba(0,247,255,0.15) 0 2px, transparent 2px 40px),
-            repeating-linear-gradient(0deg, rgba(0,247,255,0.15) 0 2px, transparent 2px 40px),
-            var(--sb-bg);
+          background: #0b1220;
           z-index:0; overflow:hidden;
         }
-
-        /* Spinning haze */
         .pulse {
           position:absolute; width:300%; height:300%; top:-100%; left:-100%;
-          background: conic-gradient(from 0deg, rgba(14,165,233,.3), rgba(249,115,22,.4), rgba(14,165,233,.3));
+          background: conic-gradient(from 0deg, rgba(14,165,233,.25), rgba(249,115,22,.25), rgba(14,165,233,.25));
           mix-blend-mode: screen;
           animation: spinPulse 12s linear infinite;
+          filter: blur(80px);
         }
         @keyframes spinPulse {
           0%{transform:rotate(0deg) scale(1)}
@@ -53,13 +49,14 @@ export default function App() {
           100%{transform:rotate(360deg) scale(1)}
         }
 
-        /* ===== Electric line style ===== */
+        /* ===== Electric streaks ===== */
         .electric-line {
           position:absolute;
           height:2px;
           background:linear-gradient(90deg, transparent, var(--electric), transparent);
-          opacity:0.8;
-          animation: dashLine var(--dur) linear var(--delay) infinite, blink .8s ease-in-out infinite alternate;
+          opacity:0.9;
+          animation: dashLine var(--dur) linear var(--delay) infinite,
+                     blink .6s ease-in-out infinite alternate;
           transform:rotate(var(--angle)) translateX(0);
         }
 
@@ -67,14 +64,14 @@ export default function App() {
           0% { transform: rotate(var(--angle)) translateX(0); opacity:0; }
           10%{ opacity:1; }
           50%{ opacity:0.9; }
-          100%{ transform: rotate(var(--angle)) translateX(100%); opacity:0; }
+          100%{ transform: rotate(var(--angle)) translateX(140%); opacity:0; }
         }
         @keyframes blink {
-          from { opacity:0.4; }
+          from { opacity:0.5; }
           to   { opacity:1; }
         }
 
-        /* ===== Foreground content ===== */
+        /* ===== Foreground ===== */
         .page{ position:relative; z-index:2; }
         .container{ max-width:1100px; margin:0 auto; padding:28px; }
         .tower-wrap{ display:flex; justify-content:center; padding:8px 0; }
@@ -102,8 +99,8 @@ export default function App() {
         }
       `}</style>
 
-      {/* Background */}
-      <div className="circuit-bg">
+      {/* Background haze + pulses */}
+      <div className="haze">
         <div className="pulse"></div>
         {lines.map((line, i) => (
           <div
