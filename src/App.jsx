@@ -1,7 +1,6 @@
 // src/App.jsx
 import React, { useMemo } from 'react'
-import { Outlet } from 'react-router-dom'
-import NavBar from './components/NavBar.jsx'
+
 
 const ORB_COUNT = 90 // change to ~75 if you want
 
@@ -149,10 +148,6 @@ export default function App(){
         ))}
       </div>
 
-      {/* App content */}
-      <NavBar />
-      <main className="page">
-        <Outlet />
       </main>
       <a href="/menu" className="mobile-cta">Order Now</a>
     </>
