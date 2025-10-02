@@ -28,8 +28,8 @@ const initialData = {
   zip: "",
   // Step 2
   allergies: "",
-  favoriteBurgers: [],     // ⟵ changed: multi-select
-  preferredSides: [],      // ⟵ changed: multi-select
+  favoriteBurgers: [],
+  preferredSides: [],
   toppings: {
     lettuce: "normal",
     tomato: "normal",
@@ -74,10 +74,7 @@ export default function Registration() {
         data.phone.trim()
       );
     }
-    if (step === 2) return true;
-    if (step === 3) return true;
-    if (step === 4) return true;
-    return false;
+    return true;
   }, [step, data]);
 
   function updateField(path, value) {
@@ -175,7 +172,7 @@ export default function Registration() {
         form{
           display:grid;
           grid-template-columns: 1fr 1fr;
-          gap:18px 42px; /* ⟵ more space between columns */
+          gap:18px 42px; /* space between columns */
         }
         label{
           display:flex; flex-direction:column;
@@ -218,7 +215,7 @@ export default function Registration() {
         .theo-title{ color:#0ea5e9; font-weight:900; margin:6px 0 2px }
         .theo-note{ margin:0; color:#0ea5e9; font-weight:800; }
 
-        /* Step 2 — enlarged white box */
+        /* ===== Step 2 — wider white box (+1.5") ===== */
         .pref-wrap{
           grid-column:1 / -1;
           background:#fff;
@@ -226,7 +223,13 @@ export default function Registration() {
           padding:22px 22px 24px;
           box-shadow: 0 6px 18px rgba(0,0,0,.10);
           display:grid; gap:18px;
+
+          /* +1.5in ≈ 144px : expand visually beyond the form columns */
+          position: relative;
+          left: -72px;                 /* half of 144px */
+          width: calc(100% + 144px);
         }
+
         .group-title{
           margin:0; color:#0ea5e9; font-weight:900;
         }
@@ -260,13 +263,18 @@ export default function Registration() {
         .social-input{ display:flex; align-items:center; gap:10px; }
         .social-input img{ width:20px; height:20px; object-fit:contain; filter: saturate(1.1); }
 
-        /* Step 4 — BIGGER white review card */
+        /* ===== Step 4 — wider review card (+2.5") ===== */
         .review-card{
           grid-column:1 / -1;
           background:#fff;
           border:1px solid #e5e7eb; border-radius:16px;
           padding:22px 22px 24px;
           box-shadow: 0 6px 18px rgba(0,0,0,.10);
+
+          /* +2.5in ≈ 240px */
+          position: relative;
+          left: -120px;                /* half of 240px */
+          width: calc(100% + 240px);
         }
         .review{
           display:grid; grid-template-columns:1fr 1fr; gap:16px 42px;
@@ -296,10 +304,12 @@ export default function Registration() {
         }
         @keyframes drift{ 0%{ transform: translateY(0) } 100%{ transform: translateY(-14px) } }
 
+        /* Mobile fallbacks: reset the wideners so they don't overflow */
         @media (max-width: 980px){
           .registration-container{ grid-template-columns: 1fr; }
           .theo-card img{ max-width:220px }
           .review{ grid-template-columns: 1fr; }
+          .pref-wrap, .review-card{ left:0; width:100%; }
         }
       `}</style>
 
