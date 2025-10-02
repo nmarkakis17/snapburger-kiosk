@@ -1,5 +1,21 @@
 import React, { useMemo, useState } from "react";
 
+const burgerOptions = [
+  "Snap Classic",
+  "Double Snap",
+  "Veggie Snap",
+  "BBQ Bacon Snap",
+  "Spicy Jalapeño Snap",
+];
+
+const sideOptions = [
+  "Fries",
+  "Sweet Potato Fries",
+  "Tater Tots",
+  "Side Salad",
+  "Onion Rings",
+];
+
 const initialData = {
   // Step 1
   firstName: "",
@@ -12,8 +28,8 @@ const initialData = {
   zip: "",
   // Step 2
   allergies: "",
-  favoriteBurger: "",
-  preferredSide: "",
+  favoriteBurgers: [],     // ⟵ changed: multi-select
+  preferredSides: [],      // ⟵ changed: multi-select
   toppings: {
     lettuce: "normal",
     tomato: "normal",
@@ -58,13 +74,8 @@ export default function Registration() {
         data.phone.trim()
       );
     }
-    if (step === 2) {
-      // allow empty fields here, it’s preferences
-      return true;
-    }
-    if (step === 3) {
-      return true; // socials are optional
-    }
+    if (step === 2) return true;
+    if (step === 3) return true;
     if (step === 4) return true;
     return false;
   }, [step, data]);
@@ -80,6 +91,21 @@ export default function Registration() {
     });
   }
 
+  function toggleInArray(path, value) {
+    setData((prev) => {
+      const parts = path.split(".");
+      const root = { ...prev };
+      let obj = root;
+      for (let i = 0; i < parts.length - 1; i++) obj = obj[parts[i]];
+      const key = parts[parts.length - 1];
+      const arr = new Set(obj[key] || []);
+      if (arr.has(value)) arr.delete(value);
+      else arr.add(value);
+      obj[key] = Array.from(arr);
+      return root;
+    });
+  }
+
   async function onSubmit(e) {
     e.preventDefault();
     if (!canNext) return;
@@ -87,9 +113,7 @@ export default function Registration() {
       setStep(step + 1);
       return;
     }
-    // Final submit – demo only
     setSubmitting(true);
-    // simulate latency
     setTimeout(() => {
       setSubmitting(false);
       setStep("done");
@@ -107,7 +131,6 @@ export default function Registration() {
           --ink:#0b1020;
           --radius:18px;
         }
-        body { margin:0; }
 
         /* ===== Haze background ===== */
         .global-haze{
@@ -124,7 +147,7 @@ export default function Registration() {
 
         .registration-container{
           position:relative; z-index:2;
-          max-width:1240px; margin:0 auto; padding:40px 28px;
+          max-width:1280px; margin:0 auto; padding:40px 28px;
           display:grid; grid-template-columns: 1.55fr 1fr; gap:42px;
           align-items:start;
         }
@@ -142,7 +165,7 @@ export default function Registration() {
         }
         .steps{
           display:flex; gap:8px; margin-bottom:10px;
-          font-weight:800; color:#2563eb; /* deeper blue for the step label */
+          font-weight:800; color:#2563eb;
         }
         .subtitle{
           margin:0 0 16px; color:#3b82f6; font-weight:700;
@@ -152,7 +175,7 @@ export default function Registration() {
         form{
           display:grid;
           grid-template-columns: 1fr 1fr;
-          gap:18px 36px; /* generous column gap (more space on the right column) */
+          gap:18px 42px; /* ⟵ more space between columns */
         }
         label{
           display:flex; flex-direction:column;
@@ -193,15 +216,33 @@ export default function Registration() {
         }
         .theo-card img{ max-width:72%; height:auto }
         .theo-title{ color:#0ea5e9; font-weight:900; margin:6px 0 2px }
-        .theo-note{
-          margin:0; color:#0ea5e9; font-weight:800;
-        }
+        .theo-note{ margin:0; color:#0ea5e9; font-weight:800; }
 
-        /* Step 2 — toppings matrix */
-        .toppings{
+        /* Step 2 — enlarged white box */
+        .pref-wrap{
           grid-column:1 / -1;
+          background:#fff;
+          border:1px solid #e5e7eb; border-radius:16px;
+          padding:22px 22px 24px;
+          box-shadow: 0 6px 18px rgba(0,0,0,.10);
+          display:grid; gap:18px;
+        }
+        .group-title{
+          margin:0; color:#0ea5e9; font-weight:900;
+        }
+        .checkbox-grid{
+          display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px 18px;
+        }
+        .cb{
+          display:flex; align-items:center; gap:10px; color:#111;
+          font-weight:700;
+        }
+        .cb input{ width:18px; height:18px }
+
+        /* Toppings matrix */
+        .toppings{
           background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px;
-          padding:14px; display:grid; gap:12px;
+          padding:16px; display:grid; gap:12px;
         }
         .t-row{
           display:grid; grid-template-columns: 1fr repeat(5, minmax(72px, 92px));
@@ -213,28 +254,24 @@ export default function Registration() {
           border:1px solid #d1d5db; background:#fff; font-size:13px; font-weight:800; color:#111;
           cursor:pointer; user-select:none;
         }
-        .pill.active{
-          border-color:#60a5fa; background:#dbeafe; color:#111827;
-        }
+        .pill.active{ border-color:#60a5fa; background:#dbeafe; color:#111827; }
 
-        /* Step 3 — socials with logos */
-        .social-input{
-          display:flex; align-items:center; gap:10px;
-        }
-        .social-input img{
-          width:20px; height:20px; object-fit:contain;
-          filter: saturate(1.1);
-        }
+        /* Step 3 — socials */
+        .social-input{ display:flex; align-items:center; gap:10px; }
+        .social-input img{ width:20px; height:20px; object-fit:contain; filter: saturate(1.1); }
 
-        /* Step 4 — review */
-        .review{
+        /* Step 4 — BIGGER white review card */
+        .review-card{
           grid-column:1 / -1;
-          display:grid; grid-template-columns:1fr 1fr; gap:14px 36px;
-          background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+          background:#fff;
+          border:1px solid #e5e7eb; border-radius:16px;
+          padding:22px 22px 24px;
+          box-shadow: 0 6px 18px rgba(0,0,0,.10);
         }
-        .review .kv{
-          display:flex; gap:10px; align-items:flex-start;
+        .review{
+          display:grid; grid-template-columns:1fr 1fr; gap:16px 42px;
         }
+        .review .kv{ display:flex; gap:10px; align-items:flex-start; }
         .review .k{ min-width:160px; color:var(--blue); font-weight:800; }
         .review .v{ color:#111; }
 
@@ -247,9 +284,7 @@ export default function Registration() {
           background:#fff; border-radius:22px; padding:26px;
           box-shadow:0 20px 40px rgba(0,0,0,.25);
         }
-        .done-title{
-          margin:10px 0 6px; font-size:28px; color:#0ea5e9; font-weight:900;
-        }
+        .done-title{ margin:10px 0 6px; font-size:28px; color:#0ea5e9; font-weight:900; }
         .done-note{ margin:0; color:#0ea5e9; font-weight:800; }
         .confetti{
           position:absolute; inset:0; pointer-events:none; z-index:1;
@@ -259,14 +294,12 @@ export default function Registration() {
             radial-gradient(circle at 50% 85%, rgba(14,165,233,.18), transparent 30%);
           animation: drift 7s ease-in-out infinite alternate;
         }
-        @keyframes drift{
-          0%{ transform: translateY(0) }
-          100%{ transform: translateY(-14px) }
-        }
+        @keyframes drift{ 0%{ transform: translateY(0) } 100%{ transform: translateY(-14px) } }
 
         @media (max-width: 980px){
           .registration-container{ grid-template-columns: 1fr; }
           .theo-card img{ max-width:220px }
+          .review{ grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -364,76 +397,74 @@ export default function Registration() {
               {/* STEP 2 */}
               {step === 2 && (
                 <>
-                  <label style={{ gridColumn: "1/-1" }}>
-                    Allergies
+                  <div className="pref-wrap">
+                    <h3 className="group-title">Allergies</h3>
                     <textarea
-                      rows="2"
+                      rows="3"
                       value={data.allergies}
                       onChange={(e) => updateField("allergies", e.target.value)}
                       placeholder="Peanuts, dairy, gluten, etc."
                     />
-                  </label>
-                  <label style={{ gridColumn: "1/-1" }}>
-                    Favorite Burger
-                    <input
-                      type="text"
-                      value={data.favoriteBurger}
-                      onChange={(e) =>
-                        updateField("favoriteBurger", e.target.value)
-                      }
-                      placeholder="e.g., Snap Classic, Double Snap, Veggie Snap"
-                    />
-                  </label>
-                  <label>
-                    Preferred Side
-                    <select
-                      value={data.preferredSide}
-                      onChange={(e) =>
-                        updateField("preferredSide", e.target.value)
-                      }
-                    >
-                      <option value="">Select a side</option>
-                      <option value="fries">Fries</option>
-                      <option value="sweet-fries">Sweet Potato Fries</option>
-                      <option value="tots">Tater Tots</option>
-                      <option value="salad">Side Salad</option>
-                      <option value="onion-rings">Onion Rings</option>
-                    </select>
-                  </label>
-                  <div style={{ gridColumn: "1/-1" }}></div>
 
-                  <div className="toppings">
-                    <strong style={{ color: "#0ea5e9" }}>
-                      Toppings — choose per-item preference
-                    </strong>
-                    <div className="t-row" style={{ fontWeight: 800, color: "#6b7280" }}>
-                      <div></div>
-                      {toppingOptions.map((opt) => (
-                        <div key={`head-${opt}`} style={{ textTransform: "capitalize", textAlign:"center" }}>
-                          {opt}
+                    <h3 className="group-title" style={{ marginTop: 6 }}>Favorite Burgers</h3>
+                    <div className="checkbox-grid">
+                      {burgerOptions.map((b) => (
+                        <label key={b} className="cb">
+                          <input
+                            type="checkbox"
+                            checked={data.favoriteBurgers.includes(b)}
+                            onChange={() => toggleInArray("favoriteBurgers", b)}
+                          />
+                          <span>{b}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <h3 className="group-title" style={{ marginTop: 6 }}>Preferred Sides</h3>
+                    <div className="checkbox-grid">
+                      {sideOptions.map((s) => (
+                        <label key={s} className="cb">
+                          <input
+                            type="checkbox"
+                            checked={data.preferredSides.includes(s)}
+                            onChange={() => toggleInArray("preferredSides", s)}
+                          />
+                          <span>{s}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <div className="toppings" style={{ marginTop: 8 }}>
+                      <strong style={{ color: "#0ea5e9" }}>
+                        Toppings — choose per-item preference
+                      </strong>
+                      <div className="t-row" style={{ fontWeight: 800, color: "#6b7280" }}>
+                        <div></div>
+                        {toppingOptions.map((opt) => (
+                          <div key={`head-${opt}`} style={{ textTransform: "capitalize", textAlign:"center" }}>
+                            {opt}
+                          </div>
+                        ))}
+                      </div>
+                      {toppingsList.map((t) => (
+                        <div className="t-row" key={t.key}>
+                          <strong>{t.label}</strong>
+                          {toppingOptions.map((opt) => {
+                            const active = data.toppings[t.key] === opt;
+                            return (
+                              <div key={opt} style={{ display: "grid", placeItems: "center" }}>
+                                <span
+                                  className={`pill ${active ? "active" : ""}`}
+                                  onClick={() => updateField(`toppings.${t.key}`, opt)}
+                                >
+                                  {opt === "normal" ? "ok" : opt}
+                                </span>
+                              </div>
+                            );
+                          })}
                         </div>
                       ))}
                     </div>
-                    {toppingsList.map((t) => (
-                      <div className="t-row" key={t.key}>
-                        <strong>{t.label}</strong>
-                        {toppingOptions.map((opt) => {
-                          const active = data.toppings[t.key] === opt;
-                          return (
-                            <div key={opt} style={{ display: "grid", placeItems: "center" }}>
-                              <span
-                                className={`pill ${active ? "active" : ""}`}
-                                onClick={() =>
-                                  updateField(`toppings.${t.key}`, opt)
-                                }
-                              >
-                                {opt === "normal" ? "ok" : opt}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
                   </div>
                 </>
               )}
@@ -523,39 +554,49 @@ export default function Registration() {
 
               {/* STEP 4 — Review */}
               {step === 4 && (
-                <div className="review">
-                  <div className="kv"><div className="k">Name</div><div className="v">{data.firstName} {data.lastName}</div></div>
-                  <div className="kv"><div className="k">Email</div><div className="v">{data.email}</div></div>
-                  <div className="kv"><div className="k">Phone</div><div className="v">{data.phone}</div></div>
-                  <div className="kv" style={{ gridColumn: "1/-1" }}>
-                    <div className="k">Address</div>
-                    <div className="v">{[data.address, data.city, data.state, data.zip].filter(Boolean).join(", ")}</div>
-                  </div>
-
-                  <div className="kv" style={{ gridColumn: "1/-1", marginTop: 10, borderTop:"1px dashed #e5e7eb", paddingTop:10 }}>
-                    <div className="k">Allergies</div><div className="v">{data.allergies || "—"}</div>
-                  </div>
-                  <div className="kv"><div className="k">Favorite Burger</div><div className="v">{data.favoriteBurger || "—"}</div></div>
-                  <div className="kv"><div className="k">Preferred Side</div><div className="v">{data.preferredSide || "—"}</div></div>
-                  <div className="kv" style={{ gridColumn: "1/-1" }}>
-                    <div className="k">Toppings</div>
-                    <div className="v">
-                      {toppingsList.map(t => (
-                        <div key={t.key} style={{ display:"inline-block", marginRight:10 }}>
-                          <strong>{t.label}:</strong> {data.toppings[t.key]}
-                        </div>
-                      ))}
+                <div className="review-card">
+                  <div className="review">
+                    <div className="kv"><div className="k">Name</div><div className="v">{data.firstName} {data.lastName}</div></div>
+                    <div className="kv"><div className="k">Email</div><div className="v">{data.email}</div></div>
+                    <div className="kv"><div className="k">Phone</div><div className="v">{data.phone}</div></div>
+                    <div className="kv" style={{ gridColumn: "1/-1" }}>
+                      <div className="k">Address</div>
+                      <div className="v">{[data.address, data.city, data.state, data.zip].filter(Boolean).join(", ")}</div>
                     </div>
-                  </div>
 
-                  <div className="kv" style={{ gridColumn: "1/-1", marginTop: 10, borderTop:"1px dashed #e5e7eb", paddingTop:10 }}>
-                    <div className="k">Socials</div>
-                    <div className="v" style={{ display:"grid", gap:6 }}>
-                      <div><strong>Facebook:</strong> {data.socials.facebook || "—"}</div>
-                      <div><strong>Instagram:</strong> {data.socials.instagram || "—"}</div>
-                      <div><strong>X:</strong> {data.socials.x || "—"}</div>
-                      <div><strong>TikTok:</strong> {data.socials.tiktok || "—"}</div>
-                      <div><strong>YouTube:</strong> {data.socials.youtube || "—"}</div>
+                    <div className="kv" style={{ gridColumn: "1/-1", marginTop: 10, borderTop:"1px dashed #e5e7eb", paddingTop:10 }}>
+                      <div className="k">Allergies</div><div className="v">{data.allergies || "—"}</div>
+                    </div>
+
+                    <div className="kv">
+                      <div className="k">Favorite Burgers</div>
+                      <div className="v">{data.favoriteBurgers.length ? data.favoriteBurgers.join(", ") : "—"}</div>
+                    </div>
+                    <div className="kv">
+                      <div className="k">Preferred Sides</div>
+                      <div className="v">{data.preferredSides.length ? data.preferredSides.join(", ") : "—"}</div>
+                    </div>
+
+                    <div className="kv" style={{ gridColumn: "1/-1" }}>
+                      <div className="k">Toppings</div>
+                      <div className="v">
+                        {toppingsList.map(t => (
+                          <div key={t.key} style={{ display:"inline-block", marginRight:10 }}>
+                            <strong>{t.label}:</strong> {data.toppings[t.key]}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="kv" style={{ gridColumn: "1/-1", marginTop: 10, borderTop:"1px dashed #e5e7eb", paddingTop:10 }}>
+                      <div className="k">Socials</div>
+                      <div className="v" style={{ display:"grid", gap:6 }}>
+                        <div><strong>Facebook:</strong> {data.socials.facebook || "—"}</div>
+                        <div><strong>Instagram:</strong> {data.socials.instagram || "—"}</div>
+                        <div><strong>X:</strong> {data.socials.x || "—"}</div>
+                        <div><strong>TikTok:</strong> {data.socials.tiktok || "—"}</div>
+                        <div><strong>YouTube:</strong> {data.socials.youtube || "—"}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
