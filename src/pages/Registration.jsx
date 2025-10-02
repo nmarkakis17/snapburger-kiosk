@@ -1,33 +1,19 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 export default function Registration() {
-  const lines = useMemo(() => {
-    const COUNT = 36;
-    const rnd = () => Math.random();
-    return Array.from({ length: COUNT }).map(() => ({
-      x: 20 + rnd() * 60,
-      y: 10 + rnd() * 80,
-      len: 140 + rnd() * 320,
-      rot: -25 + rnd() * 50,
-      delay: -rnd() * 6,
-      dur: 1.6 + rnd() * 1.2,
-      width: 1 + rnd() * 2,
-    }));
-  }, []);
-
   return (
-    <div className="wrap">
+    <div className="registration-page">
       <style>{`
         :root {
-          --blue:#0ea5e9; --orange:#f97316;
-          --border:#1f2a44; --text:#0b1220; --bg:#0b1220;
+          --blue:#0ea5e9;
+          --orange:#f97316;
+          --bg:#0b1220;
         }
-        html { background: var(--bg); }
-        body, #root { background: transparent; margin:0; }
+        body { margin:0; }
 
-        /* BACKGROUND (z-index 0/1) */
-        .bg-haze {
-          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        /* ===== Haze background ===== */
+        .global-haze{
+          position:fixed; inset:0; z-index:0; pointer-events:none;
           background:
             radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.28), transparent 60%),
             radial-gradient(900px 600px at 95% 0%,   rgba(14,165,233,.25), transparent 60%),
@@ -35,215 +21,162 @@ export default function Registration() {
             radial-gradient(900px 600px at 0% 100%,  rgba(251,146,60,.22), transparent 60%),
             linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.18) 60%),
             var(--bg);
-          filter: saturate(1.05);
+          filter:saturate(1.05);
         }
-        @property --sweep { syntax: '<length>'; inherits: false; initial-value: 0px; }
-        .bg-lines { position: fixed; inset: 0; z-index: 1; pointer-events:none; overflow:hidden; }
-        .bg-line {
-          position: absolute;
-          left: var(--x); top: var(--y);
-          width: var(--len); height: var(--thick);
-          transform: translate(-50%, -50%) rotate(var(--rot));
-          border-radius: 999px;
-          background:
-            linear-gradient(90deg,
-              transparent 0,
-              rgba(255,255,255,0.08) 20%,
-              rgba(255,255,255,0.15) 50%,
-              rgba(255,255,255,0.08) 80%,
-              transparent 100%);
-          filter: drop-shadow(0 0 10px rgba(14,165,233,.15));
-          opacity: .85;
-          isolation:isolate;
-        }
-        .bg-line::after{
-          content:""; position:absolute; inset:0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,.85) 45%, transparent 55%);
-          mix-blend-mode: screen;
-          transform: translateX(calc(var(--sweep) * -1));
-          animation: sweep var(--dur) cubic-bezier(.55,.1,.35,.9) var(--delay) infinite;
-          will-change: transform;
-        }
-        .bg-line::before{
-          content:""; position:absolute; inset:-6px -10px;
-          background:
-            radial-gradient(20px 10px at 20% 50%, rgba(14,165,233,.45), transparent 60%),
-            radial-gradient(14px 8px at 70% 50%, rgba(249,115,22,.35), transparent 60%);
-          opacity: 0;
-          animation: blink var(--dur) ease-in-out calc(var(--delay) * 1.1) infinite;
-        }
-        @keyframes sweep { from { --sweep:-120%; } to { --sweep:120%; } }
-        @keyframes blink { 0%,82%{opacity:0} 85%{opacity:.9} 88%{opacity:0} 96%{opacity:.5} 100%{opacity:0} }
 
-        /* FOREGROUND (z-index 2) */
-        .wrap{
-          position:relative; z-index: 2;
-          max-width:1440px; margin:0 auto; padding:28px;
-          display:grid; gap:24px; grid-template-columns: 2fr 1fr;
-          align-items:flex-start;
+        .registration-container{
+          position:relative; z-index:2;
+          max-width:1200px; margin:0 auto; padding:40px;
+          display:grid; grid-template-columns: 1.4fr 1fr; gap:40px;
+          align-items:start;
         }
-        .panel{ background:#fff; border:1px solid var(--border); border-radius:18px; }
-        .form-card{ padding:28px; display:grid; gap:18px; }
-        h2{ margin:0; color:var(--blue); }
 
-        .row{
+        /* ===== Form box ===== */
+        .form-box{
+          background:#fff;
+          border-radius:18px;
+          padding:30px;
+          box-shadow:0 12px 28px rgba(0,0,0,.25);
+        }
+        .form-box h2{
+          margin-top:0;
+          color:var(--blue);
+        }
+        form{
           display:grid;
           grid-template-columns:1fr 1fr;
-          column-gap: 96px;  /* plenty of space between columns */
-          row-gap:20px;
+          gap:20px 30px; /* extra gap between columns */
         }
-        .row-3{
-          display:grid;
-          grid-template-columns:1fr 1fr 1fr;
-          column-gap: 80px;
-          row-gap:20px;
+        label{
+          display:flex;
+          flex-direction:column;
+          font-weight:700;
+          font-size:14px;
+          color:var(--blue);
         }
-
-        label{ font-weight:700; color:var(--blue); }
         input, textarea{
-          width:100%; padding:12px; border-radius:12px; border:1px solid var(--border);
-          font-size:15px; color:var(--text);
+          margin-top:6px;
+          padding:10px 12px;
+          border:1px solid #ccc;
+          border-radius:10px;
+          font-size:14px;
+          color:#000;
         }
-        textarea{ resize:vertical; min-height:80px; }
+        textarea{ resize:vertical; }
 
-        .btn-row{ display:flex; gap:14px; justify-content:flex-end; margin-top:18px; }
+        .form-actions{
+          grid-column:1 / -1;
+          display:flex; justify-content:space-between; margin-top:20px;
+        }
         .btn{
-          padding:12px 20px; border-radius:999px; border:none; font-weight:800; cursor:pointer;
-          background:linear-gradient(135deg,var(--blue),var(--orange)); color:#fff;
+          cursor:pointer; border:none; border-radius:999px;
+          padding:12px 22px; font-weight:800; font-size:15px;
+          color:#0b0e14;
+          background:linear-gradient(135deg,var(--blue),var(--orange));
+          box-shadow:0 6px 18px rgba(14,165,233,.28);
         }
 
+        /* ===== Theo box ===== */
         .theo-box{
-          background:#fff; border:1px solid var(--border); border-radius:18px;
-          padding:14px; text-align:center; display:grid; gap:10px; justify-items:center;
+          background:rgba(255,255,255,.9);
+          border-radius:18px;
+          padding:20px;
+          box-shadow:0 10px 24px rgba(0,0,0,.25);
+          text-align:center;
         }
-        .theo-box img{ width:190px; height:auto; }
+        .theo-box img{
+          max-width:80%;
+          height:auto;
+        }
         .theo-box p{
-          font-size:18px; line-height:1.45; color:var(--blue);
-          font-weight:800; margin:0;
-          max-width: 360px;
-        }
-
-        @media(max-width:1100px){
-          .row, .row-3{ column-gap:42px; }
-        }
-        @media(max-width:900px){
-          .wrap{ grid-template-columns:1fr; }
-          .row, .row-3{ grid-template-columns:1fr; column-gap:0; }
+          margin-top:14px;
+          font-size:16px;
+          font-weight:700;
+          color:var(--blue);
         }
       `}</style>
 
-      {/* Background */}
-      <div className="bg-haze" aria-hidden="true" />
-      <div className="bg-lines" aria-hidden="true">
-        {lines.map((l, i) => (
-          <span
-            key={i}
-            className="bg-line"
-            style={{
-              '--x': `${l.x}%`,
-              '--y': `${l.y}%`,
-              '--len': `${l.len}px`,
-              '--rot': `${l.rot}deg`,
-              '--delay': `${l.delay}s`,
-              '--dur': `${l.dur}s`,
-              '--thick': `${l.width}px`,
-            }}
-          />
-        ))}
-      </div>
+      {/* background haze */}
+      <div className="global-haze" aria-hidden="true" />
 
-      {/* Left: Registration form */}
-      <div className="panel">
-        <div className="form-card">
-          <h2>Create Your SnapBurger Account</h2>
+      <div className="registration-container">
+        {/* Left: Registration form */}
+        <div className="form-box">
+          <h2>Account Registration</h2>
+          <form>
+            <label>
+              First Name
+              <input type="text" required />
+            </label>
+            <label>
+              Last Name
+              <input type="text" required />
+            </label>
+            <label>
+              Email Address
+              <input type="email" required />
+            </label>
+            <label>
+              Phone Number
+              <input type="tel" required />
+            </label>
+            <label>
+              Address
+              <input type="text" />
+            </label>
+            <label>
+              City
+              <input type="text" />
+            </label>
+            <label>
+              State
+              <input type="text" />
+            </label>
+            <label>
+              Zip Code
+              <input type="text" />
+            </label>
+            <label>
+              Allergies
+              <textarea rows="2"></textarea>
+            </label>
+            <label>
+              Favorite Burger
+              <input type="text" />
+            </label>
+            <label>
+              Facebook
+              <input type="url" placeholder="https://facebook.com/username" />
+            </label>
+            <label>
+              Instagram
+              <input type="url" placeholder="https://instagram.com/username" />
+            </label>
+            <label>
+              X (Twitter)
+              <input type="url" placeholder="https://x.com/username" />
+            </label>
+            <label>
+              TikTok
+              <input type="url" placeholder="https://tiktok.com/@username" />
+            </label>
+            <label>
+              YouTube
+              <input type="url" placeholder="https://youtube.com/@username" />
+            </label>
 
-          <div className="row">
-            <div>
-              <label>First Name</label>
-              <input type="text" placeholder="Enter first name" />
+            <div className="form-actions">
+              <button type="button" className="btn">Cancel</button>
+              <button type="submit" className="btn">Next</button>
             </div>
-            <div>
-              <label>Last Name</label>
-              <input type="text" placeholder="Enter last name" />
-            </div>
-          </div>
-
-          <div className="row">
-            <div>
-              <label>Email Address</label>
-              <input type="email" placeholder="you@example.com" />
-            </div>
-            <div>
-              <label>Phone Number</label>
-              <input type="tel" placeholder="(555) 555-5555" />
-            </div>
-          </div>
-
-          <div className="row">
-            <div>
-              <label>Street Address</label>
-              <input type="text" placeholder="123 Main St" />
-            </div>
-            <div>
-              <label>City</label>
-              <input type="text" placeholder="City" />
-            </div>
-          </div>
-
-          <div className="row">
-            <div>
-              <label>State</label>
-              <input type="text" placeholder="State" />
-            </div>
-            <div>
-              <label>Zip Code</label>
-              <input type="text" placeholder="12345" />
-            </div>
-          </div>
-
-          <div>
-            <label>Allergies</label>
-            <textarea placeholder="List any food allergies" />
-          </div>
-
-          <div className="row-3">
-            <div>
-              <label>Facebook</label>
-              <input type="text" placeholder="@facebook" />
-            </div>
-            <div>
-              <label>Instagram</label>
-              <input type="text" placeholder="@instagram" />
-            </div>
-            <div>
-              <label>X (Twitter)</label>
-              <input type="text" placeholder="@handle" />
-            </div>
-          </div>
-
-          <div className="row-3">
-            <div>
-              <label>TikTok</label>
-              <input type="text" placeholder="@tiktok" />
-            </div>
-            <div>
-              <label>YouTube</label>
-              <input type="text" placeholder="Channel URL" />
-            </div>
-            <div />
-          </div>
-
-          <div className="btn-row">
-            <a className="btn" href="/">Cancel</a>
-            <button className="btn">Next</button>
-          </div>
+          </form>
         </div>
-      </div>
 
-      {/* Right: Theo info card */}
-      <div className="theo-box">
-        <img src="/assets/theo-write.png" alt="Theo mascot" />
-        <p>Register today to unlock rewards, get personalized deals, and join the SnapBurger community!</p>
+        {/* Right: Theo box */}
+        <div className="theo-box">
+          <img src="/assets/theo-write.png" alt="Theo" />
+          <p>Register now to unlock rewards, personalized offers, and exclusive SnapBurger experiences!</p>
+        </div>
       </div>
     </div>
   );
