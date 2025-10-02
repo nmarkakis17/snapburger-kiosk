@@ -48,8 +48,8 @@ export default function Registration() {
           --blue:#0ea5e9; --orange:#f97316;
           --panel:#ffffff; --border:#d7def2;
         }
-        body, #root { background: transparent; margin:0; }
         html { background: var(--sb-bg); }
+        body, #root { background: transparent; margin:0; }
 
         .wrap{ max-width:1200px; margin:0 auto; padding:28px; display:grid; gap:24px; }
 
@@ -61,8 +61,8 @@ export default function Registration() {
         .dot.active{ background: var(--blue); }
         .title{ font-size:24px; font-weight:800; color:var(--blue); margin:0; }
 
-        .row{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-        .row-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+        .row{ display:grid; grid-template-columns:1fr 1fr; column-gap:40px; row-gap:20px; }  /* wider gap */
+        .row-3{ display:grid; grid-template-columns:1fr 1fr 1fr; column-gap:30px; row-gap:20px; }
         @media(max-width:720px){ .row, .row-3{ grid-template-columns:1fr; } }
 
         label{ color:var(--blue); font-weight:700; }
@@ -75,14 +75,14 @@ export default function Registration() {
           background: linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
         .ghost{ background:#f2f5ff; color:#333; border:1px solid var(--border) }
 
-        /* Theo panel bigger, on top */
+        /* Theo panel */
         .theo-panel{ background:#fff; border:1px solid var(--border); border-radius:18px; padding:30px; text-align:center; }
-        .theo-panel img{ width:min(600px, 95%); display:block; margin:0 auto 20px; }
-        .theo-panel .note{ color:#333; font-size:16px; line-height:1.4; max-width:700px; margin:0 auto; }
+        .theo-panel img{ width:min(300px, 70%); display:block; margin:0 auto 20px; } /* half size */
+        .theo-panel .note{ color:var(--blue); font-size:16px; line-height:1.5; max-width:650px; margin:0 auto; }
       `}</style>
 
       <div className="wrap">
-        {/* Theo on top, big */}
+        {/* Theo on top */}
         <div className="theo-panel">
           <img src="/assets/theo-write.png" alt="Theo mascot" />
           <div className="note">
@@ -103,7 +103,6 @@ export default function Registration() {
           <div className="form-card">
             <h2 className="title">{steps[step]}</h2>
 
-            {/* Example: Step 0 */}
             {step===0 && (
               <>
                 <div className="row">
@@ -145,7 +144,6 @@ export default function Registration() {
               </>
             )}
 
-            {/* Actions */}
             <div className="actions">
               <button type="button" className="pill ghost"
                 onClick={()=> step>0 ? setStep(step-1) : navigate("/")}>
