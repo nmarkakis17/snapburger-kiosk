@@ -27,8 +27,8 @@ export default function App() {
           background: linear-gradient(135deg, var(--blue), var(--orange));
           cursor:pointer;
         }
-        .btn-first{ top:28%; }
-        .btn-return{ top:38%; }
+        .btn-first{ top:21%; }
+        .btn-return{ top:31%; }
 
         /* Returning layout */
         .returning-wrap{
