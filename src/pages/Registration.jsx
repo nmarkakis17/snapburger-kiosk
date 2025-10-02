@@ -1,78 +1,204 @@
 // src/pages/Registration.jsx
 import React, { useState } from 'react'
-import theoImg from '/assets/theo-write.png'  // ✅ use your filename
 
 export default function Registration() {
-  const [step, setStep] = useState(1)
-  const [form, setForm] = useState({
-    name: '', email: '', phone: '', address: '',
-    allergies: '', socials: '', birthday: '', referral: ''
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    phone: '',
+    email: '',
+    allergies: '',
+    facebook: '',
+    instagram: '',
+    x: '',
+    tiktok: '',
+    youtube: '',
   })
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('Registration Data:', formData)
+    alert('Thanks for registering with SnapBurger!')
   }
 
   return (
-    <div className="reg-screen">
-      <div className="card">
-        <img src={theoImg} alt="Theo" className="theo" />
-
-        {step === 1 && (
-          <>
-            <h2>Welcome to SnapBurger!</h2>
-            <p>Let’s get you set up to earn rewards and make dining easier.</p>
-            <button className="btn" onClick={() => setStep(2)}>Start</button>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <h2>Your Info</h2>
-            <input name="name" placeholder="Full Name" onChange={handleChange} value={form.name} />
-            <input name="email" placeholder="Email Address" onChange={handleChange} value={form.email} />
-            <input name="phone" placeholder="Phone Number" onChange={handleChange} value={form.phone} />
-            <input name="address" placeholder="Street Address" onChange={handleChange} value={form.address} />
-            <div className="nav">
-              <button onClick={() => setStep(1)}>Back</button>
-              <button className="btn" onClick={() => setStep(3)}>Next</button>
-            </div>
-          </>
-        )}
-
-        {step === 3 && (
-          <>
-            <h2>Preferences</h2>
-            <input name="allergies" placeholder="Allergies / Dietary Notes" onChange={handleChange} value={form.allergies} />
-            <input name="birthday" placeholder="Birthday (MM/DD)" onChange={handleChange} value={form.birthday} />
-            <div className="nav">
-              <button onClick={() => setStep(2)}>Back</button>
-              <button className="btn" onClick={() => setStep(4)}>Next</button>
-            </div>
-          </>
-        )}
-
-        {step === 4 && (
-          <>
-            <h2>Rewards & Socials</h2>
-            <input name="socials" placeholder="Social Media @handle(s)" onChange={handleChange} value={form.socials} />
-            <input name="referral" placeholder="Referral Code (if any)" onChange={handleChange} value={form.referral} />
-            <div className="nav">
-              <button onClick={() => setStep(3)}>Back</button>
-              <button className="btn" onClick={() => setStep(5)}>Review</button>
-            </div>
-          </>
-        )}
-
-        {step === 5 && (
-          <>
-            <h2>Review & Confirm</h2>
-            <pre>{JSON.stringify(form, null, 2)}</pre>
-            <button onClick={() => setStep(4)}>Back</button>
-            <button className="btn">Finish</button>
-          </>
-        )}
+    <div style={{
+      maxWidth: '700px',
+      margin: '40px auto',
+      padding: '32px',
+      borderRadius: '16px',
+      background: '#0b1220',
+      color: '#fff',
+      border: '1px solid rgba(14,165,233,.3)',
+      boxShadow: '0 10px 30px rgba(0,0,0,.4)'
+    }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <img
+          src="/assets/theo-write.png"
+          alt="Theo mascot"
+          style={{ width: '100px', marginBottom: '12px' }}
+        />
+        <h1 style={{ color: '#0ea5e9', margin: 0 }}>New Customer Registration</h1>
+        <p style={{ opacity: .8 }}>Join SnapBurger and unlock rewards with Theo!</p>
       </div>
+
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '16px' }}>
+        {/* Name */}
+        <label>
+          Full Name
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+        </label>
+
+        {/* Address */}
+        <label>
+          Address
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+        </label>
+
+        {/* Phone */}
+        <label>
+          Phone Number
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+        </label>
+
+        {/* Email */}
+        <label>
+          Email Address
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+        </label>
+
+        {/* Allergies */}
+        <label>
+          Allergies (if any)
+          <textarea
+            name="allergies"
+            value={formData.allergies}
+            onChange={handleChange}
+            style={{ ...inputStyle, minHeight: '60px' }}
+          />
+        </label>
+
+        {/* Social Media Accounts */}
+        <h2 style={{ margin: '16px 0 8px', color: '#f97316' }}>Social Media Handles</h2>
+        
+        <label>
+          Facebook
+          <input
+            type="text"
+            name="facebook"
+            value={formData.facebook}
+            onChange={handleChange}
+            placeholder="@yourhandle"
+            style={inputStyle}
+          />
+        </label>
+
+        <label>
+          Instagram
+          <input
+            type="text"
+            name="instagram"
+            value={formData.instagram}
+            onChange={handleChange}
+            placeholder="@yourhandle"
+            style={inputStyle}
+          />
+        </label>
+
+        <label>
+          X (formerly Twitter)
+          <input
+            type="text"
+            name="x"
+            value={formData.x}
+            onChange={handleChange}
+            placeholder="@yourhandle"
+            style={inputStyle}
+          />
+        </label>
+
+        <label>
+          TikTok
+          <input
+            type="text"
+            name="tiktok"
+            value={formData.tiktok}
+            onChange={handleChange}
+            placeholder="@yourhandle"
+            style={inputStyle}
+          />
+        </label>
+
+        <label>
+          YouTube Channel
+          <input
+            type="text"
+            name="youtube"
+            value={formData.youtube}
+            onChange={handleChange}
+            placeholder="youtube.com/@yourchannel"
+            style={inputStyle}
+          />
+        </label>
+
+        {/* Submit */}
+        <button type="submit" style={{
+          padding: '14px',
+          border: 'none',
+          borderRadius: '999px',
+          background: 'linear-gradient(135deg, #0ea5e9, #f97316)',
+          color: '#fff',
+          fontWeight: 900,
+          fontSize: '16px',
+          cursor: 'pointer',
+          marginTop: '12px',
+          boxShadow: '0 8px 20px rgba(14,165,233,.3)'
+        }}>
+          Register Now
+        </button>
+      </form>
     </div>
   )
+}
+
+const inputStyle = {
+  width: '100%',
+  marginTop: '4px',
+  padding: '10px 12px',
+  borderRadius: '8px',
+  border: '1px solid rgba(255,255,255,.2)',
+  background: '#1c2536',
+  color: '#fff',
+  fontSize: '15px'
 }
