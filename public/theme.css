@@ -320,3 +320,34 @@ body{
 /* Z-layers for app */
 .global-haze{ z-index: 0; }
 .page,.container{ position: relative; z-index: 2; }
+
+.reg-screen {
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh; color: #fff;
+}
+.card {
+  background: rgba(11,18,32,0.9);
+  border: 2px solid var(--sb-accent-2, #0ea5e9);
+  border-radius: 22px;
+  padding: 24px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.theo {
+  width: 120px; margin-bottom: 16px;
+}
+input {
+  display:block; width:100%; margin:10px 0; padding:12px;
+  border-radius: 10px; border:1px solid #1f2a44;
+}
+.btn {
+  background: linear-gradient(135deg, #0ea5e9, #f97316);
+  color:#000; font-weight:800;
+  padding:12px 20px; margin:10px; border-radius:999px; border:none;
+  cursor:pointer;
+}
+.nav { display:flex; justify-content:space-between; }
+
+
