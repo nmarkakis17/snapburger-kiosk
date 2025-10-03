@@ -1,97 +1,112 @@
 // src/App.jsx
-import React, { useState } from "react";
-import Registration from "./pages/Registration.jsx"; // ✅ import registration
+import React from "react"
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom"
+
+// Pages (these files must exist)
+import Registration from "./pages/Registration.jsx"
+import Returning from "./pages/Returning.jsx"
+
+// Simple landing page (inline)
+function Landing() {
+  const navigate = useNavigate()
+  return (
+    <div className="page" style={{ padding: 28 }}>
+      <div className="card" style={{ maxWidth: 860, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 18 }}>
+          <h1 style={{ margin: 0, color: "var(--blue)" }}>Welcome to SnapBurger</h1>
+          <p style={{ margin: 8, color: "var(--sub)" }}>
+            Where dining meets technology — earn <b style={{ color: "var(--orange)" }}>SnapCoins</b> and{" "}
+            <b style={{ color: "var(--orange)" }}>SnapCharms</b> as you go!
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gap: 14, gridTemplateColumns: "1fr 1fr" }}>
+          <button className="btn" onClick={() => navigate("/register")}>
+            New Customer
+          </button>
+          <button className="btn" onClick={() => navigate("/returning")}>
+            Returning Customer
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function App() {
-  const [stage, setStage] = useState("landing"); // landing | menu | register | returning
-
   return (
     <>
+      {/* —— Global styles —— */}
       <style>{`
         :root{
-          --sb-bg:#0b1220;
-          --blue:#0ea5e9; --orange:#f97316;
+          --bg:#0b1220;
+          --panel:#ffffff;
+          --text:#0b1020;
+          --blue:#0ea5e9;
+          --orange:#f97316;
+          --sub:#5f6b85;
+          --border:rgba(10,15,30,.12);
+          --radius:18px;
         }
-        html { background: var(--sb-bg); }
-        body, #root { background: transparent; margin:0; }
 
-        /* ===== Background haze (unchanged) ===== */
+        html { background: var(--bg); }
+        body, #root { background: transparent; margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial; color:#eef2ff; }
+
+        /* Subtle brand haze (no grid) */
         .global-haze{
           position:fixed; inset:0; z-index:0; pointer-events:none;
           background:
-            radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
-            radial-gradient(900px 600px at 95% 0%,   rgba(14,165,233,.30), transparent 60%),
-            radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
-            radial-gradient(900px 600px at 0% 100%,  rgba(251,146,60,.28), transparent 60%),
-            linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
-            var(--sb-bg);
-          filter: saturate(1.05);
+            radial-gradient(1000px 700px at 15% 10%, rgba(34,211,238,.28), transparent 60%),
+            radial-gradient(900px 600px at 85% 12%, rgba(249,115,22,.24), transparent 60%),
+            linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.20) 60%),
+            var(--bg);
+          filter: saturate(1.06);
         }
-        .page{ position:relative; z-index:2; }
-        .container{ max-width:1100px; margin:0 auto; padding:28px; }
 
-        /* Tower */
-        .tower-wrap{ display:flex; justify-content:center; padding:8px 0; }
-        .tower{ position:relative; width:min(460px, 92vw); }
-        .tower > img{ display:block; width:100%; border-radius:22px; }
+        /* App layer sits above background */
+        .page { position:relative; z-index:1; }
 
-        .pill-btn{
-          position:absolute; left:50%; transform:translateX(-50%);
-          width:70%; padding:26px 0; border-radius:9999px; border:none;
-          font-weight:900; font-size:18px; color:#0b0e14;
-          background: linear-gradient(135deg, var(--blue), var(--orange));
-          cursor:pointer;
+        /* Cards & buttons */
+        .card{
+          background: var(--panel);
+          color: var(--text);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          padding: 18px;
+          box-shadow: 0 12px 28px rgba(0,0,0,.18);
         }
-        .btn-first  { top: 27%; }
-        .btn-return { top: 37%; }
+        .btn{
+          cursor:pointer; border:none; border-radius:12px; padding:12px 16px; font-weight:800;
+          background: linear-gradient(135deg, var(--blue), var(--orange)); color:#001018;
+          box-shadow: 0 10px 24px rgba(14,165,233,.28);
+        }
+        .btn:disabled{opacity:.6; cursor:not-allowed}
 
-        .tagline-box{
-          position:absolute; left:8%; width:84%; bottom:7.5%;
-          padding:14px 16px; border-radius:14px;
-          background: rgba(11,18,32,.88); color:#fff; font-weight:800; text-align:center;
-          border:1px solid rgba(29,161,255,.35);
+        /* Inputs: ensure full width (fixes “one-character” issue) */
+        input, textarea, select {
+          width: 100% !important;
+          min-width: 0 !important;
+          box-sizing: border-box;
+          font: inherit;
+        }
+
+        /* Checkbox label alignment (used by Registration) */
+        .check-row{
+          display:flex; align-items:center; gap:8px;
+          line-height:1.2;
         }
       `}</style>
 
       <div className="global-haze" aria-hidden="true" />
 
-      <div className="page">
-        <div className="container">
-          {stage === "landing" && (
-            <section className="tower-wrap">
-              <div className="tower">
-                <img src="/assets/kiosk-main.png" alt="SnapBurger Kiosk" />
-                <div className="tower-overlay">
-                  <button className="pill-btn btn-first" onClick={() => setStage("register")}>
-                    First-Time Customer
-                  </button>
-                  <button className="pill-btn btn-return" onClick={() => setStage("returning")}>
-                    Returning Customer
-                  </button>
-                  <div className="tagline-box">Where Dining Meets Technology</div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {stage === "register" && (
-            <Registration onCancel={() => setStage("landing")} />
-          )}
-
-          {stage === "returning" && (
-            <section style={{ textAlign: "center", color: "#fff" }}>
-              <h2>Returning Customer</h2>
-              <p>(placeholder until we drop in your returning customer page)</p>
-              <button
-                style={{ marginTop: "20px", background: "var(--blue)", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}
-                onClick={() => setStage("landing")}
-              >
-                Back to Home
-              </button>
-            </section>
-          )}
-        </div>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/register" element={<Registration />} />
+          {/* Your file is named Returning.jsx */}
+          <Route path="/returning" element={<Returning />} />
+        </Routes>
+      </BrowserRouter>
     </>
-  );
+  )
 }
