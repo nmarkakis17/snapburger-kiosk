@@ -1,25 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+// src/main.jsx
+import React from "react"
+import ReactDOM from "react-dom/client"
+import App from "./App.jsx"
 
-import App from './App.jsx'
-import Registration from './pages/Registration.jsx'
-import Returning from './pages/Returning.jsx'
+const root = document.getElementById("root")
+if (!root) {
+  // super defensive: create a root if index.html was altered
+  const div = document.createElement("div")
+  div.id = "root"
+  document.body.appendChild(div)
+}
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        {/* Landing page (with tower image + CTA pills) */}
-        <Route path="/" element={<App />} />
-
-        {/* New customer registration (multi-step) */}
-        <Route path="/register" element={<Registration />} />
-
-        {/* Returning customer (loyalty card landing + scan/enter options) */}
-        <Route path="/returning" element={<Returning />} />
-      </Routes>
-    </BrowserRouter>
+    <App />
   </React.StrictMode>
 )
-
