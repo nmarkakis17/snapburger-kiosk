@@ -33,7 +33,7 @@ export default function Registration({ onCancel }) {
         color: "#000",
         boxShadow: "0 10px 30px rgba(0,0,0,.15)",
         display: "flex",
-        gap: "28px",
+        gap: "36px", // gap between left (form) and right (Theo box)
         ...style
       }}
     >
@@ -63,17 +63,17 @@ export default function Registration({ onCancel }) {
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 columnGap: "28px",
-                rowGap: "12px",
+                rowGap: "6px", // tighter rows
                 paddingRight: "24px"
               }}
             >
-              <input placeholder="Full Name" value={form.name} onChange={e => handleChange("name", e.target.value)} />
-              <input placeholder="Phone Number" value={form.phone} onChange={e => handleChange("phone", e.target.value)} />
-              <input placeholder="Email Address" value={form.email} onChange={e => handleChange("email", e.target.value)} />
-              <input placeholder="Street Address" value={form.address} onChange={e => handleChange("address", e.target.value)} />
-              <input placeholder="City" value={form.city} onChange={e => handleChange("city", e.target.value)} />
-              <input placeholder="State" value={form.state} onChange={e => handleChange("state", e.target.value)} />
-              <input placeholder="ZIP Code" value={form.zip} onChange={e => handleChange("zip", e.target.value)} />
+              <input type="text" placeholder="Full Name" value={form.name} onChange={e => handleChange("name", e.target.value)} />
+              <input type="tel" placeholder="Phone Number" value={form.phone} onChange={e => handleChange("phone", e.target.value)} />
+              <input type="email" placeholder="Email Address" value={form.email} onChange={e => handleChange("email", e.target.value)} />
+              <input type="text" placeholder="Street Address" value={form.address} onChange={e => handleChange("address", e.target.value)} />
+              <input type="text" placeholder="City" value={form.city} onChange={e => handleChange("city", e.target.value)} />
+              <input type="text" placeholder="State" value={form.state} onChange={e => handleChange("state", e.target.value)} />
+              <input type="text" placeholder="ZIP Code" value={form.zip} onChange={e => handleChange("zip", e.target.value)} />
             </div>
           </>
         )}
@@ -129,7 +129,7 @@ export default function Registration({ onCancel }) {
         {step === 3 && (
           <>
             <h2 style={{ color: "var(--blue)" }}>Social Media</h2>
-            <div style={{ display: "grid", gap: 12 }}>
+            <div style={{ display: "grid", gap: 10 }}>
               {[
                 { key: "facebook", label: "Facebook", icon: "/assets/social/facebook.svg" },
                 { key: "instagram", label: "Instagram", icon: "/assets/social/instagram.svg" },
@@ -140,6 +140,7 @@ export default function Registration({ onCancel }) {
                 <div key={key} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <img src={icon} alt={label} width="22" height="22" />
                   <input
+                    type="text"
                     placeholder={`${label} Username/URL`}
                     value={form[key]}
                     onChange={e => handleChange(key, e.target.value)}
