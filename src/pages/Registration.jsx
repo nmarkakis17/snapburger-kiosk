@@ -21,9 +21,9 @@ export default function Registration() {
         <div className="layout congratsLayout">
           <div className="panel congratsPanel">
             <img src={theoClap} alt="Theo clapping" className="theoClapImg" />
-            <h2 className="congratsTitle">Congratulations!</h2>
+            <h2 className="congratsTitle">🎉 Congratulations!</h2>
             <p className="congratsBody">
-              You’re all set. Your SnapBurger account is ready — start earning{" "}
+              You’re all set! Your SnapBurger account is ready — start earning{" "}
               <span className="brandOrange">SnapCoins</span> and collecting{" "}
               <span className="brandOrange">SnapCharms</span> today!
             </p>
@@ -33,6 +33,25 @@ export default function Registration() {
             </div>
           </div>
         </div>
+
+        <style jsx>{`
+          .congratsLayout {
+            display:flex; justify-content:center; align-items:center;
+            padding:60px; width:100%;
+          }
+          .congratsPanel {
+            max-width:500px; text-align:center;
+          }
+          .theoClapImg { max-width:200px; margin-bottom:18px; }
+          .congratsTitle { font-size:26px; font-weight:800; color:var(--blue); }
+          .congratsBody {
+            font-size:18px; font-weight:600; margin:18px 0;
+            color:#111;
+          }
+          .congratsActions {
+            display:flex; justify-content:center; gap:14px; margin-top:20px;
+          }
+        `}</style>
       </div>
     );
   }
@@ -151,7 +170,7 @@ export default function Registration() {
           <p className="theoBlurb">
             Register today to earn{" "}
             <span className="brandOrange">SnapCoins</span> and{" "}
-            <span className="brandOrange">SnapCharms</span> — your rewards start right away.
+            <span className="brandOrange">SnapCharms</span>.
           </p>
         </div>
       </div>
@@ -174,13 +193,13 @@ export default function Registration() {
         .subtitle { font-size:18px; font-weight:700; color:var(--blue); margin-bottom:12px; }
         .grid2 {
           display:grid; grid-template-columns:1fr 1fr;
-          column-gap:28px; row-gap:14px; /* more space between rows */
+          column-gap:28px; row-gap:22px;
         }
         .rightColBuffer { margin-right:28px; }
-        label { display:block; font-weight:600; font-size:14px; margin-bottom:4px; color:var(--blue); }
+        label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; color:var(--blue); }
         input {
           width:100%; padding:10px; border-radius:10px;
-          border:1px solid #ccc; margin-bottom:4px;
+          border:1px solid #ccc; margin-bottom:10px;
         }
         .checkGroup label { display:inline-flex; align-items:center; gap:8px; margin:4px 12px 0 0; color:#111; font-weight:600; }
         .reviewBox { background:#f9f9f9; border:1px solid #ddd; border-radius:12px; padding:16px; min-height:220px; }
@@ -188,10 +207,8 @@ export default function Registration() {
         .pillBtn {
           border:none; border-radius:999px; padding:12px 22px;
           font-weight:700; cursor:pointer; text-decoration:none;
+          background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff;
         }
-        .pillBtn.cancel { background:#ccc; color:#000; }
-        .pillBtn.back { background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
-        .pillBtn.next { background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
         .theoPanel { text-align:center; display:flex; flex-direction:column; align-items:center; padding:20px; }
         .theoImg { max-width:150px; margin-bottom:12px; }
         .theoBlurb { font-size:16px; font-weight:700; color:var(--blue); }
