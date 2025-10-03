@@ -1,9 +1,56 @@
 // src/pages/Registration.jsx
 import React, { useState } from "react";
-import theoImg from "/assets/theo-write.png";
+import theoWrite from "/assets/theo-write.png";   // existing side image
+import theoClap from "/assets/theo-clap.png";     // NEW: congratulations image
 
 export default function Registration() {
   const [step, setStep] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+
+  const goNext = () => setStep((s) => Math.min(4, s + 1));
+  const goBack = () => setStep((s) => Math.max(1, s - 1));
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true); // go to Congrats screen
+  };
+
+  if (submitted) {
+    return (
+      <div className="registrationPage">
+        <div className="layout congratsLayout">
+          <div className="panel congratsPanel">
+            <img src={theoClap} alt="Theo clapping" className="theoClapImg" />
+            <h2 className="congratsTitle">Congratulations!</h2>
+            <p className="congratsBody">
+              You’re all set. Your SnapBurger account is ready — start earning
+              <b> SnapCoins</b> and collecting <b>SnapCharms</b> today!
+            </p>
+            <div className="congratsActions">
+              <a className="pillBtn next" href="/menu">Start Ordering</a>
+              <a className="pillBtn cancel" href="/">Back to Home</a>
+            </div>
+          </div>
+        </div>
+
+        <style jsx>{`
+          .registrationPage { display:flex; justify-content:center; padding:40px; color:var(--sb-text);}
+          .layout.congratsLayout { width:100%; max-width:900px; }
+          .congratsPanel{
+            background:#fff; color:#000; border-radius:20px; padding:28px 36px;
+            box-shadow:0 12px 30px rgba(0,0,0,.25); text-align:center;
+          }
+          .theoClapImg{ width:min(220px, 40vw); display:block; margin:0 auto 12px auto; }
+          .congratsTitle{ color:var(--blue); font-size:28px; font-weight:900; margin:6px 0 8px 0; }
+          .congratsBody{ font-size:16px; color:#111; }
+          .congratsActions{ display:flex; gap:12px; justify-content:center; margin-top:18px; }
+          .pillBtn{ border:none; border-radius:999px; padding:12px 22px; font-weight:700; cursor:pointer; text-decoration:none; }
+          .pillBtn.next{ background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
+          .pillBtn.cancel{ background:#ccc; color:#000; }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="registrationPage">
@@ -12,7 +59,7 @@ export default function Registration() {
         <div className="panel formPanel">
           <h2 className="title">Account Registration</h2>
 
-          <form>
+          <form onSubmit={onSubmit}>
             {/* Step 1 */}
             {step === 1 && (
               <div className="grid2">
@@ -22,7 +69,7 @@ export default function Registration() {
                   <label>Phone</label>
                   <input type="tel" />
                 </div>
-                <div>
+                <div className="rightColBuffer">
                   <label>Email</label>
                   <input type="email" />
                   <label>Address</label>
@@ -36,26 +83,29 @@ export default function Registration() {
               <div className="grid2">
                 <div>
                   <label>Allergies</label>
-                  <input type="text" />
-                  <label>Favorite Burger</label>
-                  <div>
-                    <input type="checkbox" /> Byte Burger <br />
-                    <input type="checkbox" /> MegaByte <br />
-                    <input type="checkbox" /> BaconByte <br />
+                  <input type="text" placeholder="e.g., peanuts, gluten" />
+                  <label>Favorite Burgers</label>
+                  <div className="checkGroup">
+                    <label><input type="checkbox" /> Byte Burger</label>
+                    <label><input type="checkbox" /> MegaByte</label>
+                    <label><input type="checkbox" /> BaconByte</label>
+                    <label><input type="checkbox" /> VeggieByte</label>
                   </div>
                 </div>
-                <div>
+                <div className="rightColBuffer">
                   <label>Toppings</label>
-                  <div>
-                    <input type="checkbox" /> Add Cheese <br />
-                    <input type="checkbox" /> Extra Onions <br />
-                    <input type="checkbox" /> Light Sauce <br />
+                  <div className="checkGroup">
+                    <label><input type="checkbox" /> Add Cheese</label>
+                    <label><input type="checkbox" /> Extra Onions</label>
+                    <label><input type="checkbox" /> Light Sauce</label>
+                    <label><input type="checkbox" /> No Pickles</label>
                   </div>
-                  <label>Preferred Side</label>
-                  <div>
-                    <input type="checkbox" /> Fries <br />
-                    <input type="checkbox" /> Onion Rings <br />
-                    <input type="checkbox" /> Salad <br />
+                  <label>Preferred Sides</label>
+                  <div className="checkGroup">
+                    <label><input type="checkbox" /> Fries</label>
+                    <label><input type="checkbox" /> Onion Rings</label>
+                    <label><input type="checkbox" /> Salad</label>
+                    <label><input type="checkbox" /> Tater Tots</label>
                   </div>
                 </div>
               </div>
@@ -66,48 +116,40 @@ export default function Registration() {
               <div className="grid2">
                 <div>
                   <label>Facebook</label>
-                  <input type="text" />
+                  <input type="text" placeholder="@yourprofile" />
                   <label>Instagram</label>
-                  <input type="text" />
+                  <input type="text" placeholder="@yourhandle" />
                   <label>X (Twitter)</label>
-                  <input type="text" />
+                  <input type="text" placeholder="@yourhandle" />
                 </div>
-                <div>
+                <div className="rightColBuffer">
                   <label>TikTok</label>
-                  <input type="text" />
+                  <input type="text" placeholder="@yourhandle" />
                   <label>YouTube</label>
-                  <input type="text" />
+                  <input type="text" placeholder="channel url or @handle" />
                 </div>
               </div>
             )}
 
             {/* Step 4 */}
             {step === 4 && (
-              <div>
+              <>
                 <h3 className="subtitle">Review Your Information</h3>
                 <div className="reviewBox">
                   <p>(Preview of submitted details here)</p>
                 </div>
-              </div>
+              </>
             )}
 
             {/* Actions */}
             <div className="actions">
               {step > 1 && (
-                <button
-                  type="button"
-                  className="pillBtn cancel"
-                  onClick={() => setStep(step - 1)}
-                >
+                <button type="button" className="pillBtn cancel" onClick={goBack}>
                   Back
                 </button>
               )}
               {step < 4 && (
-                <button
-                  type="button"
-                  className="pillBtn next"
-                  onClick={() => setStep(step + 1)}
-                >
+                <button type="button" className="pillBtn next" onClick={goNext}>
                   Next
                 </button>
               )}
@@ -122,10 +164,10 @@ export default function Registration() {
 
         {/* Theo side */}
         <div className="panel theoPanel">
-          <img src={theoImg} alt="Theo" className="theoImg" />
+          <img src={theoWrite} alt="Theo" className="theoImg" />
           <p className="theoBlurb">
-            Register today to earn SnapCoins and SnapCharms! Your rewards start
-            right away.
+            Register today to earn <b>SnapCoins</b> and <b>SnapCharms</b> —
+            your rewards start right away.
           </p>
         </div>
       </div>
@@ -140,7 +182,7 @@ export default function Registration() {
         }
         .layout {
           display: grid;
-          grid-template-columns: 1.6fr 0.4fr;
+          grid-template-columns: 1.6fr 0.4fr; /* big form, slim Theo */
           gap: 32px;
           width: 100%;
           max-width: 1100px;
@@ -164,14 +206,15 @@ export default function Registration() {
           color: var(--blue);
           margin-bottom: 12px;
         }
+        /* Two-column form grid with balanced spacing */
         .grid2 {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 8px 40px; /* tighter rows, healthy col spacing */
+          column-gap: 28px;       /* spacing between columns */
+          row-gap: 8px;           /* tighter rows */
         }
-        .grid2 > div:last-child {
-          margin-right: 24px; /* breathing room on right side */
-        }
+        .rightColBuffer { margin-right: 28px; } /* breathing room against panel edge */
+
         label {
           display: block;
           font-weight: 600;
@@ -186,12 +229,20 @@ export default function Registration() {
           border: 1px solid #ccc;
           margin-bottom: 6px;
         }
+        .checkGroup label {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin: 4px 12px 0 0;
+          color: #111;
+          font-weight: 600;
+        }
         .reviewBox {
           background: #f9f9f9;
           border: 1px solid #ddd;
           border-radius: 12px;
           padding: 16px;
-          min-height: 200px;
+          min-height: 220px;
         }
         .actions {
           margin-top: 20px;
@@ -222,16 +273,15 @@ export default function Registration() {
           padding: 20px;
         }
         .theoImg {
-          max-width: 160px;
-          margin-bottom: 14px;
+          max-width: 150px;  /* slightly smaller per your earlier preference */
+          margin-bottom: 12px;
         }
         .theoBlurb {
           font-size: 16px;
-          font-weight: 600;
+          font-weight: 700;
           color: var(--blue);
         }
       `}</style>
     </div>
   );
 }
-
