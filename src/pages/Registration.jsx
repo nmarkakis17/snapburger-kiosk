@@ -109,6 +109,20 @@ export default function Registration(){
 
         .social-row{ display:grid; grid-template-columns: 28px 1fr; align-items:center; gap:10px; }
         .social-row img{ width:28px; height:28px }
+        .btn{cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:800;
+  background:linear-gradient(135deg, #0ea5e9, #f97316); 
+  color:#001018;
+  box-shadow:0 10px 24px rgba(14,165,233,.28);
+}
+.btn.ghost{
+  background:linear-gradient(135deg, #0ea5e9, #f97316);
+  color:#001018;
+}
+.btn.alt{
+  background:linear-gradient(135deg, #0ea5e9, #f97316);
+  color:#001018;
+}
+
       `}</style>
 
       <div className="page container">
@@ -168,17 +182,34 @@ export default function Registration(){
                   </div>
                 </div>
 
-                <div style={{ marginTop:12 }}>
-                  <div className="label" style={{ marginBottom:6 }}>Toppings (add/remove/extra/light)</div>
-                  <div className="checkgrid">
-                    {toppingOptions.map(t => (
-                      <label key={t} className="check-row">
-                        <input type="checkbox" checked={form.toppings.includes(t)} onChange={onCheckList("toppings", t)} />
-                        <span>{t}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+<div style={{ marginTop:12 }}>
+  <div className="label" style={{ marginBottom:6 }}>Toppings (add/remove/light/extra)</div>
+  <div className="checkgrid" style={{ gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
+    {toppingOptions.map(t => (
+      <div key={t} style={{ display:"grid", gap:4 }}>
+        <div style={{ fontWeight:600 }}>{t}</div>
+        {["Add","Remove","Light","Extra"].map(opt => (
+          <label key={opt} className="check-row">
+            <input
+              type="checkbox"
+              checked={form.toppings.includes(`${t}-${opt}`)}
+              onChange={(e)=>{
+                const key = `${t}-${opt}`
+                if(e.target.checked){
+                  setForm(f=>({...f, toppings:[...f.toppings, key]}))
+                } else {
+                  setForm(f=>({...f, toppings:f.toppings.filter(x=>x!==key)}))
+                }
+              }}
+            />
+            <span>{opt}</span>
+          </label>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
 
                 <div className="actions">
                   <button className="btn ghost" onClick={back}>Back</button>
@@ -238,22 +269,19 @@ export default function Registration(){
               </div>
             )}
 
-            {step === 5 && (
-              <div className="card" style={{ padding:18 }}>
-                <div style={{ display:"grid", gap:12, justifyItems:"center" }}>
-                  {/* Use your real Theo asset: /public/assets/theo-clap.png or theo-write.png */}
-                  <img src="/assets/theo-clap.png" onError={(e)=>{ e.currentTarget.style.display="none" }} alt="Theo clapping" style={{ maxWidth:280 }} />
-                  <h2 style={{ margin:0, color:brand.blue }}>Congratulations!</h2>
-                  <div className="label" style={{ color:"#0b1020" }}>
-                    <span>Theo welcomes you to the </span>
-                    <b style={{ color: brand.orange }}>SnapBurger</b>
-                    <span> family!</span>
-                  </div>
-                  <a href="/" className="btn">Back to Home</a>
-                </div>
-              </div>
-            )}
-          </div>
+{step === 5 && (
+  <div className="card" style={{ padding:18 }}>
+    <div style={{ display:"grid", gap:14, justifyItems:"center" }}>
+      <img src="/assets/theo-clap.png" alt="Theo clapping" style={{ maxWidth:280 }} />
+      <h2 style={{ margin:0, fontSize:"1.6rem", color:"#0ea5e9" }}>
+        Theo welcomes you to the <b style={{ color:"#f97316" }}>SnapBurger</b> family!
+      </h2>
+      <h3 style={{ margin:0, color:"#0b1020" }}>Congratulations!</h3>
+      <a href="/" className="btn">Back to Home</a>
+    </div>
+  </div>
+)}
+
 
           {/* —— Theo / explainer side card —— */}
           <aside className="aside">
@@ -270,3 +298,4 @@ export default function Registration(){
     </>
   )
 }
+
