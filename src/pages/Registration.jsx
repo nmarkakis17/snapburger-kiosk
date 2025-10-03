@@ -73,16 +73,16 @@ export default function Registration(){
         }
 
         .page{position:relative;z-index:1}
-        .container{max-width:1100px;margin:0 auto;padding:28px}
+        .container{max-width:1280px;margin:0 auto;padding:28px}
 
         .headline{display:flex;align-items:center;gap:12px;margin-bottom:12px}
         .headline .title{font-size:26px;font-weight:900;color:var(--blue)}
         .subtitle{color:#9cb4ff}
 
-        .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
+        .layout{display:grid;grid-template-columns:1.45fr .55fr;gap:28px;align-items:start}
         .panel{
           background:#fff;color:#0b1020;border-radius:18px;border:1px solid rgba(10,15,30,.10);
-          box-shadow:0 14px 28px rgba(0,0,0,.25); padding:18px;
+          box-shadow:0 14px 28px rgba(0,0,0,.25); padding:25px;
         }
         .theoPanel{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center}
         .theoPanel img{width:120px;height:auto;display:block}
@@ -292,4 +292,5 @@ Socials:
     </>
   )
 }
+
 
