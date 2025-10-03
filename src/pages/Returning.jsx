@@ -1,62 +1,146 @@
-import React, { useState } from "react"
+// src/pages/Returning.jsx
+import React from "react"
 
-export default function Returning(){
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [loyalty, setLoyalty] = useState("")
+export default function Returning() {
+  // Update these paths if your filenames differ
+  const LOYALTY_IMG = "/assets/loyalty-card.png"
+  const THEO_POINT_IMG = "/assets/theo-pointdown.png"
 
   return (
     <>
       <style>{`
-        .wrap{ max-width:1100px; margin:0 auto; display:grid; gap:22px; }
-        .hero-card{ background:#fff; color:#0b1020; border:1px solid rgba(10,15,30,.12); border-radius:18px; padding:16px; box-shadow:0 12px 28px rgba(0,0,0,.18); }
-        .grid-2{ display:grid; gap:22px; grid-template-columns: 1fr 1fr; }
-        .card{ background:#fff; color:#0b1020; border:1px solid rgba(10,15,30,.12); border-radius:18px; padding:16px; box-shadow:0 12px 28px rgba(0,0,0,.18); }
-        .title{ margin:0 0 8px; color:#0ea5e9; }
-        .row{ display:grid; gap:10px; }
-        input{ width:100%; padding:10px 12px; border:1px solid rgba(10,15,30,.12); border-radius:12px; background:#f8f9ff; color:#0b1020; }
-        .btn{ cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:800; background:linear-gradient(135deg, #0ea5e9, #f97316); color:#001018; }
-        .btn.ghost{ background:#0c1326; color:#fff; border:1px solid rgba(10,15,30,.12); }
+        :root{
+          --bg:#0b1220;
+          --panel:#ffffff;
+          --text:#0b1020;
+          --blue:#0ea5e9;
+          --orange:#f97316;
+          --sub:#5f6b85;
+          --border:rgba(10,15,30,.12);
+          --radius:18px;
+        }
+        .page{ position:relative; z-index:1; padding:22px 14px; display:grid; place-items:center; }
+
+        /* Tighter overall width */
+        .wrap{
+          width: min(860px, 94vw);
+          display:grid;
+          gap:16px;
+        }
+
+        .card{
+          background:var(--panel);
+          color:var(--text);
+          border:1px solid var(--border);
+          border-radius:var(--radius);
+          padding:14px;                          /* smaller padding */
+          box-shadow:0 10px 24px rgba(0,0,0,.14);
+        }
+
+        .title{ margin:0; color:var(--blue); font-size:20px } /* slightly smaller */
+        .sub{ margin:4px 0 0; color:var(--sub); font-size:14px }
+
+        .btn{
+          cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:800;
+          background:linear-gradient(135deg, var(--blue), var(--orange)); color:#001018;
+          box-shadow:0 8px 20px rgba(14,165,233,.25);
+        }
+
+        input{
+          width:100%; min-width:0; box-sizing:border-box;
+          background:#fff; color:var(--text);
+          border:1px solid var(--border); border-radius:12px;
+          padding:9px 12px; font:inherit;
+        }
+        .label{ font-size:13px; font-weight:800; color:var(--blue); margin-bottom:4px }
+
+        /* Header block (loyalty card + caption) — scaled down */
+        .hero{
+          display:grid; justify-items:center; gap:10px;
+        }
+        .hero img{
+          width:min(420px, 86vw);                /* smaller card image */
+          height:auto; display:block; border-radius:16px;
+          box-shadow:0 12px 28px rgba(0,0,0,.28);
+        }
+
+        /* Two small cards: scan (left) and form (right) */
+        .cols{
+          display:grid; gap:16px; grid-template-columns: 1fr 1fr;
+        }
+        .mini-title{ margin:0 0 6px 0; color:var(--blue); font-size:16px; }
+        .row{ display:flex; gap:10px; align-items:center }
+        .space{ display:flex; align-items:center; justify-content:space-between; gap:10px }
+
+        /* Scan card */
+        .scan{
+          display:grid; gap:12px; justify-items:center; text-align:center;
+        }
+        .theo{
+          width:120px; height:auto; display:block;             /* smaller Theo */
+          filter: drop-shadow(0 6px 14px rgba(0,0,0,.25));
+        }
+        .scan-well{
+          width: min(320px, 80%);
+          height: 160px;                                       /* compact “scanner” well */
+          border-radius: 14px;
+          border:1px dashed var(--border);
+          display:grid; place-items:center;
+          color:var(--sub);
+          background: #fafafa;
+        }
+
+        /* Form card smaller */
+        .form{
+          display:grid; gap:10px;
+        }
+
+        @media (max-width: 760px){
+          .cols{ grid-template-columns: 1fr; }
+          .scan-well{ width:100%; }
+        }
       `}</style>
 
-      <div className="page container">
+      <div className="page">
         <div className="wrap">
-          {/* Loyalty card preview */}
-          <div className="hero-card" style={{ textAlign:"center" }}>
-            {/* Place your generated card: /public/assets/loyalty-card.png */}
-            <img src="/assets/loyalty-card.png" alt="SnapBurger Loyalty Card" style={{ width:"min(780px, 96%)", height:"auto" }} />
+          {/* Loyalty card “hero” */}
+          <div className="hero">
+            <img src={LOYALTY_IMG} alt="SnapBurger Loyalty Card" />
+            <div className="sub">Welcome back! Scan your card or enter your information to continue.</div>
           </div>
 
-          <div className="grid-2">
-            {/* Left: Scan box with Theo pointing down */}
-            <div className="card" style={{ display:"grid", gap:12, justifyItems:"center" }}>
-              <h3 className="title">Scan Your Loyalty Card Below</h3>
-              {/* Theo pointing down: /public/assets/theo-point.png */}
-              <img src="/assets/theo-point.png" alt="Theo pointing down" style={{ maxWidth:260 }} />
-              <div className="row" style={{ textAlign:"center", color:"#5f6b85" }}>
-                Place your card near the scanner to sign in instantly.
+          {/* Two smaller cards */}
+          <div className="cols">
+            {/* Left: Scan */}
+            <div className="card scan">
+              <h3 className="mini-title">Scan Your Loyalty Card Below</h3>
+              <img className="theo" src={THEO_POINT_IMG} alt="Theo pointing down" />
+              <div className="scan-well">Place card under scanner</div>
+              <div className="row" style={{ justifyContent: "center" }}>
+                <button className="btn" onClick={() => alert("Scanner stub")}>Start Scan</button>
               </div>
-              <button className="btn ghost" onClick={()=>window.history.back()}>Back</button>
             </div>
 
-            {/* Right: Manual entry */}
-            <div className="card" style={{ display:"grid", gap:12 }}>
-              <h3 className="title">Enter Your Information Below</h3>
-              <div className="row">
-                <label className="label" style={{ color:"#5f6b85" }}>Phone Number</label>
-                <input value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder="(555) 555-5555" />
+            {/* Right: Manual entry — smaller inputs, compact spacing */}
+            <div className="card form">
+              <h3 className="mini-title">Enter Your Information</h3>
+
+              <div>
+                <div className="label">Phone number</div>
+                <input placeholder="(555) 555-5555" />
               </div>
-              <div className="row">
-                <label className="label" style={{ color:"#5f6b85" }}>Email Address</label>
-                <input value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com" />
+              <div>
+                <div className="label">Email address</div>
+                <input type="email" placeholder="you@example.com" />
               </div>
-              <div className="row">
-                <label className="label" style={{ color:"#5f6b85" }}>Loyalty Number</label>
-                <input value={loyalty} onChange={(e)=>setLoyalty(e.target.value)} placeholder="e.g. 000123456" />
+              <div>
+                <div className="label">Loyalty number</div>
+                <input placeholder="SNAP-000000" />
               </div>
-              <div style={{ display:"flex", gap:10, justifyContent:"flex-end" }}>
-                <a href="/" className="btn ghost">Cancel</a>
-                <button className="btn" onClick={()=>alert("Signed in (demo)")}>Continue</button>
+
+              <div className="row" style={{ justifyContent: "flex-end", marginTop: 6 }}>
+                <a className="btn" href="/">Cancel</a>
+                <button className="btn" onClick={() => alert("Continue stub")}>Continue</button>
               </div>
             </div>
           </div>
