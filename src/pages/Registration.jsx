@@ -88,7 +88,7 @@ export default function Registration(){
         .theoPanel img{width:120px;height:auto;display:block}
         .theoPanel .blurb{color:var(--blue);font-weight:800}
 
-        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:25px}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:45px}
         .kv{display:grid;gap:6px}
         .kv label{font-size:12px;color:#51607a}
         .input{
@@ -292,6 +292,7 @@ Socials:
     </>
   )
 }
+
 
 
 
