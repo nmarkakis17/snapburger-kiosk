@@ -1,4 +1,3 @@
-// src/pages/Registration.jsx
 import React, { useState } from "react";
 
 export default function Registration({ onCancel }) {
@@ -29,10 +28,12 @@ export default function Registration({ onCancel }) {
         background: "#fff",
         borderRadius: "16px",
         padding: "28px",
-        maxWidth: "900px",
+        maxWidth: "1000px",
         margin: "0 auto",
         color: "#000",
         boxShadow: "0 10px 30px rgba(0,0,0,.15)",
+        display: "flex",
+        gap: "28px",
         ...style
       }}
     >
@@ -40,146 +41,178 @@ export default function Registration({ onCancel }) {
     </div>
   );
 
+  const buttonStyle = {
+    background: "linear-gradient(135deg, var(--blue), var(--orange))",
+    color: "#fff",
+    padding: "10px 20px",
+    borderRadius: 8,
+    fontWeight: 700,
+    border: "none",
+    cursor: "pointer"
+  };
+
   return (
     <Box>
-      {step === 1 && (
-        <>
-          <h2 style={{ color: "var(--blue)", marginTop: 0 }}>Account Information</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px 24px",
-            }}
-          >
-            <input placeholder="Full Name" value={form.name} onChange={e => handleChange("name", e.target.value)} />
-            <input placeholder="Phone Number" value={form.phone} onChange={e => handleChange("phone", e.target.value)} />
-            <input placeholder="Email Address" value={form.email} onChange={e => handleChange("email", e.target.value)} />
-            <input placeholder="Street Address" value={form.address} onChange={e => handleChange("address", e.target.value)} />
-            <input placeholder="City" value={form.city} onChange={e => handleChange("city", e.target.value)} />
-            <input placeholder="State" value={form.state} onChange={e => handleChange("state", e.target.value)} />
-            <input placeholder="ZIP Code" value={form.zip} onChange={e => handleChange("zip", e.target.value)} />
-          </div>
-        </>
-      )}
+      {/* LEFT: Registration content */}
+      <div style={{ flex: 2 }}>
+        {step === 1 && (
+          <>
+            <h2 style={{ color: "var(--blue)", marginTop: 0 }}>Account Information</h2>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                columnGap: "28px",
+                rowGap: "12px",
+                paddingRight: "24px"
+              }}
+            >
+              <input placeholder="Full Name" value={form.name} onChange={e => handleChange("name", e.target.value)} />
+              <input placeholder="Phone Number" value={form.phone} onChange={e => handleChange("phone", e.target.value)} />
+              <input placeholder="Email Address" value={form.email} onChange={e => handleChange("email", e.target.value)} />
+              <input placeholder="Street Address" value={form.address} onChange={e => handleChange("address", e.target.value)} />
+              <input placeholder="City" value={form.city} onChange={e => handleChange("city", e.target.value)} />
+              <input placeholder="State" value={form.state} onChange={e => handleChange("state", e.target.value)} />
+              <input placeholder="ZIP Code" value={form.zip} onChange={e => handleChange("zip", e.target.value)} />
+            </div>
+          </>
+        )}
 
-      {step === 2 && (
-        <>
-          <h2 style={{ color: "var(--blue)", marginTop: 0 }}>Preferences</h2>
-          <textarea
-            placeholder="Allergies / Dietary Restrictions"
-            value={form.allergies}
-            onChange={e => handleChange("allergies", e.target.value)}
-            style={{ width: "100%", minHeight: 100, marginBottom: 16 }}
-          />
-          <h3 style={{ color: "var(--orange)", margin: "12px 0 8px" }}>Favorite Burgers</h3>
-          <label><input type="checkbox" onChange={e => {
-            const v = "Byte Burger"; handleChange("burgerPrefs", e.target.checked ? [...new Set([...form.burgerPrefs, v])] : form.burgerPrefs.filter(x => x !== v));
-          }} /> Byte Burger</label>
-          <br />
-          <label><input type="checkbox" onChange={e => {
-            const v = "MegaByte"; handleChange("burgerPrefs", e.target.checked ? [...new Set([...form.burgerPrefs, v])] : form.burgerPrefs.filter(x => x !== v));
-          }} /> MegaByte</label>
-          <br />
-          <label><input type="checkbox" onChange={e => {
-            const v = "BaconByte Burger"; handleChange("burgerPrefs", e.target.checked ? [...new Set([...form.burgerPrefs, v])] : form.burgerPrefs.filter(x => x !== v));
-          }} /> BaconByte Burger</label>
-
-          <h3 style={{ color: "var(--orange)", margin: "16px 0 8px" }}>Preferred Sides</h3>
-          <label><input type="checkbox" onChange={e => {
-            const v = "Fries"; handleChange("sidePrefs", e.target.checked ? [...new Set([...form.sidePrefs, v])] : form.sidePrefs.filter(x => x !== v));
-          }} /> Fries</label>
-          <br />
-          <label><input type="checkbox" onChange={e => {
-            const v = "Onion Rings"; handleChange("sidePrefs", e.target.checked ? [...new Set([...form.sidePrefs, v])] : form.sidePrefs.filter(x => x !== v));
-          }} /> Onion Rings</label>
-          <br />
-          <label><input type="checkbox" onChange={e => {
-            const v = "Salad"; handleChange("sidePrefs", e.target.checked ? [...new Set([...form.sidePrefs, v])] : form.sidePrefs.filter(x => x !== v));
-          }} /> Salad</label>
-        </>
-      )}
-
-      {step === 3 && (
-        <>
-          <h2 style={{ color: "var(--blue)", marginTop: 0 }}>Social Media</h2>
-          <div style={{ display: "grid", gap: 12 }}>
-            {[
-              { key: "facebook", label: "Facebook", icon: "/assets/social/facebook.svg" },
-              { key: "instagram", label: "Instagram", icon: "/assets/social/instagram.svg" },
-              { key: "x", label: "X", icon: "/assets/social/x.svg" },
-              { key: "youtube", label: "YouTube", icon: "/assets/social/youtube.svg" },
-              { key: "tiktok", label: "TikTok", icon: "/assets/social/tiktok.svg" },
-            ].map(({ key, label, icon }) => (
-              <div key={key} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <img src={icon} alt={label} width="22" height="22" />
+        {step === 2 && (
+          <>
+            <h2 style={{ color: "var(--blue)" }}>Preferences</h2>
+            <textarea
+              placeholder="Allergies / Dietary Restrictions"
+              value={form.allergies}
+              onChange={e => handleChange("allergies", e.target.value)}
+              style={{ width: "100%", minHeight: 100, marginBottom: 16 }}
+            />
+            <h3 style={{ color: "var(--orange)" }}>Favorite Burgers</h3>
+            {["Byte Burger", "MegaByte", "BaconByte Burger"].map(b => (
+              <label key={b} style={{ display: "block" }}>
                 <input
-                  placeholder={`${label} Username/URL`}
-                  value={form[key]}
-                  onChange={e => handleChange(key, e.target.value)}
-                  style={{ flex: 1 }}
-                />
-              </div>
+                  type="checkbox"
+                  checked={form.burgerPrefs.includes(b)}
+                  onChange={e =>
+                    handleChange(
+                      "burgerPrefs",
+                      e.target.checked
+                        ? [...form.burgerPrefs, b]
+                        : form.burgerPrefs.filter(x => x !== b)
+                    )
+                  }
+                />{" "}
+                {b}
+              </label>
             ))}
-          </div>
-        </>
-      )}
+            <h3 style={{ color: "var(--orange)", marginTop: 16 }}>Preferred Sides</h3>
+            {["Fries", "Onion Rings", "Salad"].map(s => (
+              <label key={s} style={{ display: "block" }}>
+                <input
+                  type="checkbox"
+                  checked={form.sidePrefs.includes(s)}
+                  onChange={e =>
+                    handleChange(
+                      "sidePrefs",
+                      e.target.checked
+                        ? [...form.sidePrefs, s]
+                        : form.sidePrefs.filter(x => x !== s)
+                    )
+                  }
+                />{" "}
+                {s}
+              </label>
+            ))}
+          </>
+        )}
 
-      {step === 4 && (
-        <>
-          <h2 style={{ color: "var(--blue)", marginTop: 0 }}>Review Your Information</h2>
-          <div style={{ background: "#f7f7f7", borderRadius: 12, padding: 16, lineHeight: 1.5 }}>
-            <p><b>Name:</b> {form.name}</p>
-            <p><b>Phone:</b> {form.phone}</p>
-            <p><b>Email:</b> {form.email}</p>
-            <p><b>Address:</b> {form.address}, {form.city}, {form.state} {form.zip}</p>
-            <p><b>Allergies:</b> {form.allergies || "—"}</p>
-            <p><b>Burgers:</b> {form.burgerPrefs.length ? form.burgerPrefs.join(", ") : "—"}</p>
-            <p><b>Sides:</b> {form.sidePrefs.length ? form.sidePrefs.join(", ") : "—"}</p>
-            <p><b>Facebook:</b> {form.facebook || "—"}</p>
-            <p><b>Instagram:</b> {form.instagram || "—"}</p>
-            <p><b>X:</b> {form.x || "—"}</p>
-            <p><b>YouTube:</b> {form.youtube || "—"}</p>
-            <p><b>TikTok:</b> {form.tiktok || "—"}</p>
-          </div>
-        </>
-      )}
+        {step === 3 && (
+          <>
+            <h2 style={{ color: "var(--blue)" }}>Social Media</h2>
+            <div style={{ display: "grid", gap: 12 }}>
+              {[
+                { key: "facebook", label: "Facebook", icon: "/assets/social/facebook.svg" },
+                { key: "instagram", label: "Instagram", icon: "/assets/social/instagram.svg" },
+                { key: "x", label: "X", icon: "/assets/social/x.svg" },
+                { key: "youtube", label: "YouTube", icon: "/assets/social/youtube.svg" },
+                { key: "tiktok", label: "TikTok", icon: "/assets/social/tiktok.svg" }
+              ].map(({ key, label, icon }) => (
+                <div key={key} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <img src={icon} alt={label} width="22" height="22" />
+                  <input
+                    placeholder={`${label} Username/URL`}
+                    value={form[key]}
+                    onChange={e => handleChange(key, e.target.value)}
+                    style={{ flex: 1 }}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
-      {step === 5 && (
-        <div style={{ textAlign: "center", color: "var(--blue)" }}>
-          <div style={{ background: "#fff", borderRadius: 12, padding: 24, display: "inline-block", boxShadow: "0 10px 30px rgba(0,0,0,.15)" }}>
-            <img src="/assets/theo-clap.png" alt="Theo Clapping" style={{ maxWidth: 180, marginBottom: 12 }} />
-            <h2 style={{ margin: "8px 0" }}>Congratulations!</h2>
-            <p style={{ margin: 0 }}>
-              Theo welcomes you to the <span style={{ color: "var(--orange)", fontWeight: 800 }}>SnapBurger</span> family!
-            </p>
-          </div>
-        </div>
-      )}
+        {step === 4 && (
+          <>
+            <h2 style={{ color: "var(--blue)" }}>Review</h2>
+            <div style={{ background: "#f7f7f7", borderRadius: 12, padding: 16 }}>
+              <p><b>Name:</b> {form.name}</p>
+              <p><b>Email:</b> {form.email}</p>
+              <p><b>Phone:</b> {form.phone}</p>
+              <p><b>Address:</b> {form.address}, {form.city}, {form.state} {form.zip}</p>
+              <p><b>Burgers:</b> {form.burgerPrefs.join(", ") || "—"}</p>
+              <p><b>Sides:</b> {form.sidePrefs.join(", ") || "—"}</p>
+              <p><b>Allergies:</b> {form.allergies || "—"}</p>
+              <p><b>Facebook:</b> {form.facebook || "—"}</p>
+              <p><b>Instagram:</b> {form.instagram || "—"}</p>
+              <p><b>X:</b> {form.x || "—"}</p>
+              <p><b>YouTube:</b> {form.youtube || "—"}</p>
+              <p><b>TikTok:</b> {form.tiktok || "—"}</p>
+            </div>
+          </>
+        )}
 
-      {/* Nav buttons */}
-      <div style={{ marginTop: 20, display: "flex", gap: 12, justifyContent: "space-between" }}>
-        <button onClick={onCancel} style={{ background: "var(--blue)", color: "#fff", padding: "10px 20px", borderRadius: 8 }}>
-          Cancel
-        </button>
-        <div style={{ display: "flex", gap: 8 }}>
-          {step > 1 && step < 5 && (
-            <button onClick={() => setStep(step - 1)} style={{ background: "var(--blue)", color: "#fff", padding: "10px 20px", borderRadius: 8 }}>
-              Back
-            </button>
-          )}
-          {step < 5 && (
-            <button onClick={() => setStep(step + 1)} style={{ background: "var(--orange)", color: "#fff", padding: "10px 20px", borderRadius: 8 }}>
-              Next
-            </button>
-          )}
-          {step === 5 && (
-            <button onClick={onCancel} style={{ background: "var(--blue)", color: "#fff", padding: "10px 20px", borderRadius: 8 }}>
-              Done
-            </button>
-          )}
+        {step === 5 && (
+          <div style={{ textAlign: "center", width: "100%" }}>
+            <div
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                padding: 24,
+                display: "inline-block",
+                boxShadow: "0 10px 30px rgba(0,0,0,.15)"
+              }}
+            >
+              <img src="/assets/theo-clap.png" alt="Theo Clapping" style={{ maxWidth: 180 }} />
+              <h2>Congratulations!</h2>
+              <p>
+                Theo welcomes you to the{" "}
+                <span style={{ color: "var(--orange)", fontWeight: 800 }}>SnapBurger</span> family!
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Nav buttons */}
+        <div style={{ marginTop: 20, display: "flex", gap: 12, justifyContent: "space-between" }}>
+          <button onClick={onCancel} style={buttonStyle}>Cancel</button>
+          <div style={{ display: "flex", gap: 8 }}>
+            {step > 1 && step < 5 && <button onClick={() => setStep(step - 1)} style={buttonStyle}>Back</button>}
+            {step < 5 && <button onClick={() => setStep(step + 1)} style={buttonStyle}>Next</button>}
+            {step === 5 && <button onClick={onCancel} style={buttonStyle}>Done</button>}
+          </div>
         </div>
       </div>
+
+      {/* RIGHT: Theo info box */}
+      {step < 5 && (
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <img src="/assets/theo-write.png" alt="Theo" style={{ maxWidth: 160, marginBottom: 12 }} />
+          <p style={{ color: "var(--blue)", fontWeight: 600 }}>
+            Register to earn <span style={{ color: "var(--orange)" }}>SnapCoins</span> and{" "}
+            <span style={{ color: "var(--orange)" }}>SnapCharms</span> for exclusive rewards!
+          </p>
+        </div>
+      )}
     </Box>
   );
 }
