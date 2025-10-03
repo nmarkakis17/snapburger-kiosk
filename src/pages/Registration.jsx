@@ -1,7 +1,7 @@
 // src/pages/Registration.jsx
 import React, { useState } from "react";
-import theoWrite from "/assets/theo-write.png";   // existing side image
-import theoClap from "/assets/theo-clap.png";     // NEW: congratulations image
+import theoWrite from "/assets/theo-write.png";
+import theoClap from "/assets/theo-clap.png";
 
 export default function Registration() {
   const [step, setStep] = useState(1);
@@ -12,7 +12,7 @@ export default function Registration() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true); // go to Congrats screen
+    setSubmitted(true);
   };
 
   if (submitted) {
@@ -23,8 +23,9 @@ export default function Registration() {
             <img src={theoClap} alt="Theo clapping" className="theoClapImg" />
             <h2 className="congratsTitle">Congratulations!</h2>
             <p className="congratsBody">
-              You’re all set. Your SnapBurger account is ready — start earning
-              <b> SnapCoins</b> and collecting <b>SnapCharms</b> today!
+              You’re all set. Your SnapBurger account is ready — start earning{" "}
+              <span className="brandOrange">SnapCoins</span> and collecting{" "}
+              <span className="brandOrange">SnapCharms</span> today!
             </p>
             <div className="congratsActions">
               <a className="pillBtn next" href="/menu">Start Ordering</a>
@@ -32,22 +33,6 @@ export default function Registration() {
             </div>
           </div>
         </div>
-
-        <style jsx>{`
-          .registrationPage { display:flex; justify-content:center; padding:40px; color:var(--sb-text);}
-          .layout.congratsLayout { width:100%; max-width:900px; }
-          .congratsPanel{
-            background:#fff; color:#000; border-radius:20px; padding:28px 36px;
-            box-shadow:0 12px 30px rgba(0,0,0,.25); text-align:center;
-          }
-          .theoClapImg{ width:min(220px, 40vw); display:block; margin:0 auto 12px auto; }
-          .congratsTitle{ color:var(--blue); font-size:28px; font-weight:900; margin:6px 0 8px 0; }
-          .congratsBody{ font-size:16px; color:#111; }
-          .congratsActions{ display:flex; gap:12px; justify-content:center; margin-top:18px; }
-          .pillBtn{ border:none; border-radius:999px; padding:12px 22px; font-weight:700; cursor:pointer; text-decoration:none; }
-          .pillBtn.next{ background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
-          .pillBtn.cancel{ background:#ccc; color:#000; }
-        `}</style>
       </div>
     );
   }
@@ -55,7 +40,6 @@ export default function Registration() {
   return (
     <div className="registrationPage">
       <div className="layout">
-        {/* Registration form */}
         <div className="panel formPanel">
           <h2 className="title">Account Registration</h2>
 
@@ -143,8 +127,9 @@ export default function Registration() {
 
             {/* Actions */}
             <div className="actions">
+              <a href="/" className="pillBtn cancel">Cancel</a>
               {step > 1 && (
-                <button type="button" className="pillBtn cancel" onClick={goBack}>
+                <button type="button" className="pillBtn back" onClick={goBack}>
                   Back
                 </button>
               )}
@@ -154,133 +139,62 @@ export default function Registration() {
                 </button>
               )}
               {step === 4 && (
-                <button type="submit" className="pillBtn next">
-                  Submit
-                </button>
+                <button type="submit" className="pillBtn next">Submit</button>
               )}
             </div>
           </form>
         </div>
 
-        {/* Theo side */}
+        {/* Theo panel */}
         <div className="panel theoPanel">
           <img src={theoWrite} alt="Theo" className="theoImg" />
           <p className="theoBlurb">
-            Register today to earn <b>SnapCoins</b> and <b>SnapCharms</b> —
-            your rewards start right away.
+            Register today to earn{" "}
+            <span className="brandOrange">SnapCoins</span> and{" "}
+            <span className="brandOrange">SnapCharms</span> — your rewards start right away.
           </p>
         </div>
       </div>
 
       <style jsx>{`
+        .brandOrange { color: var(--orange); }
         .registrationPage {
-          display: flex;
-          justify-content: center;
-          align-items: flex-start;
-          padding: 40px;
-          color: var(--sb-text);
+          display:flex; justify-content:center; align-items:flex-start;
+          padding:40px; color:var(--sb-text);
         }
         .layout {
-          display: grid;
-          grid-template-columns: 1.6fr 0.4fr; /* big form, slim Theo */
-          gap: 32px;
-          width: 100%;
-          max-width: 1100px;
+          display:grid; grid-template-columns:1.6fr 0.4fr;
+          gap:32px; width:100%; max-width:1100px;
         }
         .panel {
-          background: #fff;
-          border-radius: 20px;
-          padding: 28px 36px;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-          color: #000;
+          background:#fff; border-radius:20px; padding:28px 36px;
+          box-shadow:0 12px 30px rgba(0,0,0,.25); color:#000;
         }
-        .title {
-          font-size: 22px;
-          font-weight: 800;
-          margin-bottom: 16px;
-          color: var(--blue);
-        }
-        .subtitle {
-          font-size: 18px;
-          font-weight: 700;
-          color: var(--blue);
-          margin-bottom: 12px;
-        }
-        /* Two-column form grid with balanced spacing */
+        .title { font-size:22px; font-weight:800; margin-bottom:16px; color:var(--blue); }
+        .subtitle { font-size:18px; font-weight:700; color:var(--blue); margin-bottom:12px; }
         .grid2 {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          column-gap: 28px;       /* spacing between columns */
-          row-gap: 8px;           /* tighter rows */
+          display:grid; grid-template-columns:1fr 1fr;
+          column-gap:28px; row-gap:14px; /* more space between rows */
         }
-        .rightColBuffer { margin-right: 28px; } /* breathing room against panel edge */
-
-        label {
-          display: block;
-          font-weight: 600;
-          font-size: 14px;
-          margin-bottom: 4px;
-          color: var(--blue);
-        }
+        .rightColBuffer { margin-right:28px; }
+        label { display:block; font-weight:600; font-size:14px; margin-bottom:4px; color:var(--blue); }
         input {
-          width: 100%;
-          padding: 10px;
-          border-radius: 10px;
-          border: 1px solid #ccc;
-          margin-bottom: 6px;
+          width:100%; padding:10px; border-radius:10px;
+          border:1px solid #ccc; margin-bottom:4px;
         }
-        .checkGroup label {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          margin: 4px 12px 0 0;
-          color: #111;
-          font-weight: 600;
-        }
-        .reviewBox {
-          background: #f9f9f9;
-          border: 1px solid #ddd;
-          border-radius: 12px;
-          padding: 16px;
-          min-height: 220px;
-        }
-        .actions {
-          margin-top: 20px;
-          display: flex;
-          justify-content: flex-end;
-          gap: 12px;
-        }
+        .checkGroup label { display:inline-flex; align-items:center; gap:8px; margin:4px 12px 0 0; color:#111; font-weight:600; }
+        .reviewBox { background:#f9f9f9; border:1px solid #ddd; border-radius:12px; padding:16px; min-height:220px; }
+        .actions { margin-top:20px; display:flex; justify-content:flex-end; gap:12px; }
         .pillBtn {
-          border: none;
-          border-radius: 999px;
-          padding: 12px 22px;
-          font-weight: 700;
-          cursor: pointer;
+          border:none; border-radius:999px; padding:12px 22px;
+          font-weight:700; cursor:pointer; text-decoration:none;
         }
-        .pillBtn.cancel {
-          background: #ccc;
-          color: #000;
-        }
-        .pillBtn.next {
-          background: linear-gradient(135deg, var(--blue), var(--orange));
-          color: #fff;
-        }
-        .theoPanel {
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 20px;
-        }
-        .theoImg {
-          max-width: 150px;  /* slightly smaller per your earlier preference */
-          margin-bottom: 12px;
-        }
-        .theoBlurb {
-          font-size: 16px;
-          font-weight: 700;
-          color: var(--blue);
-        }
+        .pillBtn.cancel { background:#ccc; color:#000; }
+        .pillBtn.back { background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
+        .pillBtn.next { background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff; }
+        .theoPanel { text-align:center; display:flex; flex-direction:column; align-items:center; padding:20px; }
+        .theoImg { max-width:150px; margin-bottom:12px; }
+        .theoBlurb { font-size:16px; font-weight:700; color:var(--blue); }
       `}</style>
     </div>
   );
