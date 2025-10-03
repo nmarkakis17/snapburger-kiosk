@@ -73,6 +73,7 @@ export default function App() {
               </div>
             </section>
           )}
+<Route path="/returning" element={<ReturningCustomer onCancel={() => navigate("/")} />} />
 
           {stage === "register" && (
             <Registration onCancel={() => setStage("landing")} />
