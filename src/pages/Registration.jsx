@@ -167,7 +167,7 @@ export default function Registration() {
         .grid2 {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 8px 24px; /* tighter rows, healthy col spacing */
+          gap: 8px 40px; /* tighter rows, healthy col spacing */
         }
         .grid2 > div:last-child {
           margin-right: 24px; /* breathing room on right side */
@@ -234,3 +234,4 @@ export default function Registration() {
     </div>
   );
 }
+
