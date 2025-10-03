@@ -1,218 +1,138 @@
 // src/pages/Registration.jsx
 import React, { useState } from "react";
-import theoWrite from "/assets/theo-write.png";
-import theoClap from "/assets/theo-clap.png";
+import theoWrite from "/assets/theo-write.png"; 
+import theoClap from "/assets/theo-clap.png"; 
+import fbIcon from "/assets/fb.png";
+import igIcon from "/assets/ig.png";
+import xIcon from "/assets/x.png";
+import tiktokIcon from "/assets/tiktok.png";
+import ytIcon from "/assets/yt.png";
 
-export default function Registration() {
+export default function Registration({ onCancel }) {
   const [step, setStep] = useState(1);
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+    allergies: "",
+    burger: [],
+    sides: [],
+    socials: {
+      facebook: "",
+      instagram: "",
+      x: "",
+      tiktok: "",
+      youtube: ""
+    }
+  });
 
-  const goNext = () => setStep((s) => Math.min(4, s + 1));
-  const goBack = () => setStep((s) => Math.max(1, s - 1));
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
+  const updateField = (field, value) => {
+    setForm((f) => ({ ...f, [field]: value }));
   };
 
-  if (submitted) {
-    return (
-      <div className="registrationPage">
-        <div className="layout congratsLayout">
-          <div className="panel congratsPanel">
-            <img src={theoClap} alt="Theo clapping" className="theoClapImg" />
-            <h2 className="congratsTitle">🎉 Congratulations!</h2>
-            <p className="congratsBody">
-              You’re all set! Your SnapBurger account is ready — start earning{" "}
-              <span className="brandOrange">SnapCoins</span> and collecting{" "}
-              <span className="brandOrange">SnapCharms</span> today!
-            </p>
-            <div className="congratsActions">
-              <a className="pillBtn next" href="/menu">Start Ordering</a>
-              <a className="pillBtn cancel" href="/">Back to Home</a>
-            </div>
-          </div>
-        </div>
-
-        <style jsx>{`
-          .congratsLayout {
-            display:flex; justify-content:center; align-items:center;
-            padding:60px; width:100%;
-          }
-          .congratsPanel {
-            max-width:500px; text-align:center;
-          }
-          .theoClapImg { max-width:200px; margin-bottom:18px; }
-          .congratsTitle { font-size:26px; font-weight:800; color:var(--blue); }
-          .congratsBody {
-            font-size:18px; font-weight:600; margin:18px 0;
-            color:#111;
-          }
-          .congratsActions {
-            display:flex; justify-content:center; gap:14px; margin-top:20px;
-          }
-        `}</style>
-      </div>
-    );
-  }
+  const updateSocial = (platform, value) => {
+    setForm((f) => ({
+      ...f,
+      socials: { ...f.socials, [platform]: value }
+    }));
+  };
 
   return (
-    <div className="registrationPage">
-      <div className="layout">
-        <div className="panel formPanel">
-          <h2 className="title">Account Registration</h2>
-
-          <form onSubmit={onSubmit}>
-            {/* Step 1 */}
-            {step === 1 && (
-              <div className="grid2">
-                <div>
-                  <label>Name</label>
-                  <input type="text" />
-                  <label>Phone</label>
-                  <input type="tel" />
-                </div>
-                <div className="rightColBuffer">
-                  <label>Email</label>
-                  <input type="email" />
-                  <label>Address</label>
-                  <input type="text" />
-                </div>
-              </div>
-            )}
-
-            {/* Step 2 */}
-            {step === 2 && (
-              <div className="grid2">
-                <div>
-                  <label>Allergies</label>
-                  <input type="text" placeholder="e.g., peanuts, gluten" />
-                  <label>Favorite Burgers</label>
-                  <div className="checkGroup">
-                    <label><input type="checkbox" /> Byte Burger</label>
-                    <label><input type="checkbox" /> MegaByte</label>
-                    <label><input type="checkbox" /> BaconByte</label>
-                    <label><input type="checkbox" /> VeggieByte</label>
-                  </div>
-                </div>
-                <div className="rightColBuffer">
-                  <label>Toppings</label>
-                  <div className="checkGroup">
-                    <label><input type="checkbox" /> Add Cheese</label>
-                    <label><input type="checkbox" /> Extra Onions</label>
-                    <label><input type="checkbox" /> Light Sauce</label>
-                    <label><input type="checkbox" /> No Pickles</label>
-                  </div>
-                  <label>Preferred Sides</label>
-                  <div className="checkGroup">
-                    <label><input type="checkbox" /> Fries</label>
-                    <label><input type="checkbox" /> Onion Rings</label>
-                    <label><input type="checkbox" /> Salad</label>
-                    <label><input type="checkbox" /> Tater Tots</label>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step 3 */}
-            {step === 3 && (
-              <div className="grid2">
-                <div>
-                  <label>Facebook</label>
-                  <input type="text" placeholder="@yourprofile" />
-                  <label>Instagram</label>
-                  <input type="text" placeholder="@yourhandle" />
-                  <label>X (Twitter)</label>
-                  <input type="text" placeholder="@yourhandle" />
-                </div>
-                <div className="rightColBuffer">
-                  <label>TikTok</label>
-                  <input type="text" placeholder="@yourhandle" />
-                  <label>YouTube</label>
-                  <input type="text" placeholder="channel url or @handle" />
-                </div>
-              </div>
-            )}
-
-            {/* Step 4 */}
-            {step === 4 && (
-              <>
-                <h3 className="subtitle">Review Your Information</h3>
-                <div className="reviewBox">
-                  <p>(Preview of submitted details here)</p>
-                </div>
-              </>
-            )}
-
-            {/* Actions */}
-            <div className="actions">
-              <a href="/" className="pillBtn cancel">Cancel</a>
-              {step > 1 && (
-                <button type="button" className="pillBtn back" onClick={goBack}>
-                  Back
-                </button>
-              )}
-              {step < 4 && (
-                <button type="button" className="pillBtn next" onClick={goNext}>
-                  Next
-                </button>
-              )}
-              {step === 4 && (
-                <button type="submit" className="pillBtn next">Submit</button>
-              )}
+    <div style={{ padding: "24px", display: "flex", justifyContent: "center" }}>
+      <div style={{ maxWidth: "820px", width: "100%", background: "#fff", borderRadius: "14px", padding: "28px", boxShadow: "0 8px 22px rgba(0,0,0,.25)" }}>
+        {step === 1 && (
+          <>
+            <h2 style={{ color: "#0ea5e9" }}>Account Information</h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <input placeholder="Name" value={form.name} onChange={(e) => updateField("name", e.target.value)} />
+              <input placeholder="Phone" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} />
+              <input placeholder="Email" value={form.email} onChange={(e) => updateField("email", e.target.value)} />
+              <input placeholder="Address" value={form.address} onChange={(e) => updateField("address", e.target.value)} />
+              <input placeholder="City" value={form.city} onChange={(e) => updateField("city", e.target.value)} />
+              <input placeholder="State" value={form.state} onChange={(e) => updateField("state", e.target.value)} />
+              <input placeholder="Zip" value={form.zip} onChange={(e) => updateField("zip", e.target.value)} />
             </div>
-          </form>
-        </div>
+            <div style={{ marginTop: "20px" }}>
+              <button onClick={onCancel} style={{ marginRight: "12px", background: "#0ea5e9", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Cancel</button>
+              <button onClick={() => setStep(2)} style={{ background: "#f97316", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Next</button>
+            </div>
+          </>
+        )}
 
-        {/* Theo panel */}
-        <div className="panel theoPanel">
-          <img src={theoWrite} alt="Theo" className="theoImg" />
-          <p className="theoBlurb">
-            Register today to earn{" "}
-            <span className="brandOrange">SnapCoins</span> and{" "}
-            <span className="brandOrange">SnapCharms</span>.
-          </p>
-        </div>
+        {step === 2 && (
+          <>
+            <h2 style={{ color: "#0ea5e9" }}>Eating Preferences</h2>
+            <textarea placeholder="Allergies" value={form.allergies} onChange={(e) => updateField("allergies", e.target.value)} />
+            <h3 style={{ marginTop: "20px" }}>Favorite Burger Options</h3>
+            <label><input type="checkbox" value="Cheese" /> Cheese</label>
+            <label><input type="checkbox" value="Bacon" /> Bacon</label>
+            <label><input type="checkbox" value="Onions" /> Onions</label>
+            <h3 style={{ marginTop: "20px" }}>Preferred Sides</h3>
+            <label><input type="checkbox" value="Fries" /> Fries</label>
+            <label><input type="checkbox" value="Onion Rings" /> Onion Rings</label>
+            <label><input type="checkbox" value="Salad" /> Salad</label>
+            <div style={{ marginTop: "20px" }}>
+              <button onClick={() => setStep(1)} style={{ marginRight: "12px", background: "#0ea5e9", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Back</button>
+              <button onClick={() => setStep(3)} style={{ background: "#f97316", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Next</button>
+            </div>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2 style={{ color: "#0ea5e9" }}>Social Media Accounts</h2>
+            <div style={{ display: "grid", gap: "12px" }}>
+              <div><img src={fbIcon} alt="Facebook" style={{ width: "20px", marginRight: "8px" }} /><input placeholder="Facebook" value={form.socials.facebook} onChange={(e) => updateSocial("facebook", e.target.value)} /></div>
+              <div><img src={igIcon} alt="Instagram" style={{ width: "20px", marginRight: "8px" }} /><input placeholder="Instagram" value={form.socials.instagram} onChange={(e) => updateSocial("instagram", e.target.value)} /></div>
+              <div><img src={xIcon} alt="X" style={{ width: "20px", marginRight: "8px" }} /><input placeholder="X" value={form.socials.x} onChange={(e) => updateSocial("x", e.target.value)} /></div>
+              <div><img src={tiktokIcon} alt="TikTok" style={{ width: "20px", marginRight: "8px" }} /><input placeholder="TikTok" value={form.socials.tiktok} onChange={(e) => updateSocial("tiktok", e.target.value)} /></div>
+              <div><img src={ytIcon} alt="YouTube" style={{ width: "20px", marginRight: "8px" }} /><input placeholder="YouTube" value={form.socials.youtube} onChange={(e) => updateSocial("youtube", e.target.value)} /></div>
+            </div>
+            <div style={{ marginTop: "20px" }}>
+              <button onClick={() => setStep(2)} style={{ marginRight: "12px", background: "#0ea5e9", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Back</button>
+              <button onClick={() => setStep(4)} style={{ background: "#f97316", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Next</button>
+            </div>
+          </>
+        )}
+
+        {step === 4 && (
+          <>
+            <h2 style={{ color: "#0ea5e9" }}>Review Your Info</h2>
+            <div style={{ padding: "14px", border: "1px solid #ddd", borderRadius: "8px", background: "#fafafa" }}>
+              <p><strong>Name:</strong> {form.name}</p>
+              <p><strong>Phone:</strong> {form.phone}</p>
+              <p><strong>Email:</strong> {form.email}</p>
+              <p><strong>Address:</strong> {form.address}, {form.city}, {form.state} {form.zip}</p>
+              <p><strong>Allergies:</strong> {form.allergies}</p>
+              <p><strong>Burger Choices:</strong> {form.burger.join(", ")}</p>
+              <p><strong>Sides:</strong> {form.sides.join(", ")}</p>
+              <p><strong>Facebook:</strong> {form.socials.facebook}</p>
+              <p><strong>Instagram:</strong> {form.socials.instagram}</p>
+              <p><strong>X:</strong> {form.socials.x}</p>
+              <p><strong>TikTok:</strong> {form.socials.tiktok}</p>
+              <p><strong>YouTube:</strong> {form.socials.youtube}</p>
+            </div>
+            <div style={{ marginTop: "20px" }}>
+              <button onClick={() => setStep(3)} style={{ marginRight: "12px", background: "#0ea5e9", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Back</button>
+              <button onClick={() => setStep(5)} style={{ background: "#f97316", color: "#fff", padding: "10px 16px", borderRadius: "8px" }}>Submit</button>
+            </div>
+          </>
+        )}
+
+        {step === 5 && (
+          <div style={{ textAlign: "center", padding: "40px", background: "#fff", borderRadius: "14px" }}>
+            <img src={theoClap} alt="Theo Clapping" style={{ width: "220px", marginBottom: "20px" }} />
+            <h2 style={{ color: "#0ea5e9" }}>🎉 Congratulations! 🎉</h2>
+            <p style={{ marginTop: "12px", fontWeight: "700" }}>
+              Theo welcomes you to the <span style={{ color: "#f97316" }}>SnapBurger</span> family!
+            </p>
+          </div>
+        )}
       </div>
-
-      <style jsx>{`
-        .brandOrange { color: var(--orange); }
-        .registrationPage {
-          display:flex; justify-content:center; align-items:flex-start;
-          padding:40px; color:var(--sb-text);
-        }
-        .layout {
-          display:grid; grid-template-columns:1.6fr 0.4fr;
-          gap:32px; width:100%; max-width:1100px;
-        }
-        .panel {
-          background:#fff; border-radius:20px; padding:28px 36px;
-          box-shadow:0 12px 30px rgba(0,0,0,.25); color:#000;
-        }
-        .title { font-size:22px; font-weight:800; margin-bottom:16px; color:var(--blue); }
-        .subtitle { font-size:18px; font-weight:700; color:var(--blue); margin-bottom:12px; }
-        .grid2 {
-          display:grid; grid-template-columns:1fr 1fr;
-          column-gap:28px; row-gap:22px;
-        }
-        .rightColBuffer { margin-right:28px; }
-        label { display:block; font-weight:600; font-size:14px; margin-bottom:6px; color:var(--blue); }
-        input {
-          width:100%; padding:10px; border-radius:10px;
-          border:1px solid #ccc; margin-bottom:10px;
-        }
-        .checkGroup label { display:inline-flex; align-items:center; gap:8px; margin:4px 12px 0 0; color:#111; font-weight:600; }
-        .reviewBox { background:#f9f9f9; border:1px solid #ddd; border-radius:12px; padding:16px; min-height:220px; }
-        .actions { margin-top:20px; display:flex; justify-content:flex-end; gap:12px; }
-        .pillBtn {
-          border:none; border-radius:999px; padding:12px 22px;
-          font-weight:700; cursor:pointer; text-decoration:none;
-          background:linear-gradient(135deg, var(--blue), var(--orange)); color:#fff;
-        }
-        .theoPanel { text-align:center; display:flex; flex-direction:column; align-items:center; padding:20px; }
-        .theoImg { max-width:150px; margin-bottom:12px; }
-        .theoBlurb { font-size:16px; font-weight:700; color:var(--blue); }
-      `}</style>
     </div>
   );
 }
