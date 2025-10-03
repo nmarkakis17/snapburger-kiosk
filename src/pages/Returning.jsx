@@ -1,93 +1,75 @@
-// src/pages/Returning.jsx
-import React from "react";
+import React from 'react'
 
-export default function Returning() {
+export default function Returning(){
   return (
-    <div className="returning-page">
+    <>
       <style>{`
-        .returning-page {
-          color: #fff;
-          padding: 32px;
-          text-align: center;
+        :root{
+          --blue:#1da1ff; --orange:#f97316; --bg:#0b1220;
+          --border:#1f2a44; --radius:18px;
         }
-        .loyalty-card {
-          max-width: 420px;
-          margin: 0 auto 30px auto;
-          border-radius: 16px;
-          box-shadow: 0 12px 28px rgba(0,0,0,.35);
+        html { background: var(--bg); }
+        body, #root { background: transparent; margin:0; color:#eef2ff; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial; }
+
+        .global-haze{
+          position: fixed; inset: 0; z-index: 0; pointer-events: none;
+          background:
+            radial-gradient(1100px 700px at 10% -10%, rgba(34,211,238,.34), transparent 60%),
+            radial-gradient(900px 600px at 95% 0%,   rgba(14,165,233,.30), transparent 60%),
+            radial-gradient(1100px 700px at 65% 55%, rgba(249,115,22,.40), transparent 62%),
+            radial-gradient(900px 600px at 0% 100%,  rgba(251,146,60,.28), transparent 60%),
+            linear-gradient(135deg, rgba(14,165,233,.18), rgba(249,115,22,.22) 60%),
+            var(--bg);
+          filter: saturate(1.08);
         }
-        .returning-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 28px;
-          max-width: 900px;
-          margin: 0 auto;
+
+        .page{ position:relative; z-index:1 }
+        .container{ max-width:1100px; margin:0 auto; padding:28px }
+
+        .card{
+          background:#fff;color:#0b1020;border:1px solid rgba(10,15,30,.1);
+          border-radius:18px; padding:16px; box-shadow:0 14px 28px rgba(0,0,0,.25);
         }
-        .returning-box {
-          background: #fff;
-          color: #0b1220;
-          border-radius: 16px;
-          padding: 22px;
-          text-align: center;
-          box-shadow: 0 8px 20px rgba(0,0,0,.2);
-        }
-        .returning-box h3 {
-          color: #0ea5e9;
-          margin-bottom: 12px;
-        }
-        .returning-box img {
-          max-width: 180px;
-          margin-top: 12px;
-        }
-        .returning-box input {
-          display: block;
-          width: 90%;
-          margin: 10px auto;
-          padding: 10px;
-          border-radius: 8px;
-          border: 1px solid #ccc;
-          font-size: 16px;
-        }
-        .btn-submit {
-          margin-top: 14px;
-          padding: 12px 18px;
-          border: none;
-          border-radius: 10px;
-          background: linear-gradient(135deg, #0ea5e9, #f97316);
-          color: #fff;
-          font-weight: 700;
-          cursor: pointer;
-          transition: 0.2s ease;
-        }
-        .btn-submit:hover {
-          filter: brightness(1.1);
-        }
+        .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start }
+
+        .title{ font-weight:900; font-size:22px; color:var(--blue); margin:0 0 8px }
+        .sub{ color:#51607a; margin:0 0 12px }
+
+        .bigImg{ display:block; width:100%; max-width:520px; height:auto; margin:0 auto 16px; border-radius:14px; box-shadow: 0 12px 24px rgba(0,0,0,.35) }
+        .box{ min-height: 220px }
+        .row{ display:flex; align-items:center; gap:8px; margin-bottom:10px }
+        .input{ width:100%; padding:10px 12px; border-radius:12px; border:1px solid #d1d8e6; }
+        .btn{ cursor:pointer; border:none; border-radius:12px; padding:10px 14px; font-weight:900;
+              background:linear-gradient(135deg,var(--blue),var(--orange)); color:#0b0e14 }
       `}</style>
 
-      {/* Loyalty card at the top */}
-      <img
-        src="/assets/loyalty-card.png"
-        alt="SnapBurger Loyalty Card"
-        className="loyalty-card"
-      />
+      <div className="global-haze" aria-hidden="true" />
 
-      {/* Two columns below */}
-      <div className="returning-grid">
-        {/* Left Box */}
-        <div className="returning-box">
-          <h3>Scan Your Loyalty Card Below</h3>
-          <img src="/assets/theo-point.png" alt="Theo pointing down" />
-        </div>
+      <main className="page">
+        <div className="container">
+          <img className="bigImg" src="/assets/loyalty-card.png" alt="SnapBurger Loyalty Card" />
 
-        {/* Right Box */}
-        <div className="returning-box">
-          <h3>Enter Your Information Below</h3>
-          <input type="text" placeholder="Phone Number" />
-          <input type="email" placeholder="Email Address" />
-          <input type="text" placeholder="Loyalty Number" />
-          <button className="btn-submit">Submit</button>
+          <div className="grid-2">
+            <div className="card box" style={{display:'grid', gap:12, justifyItems:'center', textAlign:'center'}}>
+              <div className="title">Scan Your Loyalty Card Below</div>
+              <img src="/assets/theo-point-down.png" alt="Theo pointing down" style={{ width:170, height:'auto' }} />
+              <div className="sub">Place your card under the scanner</div>
+              <button className="btn">Simulate Scan</button>
+            </div>
+
+            <div className="card box" style={{display:'grid', gap:10}}>
+              <div className="title">Enter Your Information Below</div>
+              <div className="row"><span style={{minWidth:110}}>Phone</span><input className="input" placeholder="(555) 555-5555" /></div>
+              <div className="row"><span style={{minWidth:110}}>Email</span><input className="input" placeholder="you@example.com" /></div>
+              <div className="row"><span style={{minWidth:110}}>Loyalty #</span><input className="input" placeholder="SB-XXXX-XXXX" /></div>
+              <div style={{display:'flex', gap:10, justifyContent:'flex-end', marginTop:6}}>
+                <a className="btn" href="/">Back</a>
+                <button className="btn">Continue</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  );
+      </main>
+    </>
+  )
 }
