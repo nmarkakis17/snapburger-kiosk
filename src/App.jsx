@@ -34,6 +34,9 @@ function Landing() {
 }
 
 export default function App() {
+  // just under `export default function App() {`
+if (typeof window === "undefined") return null; // SSR safety
+
   return (
     <>
       {/* —— Global styles —— */}
