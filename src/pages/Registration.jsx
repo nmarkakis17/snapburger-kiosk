@@ -105,6 +105,9 @@ export default function Registration(){
         .checkgrid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:10px}
         .check{display:flex;align-items:center;gap:8px}
         .review{white-space:pre-wrap;line-height:1.25}
+        .panel.formPanel{padding: 28px 36px;   /* top/bottom 28px, left/right 36px */}
+        .grid2 > div:last-child {margin-right: 24px;   /* push it away from the edge */}
+
       `}</style>
 
       <div className="global-haze" aria-hidden="true" />
@@ -292,6 +295,7 @@ Socials:
     </>
   )
 }
+
 
 
 
